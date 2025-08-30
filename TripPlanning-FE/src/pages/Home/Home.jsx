@@ -108,7 +108,7 @@ function Home() {
                 Về Chúng Tôi
               </a>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <div className="nav-notifications">
                 <button className="nav-icon-btn">
                   <Bell size={20} />
@@ -199,7 +199,7 @@ function Home() {
               <div className="wrapper-card wrapper-card--trip">
                 <div className="wrapper-card__image-container">
                   <img
-                    src="https://images.unsplash.com/photo-1580837119756-563d608dd119?w=300&h=200&fit=crop"
+                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
                     alt="Chuyến đi quanh Sài Gòn"
                     className="wrapper-card__image"
                   />
@@ -254,13 +254,49 @@ function Home() {
               <div className="wrapper-card wrapper-card--destination">
                 <div className="wrapper-card__image-container">
                   <img
+                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
+                    alt="Dinh Độc Lập"
+                    className="wrapper-card__image"
+                  />
+                </div>
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
+                    <MapPin size={16} />
+                    <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="wrapper-card wrapper-card--destination">
+                <div className="wrapper-card__image-container">
+                  <img
+                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
+                    alt="Dinh Độc Lập"
+                    className="wrapper-card__image"
+                  />
+                </div>
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
+                    <MapPin size={16} />
+                    <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="wrapper-card wrapper-card--destination">
+                <div className="wrapper-card__image-container">
+                  <img
                     src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
                     alt="Nhà Thờ Đức Bà Sài Gòn"
                     className="wrapper-card__image"
                   />
                 </div>
                 <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Nhà Thờ Đức Bà Sài Gòn</h3>
+                  <h3 className="wrapper-card__title">
+                    Nhà Thờ Đức Bà Sài Gòn
+                  </h3>
                   <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                     <MapPin size={16} />
                     <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>

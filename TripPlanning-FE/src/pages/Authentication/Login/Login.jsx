@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import api from "../../../config/axios";
+import { login } from "../../../store/redux/features/userSlice";
 
 function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,10 +24,30 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login data:", formData);
+    try {
+      const response = await api.post("User/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log("Login successful:", response.data);
+
+      // Store token if provided
+      if (response.data.token) {
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+      }
+
+      // Dispatch login action
+      dispatch(login(response.data));
+
+      // Navigate to home page
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      // Handle error (show message to user)
+      alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+    }
   };
 
   return (
@@ -35,7 +60,7 @@ function Login() {
           </p>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="form-group">
             <label className="form-label">Email</label>
             <div className="input-wrapper">
