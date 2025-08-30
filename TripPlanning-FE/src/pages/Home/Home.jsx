@@ -11,6 +11,10 @@ import {
   X,
   Bell,
   User,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
 } from "lucide-react";
 import "./Home.css";
 
@@ -104,13 +108,17 @@ function Home() {
                 Về Chúng Tôi
               </a>
             </div>
-            <div className="nav-actions">
-              <button className="nav-icon-btn">
-                <Bell size={20} />
-              </button>
-              <button className="nav-icon-btn">
-                <User size={20} />
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="nav-notifications">
+                <button className="nav-icon-btn">
+                  <Bell size={20} />
+                </button>
+              </div>
+              <div className="nav-user-profile">
+                <button className="nav-icon-btn">
+                  <User size={20} />
+                </button>
+              </div>
             </div>
           </div>
         </nav>
@@ -151,36 +159,36 @@ function Home() {
       </section>
       <div className="wrapper">
         {/* Content Sections */}
-        <main className="main-content">
+        <main className="wrapper-content">
           {/* Lịch Trình Nổi Bật */}
-          <section className="content-section">
-            <div className="section-header">
-              <h2 className="section-title">Lịch Trình Nổi Bật</h2>
-              <button className="view-more-btn">Xem Thêm</button>
+          <section className="wrapper-section">
+            <div className="wrapper-section__header">
+              <h2 className="wrapper-section__title">Lịch Trình Nổi Bật</h2>
+              <button className="wrapper-section__view-more">Xem Thêm</button>
             </div>
-            <div className="trip-cards">
-              <div className="trip-card">
-                <div className="trip-image-container">
+            <div className="wrapper-cards wrapper-cards--trip">
+              <div className="wrapper-card wrapper-card--trip">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1580837119756-563d608dd119?w=300&h=200&fit=crop"
                     alt="Chuyến đi quanh Sài Gòn"
-                    className="trip-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="trip-info">
-                  <h3 className="trip-title">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">
                     Chuyến đi quanh Sài Gòn với máy đưa bạn
                   </h3>
-                  <div className="trip-meta">
-                    <div className="trip-date">
+                  <div className="wrapper-card__meta">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--date">
                       <Calendar size={16} />
                       <span>28 Tháng 08, 2024</span>
                     </div>
-                    <div className="trip-participants">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--participants">
                       <Users size={16} />
                       <span>Với bạn bè</span>
                     </div>
-                    <div className="trip-location">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                       <MapPin size={16} />
                       <span>Thành phố Hồ Chí Minh</span>
                     </div>
@@ -188,28 +196,28 @@ function Home() {
                 </div>
               </div>
 
-              <div className="trip-card">
-                <div className="trip-image-container">
+              <div className="wrapper-card wrapper-card--trip">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1580837119756-563d608dd119?w=300&h=200&fit=crop"
                     alt="Chuyến đi quanh Sài Gòn"
-                    className="trip-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="trip-info">
-                  <h3 className="trip-title">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">
                     Chuyến đi quanh Sài Gòn với máy đưa bạn
                   </h3>
-                  <div className="trip-meta">
-                    <div className="trip-date">
+                  <div className="wrapper-card__meta">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--date">
                       <Calendar size={16} />
                       <span>29 Tháng 08, 2024</span>
                     </div>
-                    <div className="trip-participants">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--participants">
                       <Users size={16} />
                       <span>Với gia đình</span>
                     </div>
-                    <div className="trip-location">
+                    <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                       <MapPin size={16} />
                       <span>Thành phố Hồ Chí Minh</span>
                     </div>
@@ -220,40 +228,40 @@ function Home() {
           </section>
 
           {/* Địa Điểm Nổi Bật */}
-          <section className="content-section">
-            <div className="section-header">
-              <h2 className="section-title">Địa Điểm Nổi Bật</h2>
-              <button className="view-more-btn">Xem Thêm</button>
+          <section className="wrapper-section">
+            <div className="wrapper-section__header">
+              <h2 className="wrapper-section__title">Địa Điểm Nổi Bật</h2>
+              <button className="wrapper-section__view-more">Xem Thêm</button>
             </div>
-            <div className="destination-cards">
-              <div className="destination-card">
-                <div className="destination-image-container">
+            <div className="wrapper-cards wrapper-cards--destination">
+              <div className="wrapper-card wrapper-card--destination">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
                     alt="Dinh Độc Lập"
-                    className="destination-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="destination-info">
-                  <h3 className="destination-title">Dinh Độc Lập</h3>
-                  <div className="destination-location">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                     <MapPin size={16} />
                     <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
                   </div>
                 </div>
               </div>
 
-              <div className="destination-card">
-                <div className="destination-image-container">
+              <div className="wrapper-card wrapper-card--destination">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
                     alt="Nhà Thờ Đức Bà Sài Gòn"
-                    className="destination-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="destination-info">
-                  <h3 className="destination-title">Nhà Thờ Đức Bà Sài Gòn</h3>
-                  <div className="destination-location">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Nhà Thờ Đức Bà Sài Gòn</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                     <MapPin size={16} />
                     <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
                   </div>
@@ -263,40 +271,40 @@ function Home() {
           </section>
 
           {/* Vui Chơi */}
-          <section className="content-section">
-            <div className="section-header">
-              <h2 className="section-title">Vui Chơi</h2>
-              <button className="view-more-btn">Xem Thêm</button>
+          <section className="wrapper-section">
+            <div className="wrapper-section__header">
+              <h2 className="wrapper-section__title">Vui Chơi</h2>
+              <button className="wrapper-section__view-more">Xem Thêm</button>
             </div>
-            <div className="entertainment-cards">
-              <div className="entertainment-card">
-                <div className="entertainment-image-container">
+            <div className="wrapper-cards wrapper-cards--entertainment">
+              <div className="wrapper-card wrapper-card--entertainment">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&h=200&fit=crop"
                     alt="Thảo Cầm Viên"
-                    className="entertainment-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="entertainment-info">
-                  <h3 className="entertainment-title">Thảo Cầm Viên</h3>
-                  <div className="entertainment-location">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Thảo Cầm Viên</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                     <MapPin size={16} />
                     <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
                   </div>
                 </div>
               </div>
 
-              <div className="entertainment-card">
-                <div className="entertainment-image-container">
+              <div className="wrapper-card wrapper-card--entertainment">
+                <div className="wrapper-card__image-container">
                   <img
                     src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
                     alt="Phố Đi Bộ Nguyễn Huệ"
-                    className="entertainment-image"
+                    className="wrapper-card__image"
                   />
                 </div>
-                <div className="entertainment-info">
-                  <h3 className="entertainment-title">Phố Đi Bộ Nguyễn Huệ</h3>
-                  <div className="entertainment-location">
+                <div className="wrapper-card__info">
+                  <h3 className="wrapper-card__title">Phố Đi Bộ Nguyễn Huệ</h3>
+                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
                     <MapPin size={16} />
                     <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
                   </div>
