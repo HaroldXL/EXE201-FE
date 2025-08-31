@@ -3,6 +3,7 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { CircularProgress } from "@mui/material";
 import api from "../../../config/axios";
 import { login } from "../../../store/redux/features/userSlice";
 
@@ -15,6 +16,7 @@ function Login() {
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,6 +28,7 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await api.post("User/login", {
         email: formData.email,
@@ -47,6 +50,8 @@ function Login() {
       console.error("Login error:", err);
       // Handle error (show message to user)
       alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,8 +109,19 @@ function Login() {
             </div>
           </div>
 
-          <button type="submit" className="login-button">
-            Đăng Nhập
+          <button
+            type="submit"
+            className="login-button"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="loading-content">
+                <CircularProgress size={20} color="inherit" />
+                Đang đăng nhập...
+              </div>
+            ) : (
+              <span className="normal-content">Đăng Nhập</span>
+            )}
           </button>
 
           <div className="form-footer">

@@ -11,14 +11,12 @@ import {
   X,
   Bell,
   User,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
 } from "lucide-react";
 import "./Home.css";
+import { useSelector } from "react-redux";
 
 function Home() {
+  const user = useSelector((store) => store.user);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

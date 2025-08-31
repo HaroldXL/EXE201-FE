@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { CircularProgress } from "@mui/material";
+import api from "../../../config/axios";
+import { login } from "../../../store/redux/features/userSlice";
 
 function Register() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,10 +26,23 @@ function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log("Registration data:", formData);
+    setIsLoading(true);
+    try {
+      const response = await api.post("User/signup", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log("Registration successful:", response.data);
+      navigate("/login");
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,22 +51,23 @@ function Register() {
         <div className="register-header">
           <h1 className="register-title">Tạo Tài Khoản</h1>
           <p className="register-subtitle">
-            Hãy điền thông tin của bạn để tạo tài khoản và tận hưởng dịch vụ của chúng tôi.
+            Hãy điền thông tin của bạn để tạo tài khoản và tận hưởng dịch vụ của
+            chúng tôi.
           </p>
         </div>
 
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Họ và Tên</label>
+            <label className="form-label">Tên Tài Khoản</label>
             <div className="input-wrapper">
               <div className="input-icon">
                 <User size={20} />
               </div>
               <input
                 type="text"
-                name="fullName"
-                placeholder="Họ và Tên"
-                value={formData.fullName}
+                name="username"
+                placeholder="Tên Tài Khoản"
+                value={formData.username}
                 onChange={handleInputChange}
                 className="form-input"
                 required
@@ -97,8 +118,19 @@ function Register() {
             </div>
           </div>
 
-          <button type="submit" className="register-button">
-            Đăng Ký
+          <button
+            type="submit"
+            className="register-button"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="loading-content">
+                <CircularProgress size={20} color="inherit" />
+                Đang đăng ký...
+              </div>
+            ) : (
+              <span className="normal-content">Đăng Ký</span>
+            )}
           </button>
         </form>
 

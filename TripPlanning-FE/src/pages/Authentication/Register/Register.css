@@ -126,18 +126,66 @@
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 8px;
 }
 
-.register-button:hover {
+.register-button:hover:not(:disabled) {
     background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
 }
 
-.register-button:active {
-    transform: translateY(0);
+.register-button:active:not(:disabled) {
+    transform: translateY(-1px);
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+.register-button:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.register-button:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading state animations */
+.register-button .loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: fadeInSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.register-button .normal-content {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.register-button:disabled .normal-content {
+    opacity: 0;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeInSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(4px) scale(0.95);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(1px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Login Link */
