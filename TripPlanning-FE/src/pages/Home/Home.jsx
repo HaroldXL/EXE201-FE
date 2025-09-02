@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Percent,
@@ -11,14 +11,36 @@ import {
   X,
   Bell,
   User,
+  Home as HomeIcon,
+  Info,
 } from "lucide-react";
 import "./Home.css";
 import { useSelector } from "react-redux";
+import Footer from "../../components/footer/footer";
 
 function Home() {
   const user = useSelector((store) => store.user);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollTop = window.scrollY;
+          setIsScrolled(scrollTop > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -40,19 +62,24 @@ function Home() {
         </div>
         <div className="sidebar-content">
           <a href="#" className="sidebar-link">
-            Trang Chủ
+            <HomeIcon size={20} />
+            <span>Trang Chủ</span>
           </a>
           <a href="#" className="sidebar-link">
-            Khám Phá
+            <Map size={20} />
+            <span>Khám Phá</span>
           </a>
           <a href="#" className="sidebar-link">
-            Tạo Kế Hoạch
+            <Percent size={20} />
+            <span>Tạo Kế Hoạch</span>
           </a>
           <a href="#" className="sidebar-link">
-            Hỏi Đáp AI
+            <MessageCircle size={20} />
+            <span>Hỏi Đáp AI</span>
           </a>
           <a href="#" className="sidebar-link">
-            Về Chúng Tôi
+            <Info size={20} />
+            <span>Về Chúng Tôi</span>
           </a>
         </div>
       </div>
@@ -71,7 +98,7 @@ function Home() {
         </div>
 
         {/* Navigation in Hero */}
-        <nav className="hero-navigation">
+        <nav className={`hero-navigation ${isScrolled ? "scrolled" : ""}`}>
           {/* Mobile Menu Button */}
           <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
             <Menu size={24} />
@@ -348,6 +375,7 @@ function Home() {
           </section>
         </main>
       </div>
+      <Footer />
     </>
   );
 }

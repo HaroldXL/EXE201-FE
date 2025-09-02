@@ -4,6 +4,7 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Authentication/Login/Login";
 import Register from "./pages/Authentication/Register/Register";
 import Layout from "./components/layout/Layout";
+import ProfilePav from "./pages/Profile/ProfilePav/ProfilePav";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +26,14 @@ function App() {
           element: (
             //<ProtectRouteAuth>
             <Register />
+            //</ProtectRouteAuth>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            //<ProtectRouteAuth>
+            <ProfilePav />
             //</ProtectRouteAuth>
           ),
         },

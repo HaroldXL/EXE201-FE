@@ -1,0 +1,301 @@
+/* Profile Page Styles - BEM Convention */
+.wrapper-profile {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 80px;
+  animation: slideUpFade 0.8s ease-out;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Profile Header */
+.wrapper-profile__header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: slideUpFade 0.8s ease-out 0.2s both;
+}
+
+.wrapper-profile__avatar {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.wrapper-profile__avatar-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  transition: all 0.3s ease;
+}
+
+.wrapper-profile__avatar-image:hover {
+  transform: scale(1.02);
+}
+
+.wrapper-profile__username {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  background: linear-gradient(135deg, #0A52B5, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Profile Menu */
+.wrapper-profile__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: slideUpFade 0.8s ease-out 0.4s both;
+}
+
+.wrapper-profile__menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+      position: relative;
+  overflow: hidden;
+}
+
+.wrapper-profile__menu-item:hover {
+  background: #f8fafc;
+  border-color: #d1d5db;
+}
+
+.wrapper-profile__menu-item:active {
+  background: #f1f5f9;
+}
+
+.wrapper-profile__menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.wrapper-profile__menu-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.wrapper-profile__menu-item:hover .wrapper-profile__menu-item-icon {
+  background: #e2e8f0;
+}
+
+.wrapper-profile__menu-item-icon svg {
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.wrapper-profile__menu-item:hover .wrapper-profile__menu-item-icon svg {
+  color: #3b82f6;
+}
+
+.wrapper-profile__menu-item-content {
+  flex: 1;
+}
+
+.wrapper-profile__menu-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+  transition: color 0.3s ease;
+}
+
+.wrapper-profile__menu-item:hover .wrapper-profile__menu-item-title {
+  color: #0A52B5;
+}
+
+.wrapper-profile__menu-item-description {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.wrapper-profile__menu-item-arrow {
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.wrapper-profile__menu-item:hover .wrapper-profile__menu-item-arrow {
+  color: #6b7280;
+  transform: translateX(2px);
+}
+
+/* Logout Item Special Styling */
+.wrapper-profile__menu-item--logout {
+  border-color: #fecaca;
+}
+
+.wrapper-profile__menu-item--logout:hover {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.wrapper-profile__menu-item--logout .wrapper-profile__menu-item-icon {
+  background: #fee2e2;
+}
+
+.wrapper-profile__menu-item--logout:hover .wrapper-profile__menu-item-icon {
+  background: #fecaca;
+}
+
+.wrapper-profile__menu-item--logout .wrapper-profile__menu-item-icon svg {
+  color: #dc2626;
+}
+
+.wrapper-profile__menu-item--logout:hover .wrapper-profile__menu-item-icon svg {
+  color: #b91c1c;
+}
+
+.wrapper-profile__menu-item--logout .wrapper-profile__menu-item-title {
+  color: #dc2626;
+}
+
+.wrapper-profile__menu-item--logout:hover .wrapper-profile__menu-item-title {
+  color: #b91c1c;
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .wrapper-profile {
+    padding: 120px 0 40px 0; 
+  }
+  
+  .wrapper-profile__header {
+    margin-bottom: 50px;
+  }
+  
+  .wrapper-profile__avatar-image {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .wrapper-profile__username {
+    font-size: 28px;
+  }
+  
+  .wrapper-profile__menu-item {
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .wrapper-profile__menu-item-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .wrapper-profile__menu-item-title {
+    font-size: 18px;
+  }
+  
+  .wrapper-profile__menu-item-description {
+    font-size: 14px;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .wrapper-profile {
+    max-width: 800px;
+    display: grid;
+    padding: 120px 0 40px 0; 
+    grid-template-columns: 300px 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  
+  .wrapper-profile__header {
+    margin-bottom: 0;
+    position: sticky;
+    top: 120px;
+  }
+  
+  .wrapper-profile__avatar-image {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .wrapper-profile__username {
+    font-size: 32px;
+    margin-top: 20px;
+  }
+  
+  .wrapper-profile__menu {
+    animation: slideUpFade 0.8s ease-out 0.2s both;
+  }
+  
+  .wrapper-profile__menu-item {
+    padding: 28px;
+    border-radius: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .wrapper-profile__menu-item-left {
+    gap: 20px;
+  }
+  
+  .wrapper-profile__menu-item-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+  }
+  
+  .wrapper-profile__menu-item-title {
+    font-size: 20px;
+  }
+  
+  .wrapper-profile__menu-item-description {
+    font-size: 15px;
+  }
+  
+  .wrapper-profile__menu-item-arrow {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1200px) {
+  .wrapper-profile {
+    max-width: 1060px;
+    grid-template-columns: 350px 1fr;
+    gap: 80px;
+  }
+}
+
+/* Animation Delays for Menu Items */
+.wrapper-profile__menu-item:nth-child(1) { animation: slideUpFade 0.6s ease-out 0.5s both; }
+.wrapper-profile__menu-item:nth-child(2) { animation: slideUpFade 0.6s ease-out 0.6s both; }
+.wrapper-profile__menu-item:nth-child(3) { animation: slideUpFade 0.6s ease-out 0.7s both; }
+.wrapper-profile__menu-item:nth-child(4) { animation: slideUpFade 0.6s ease-out 0.8s both; }
+.wrapper-profile__menu-item:nth-child(5) { animation: slideUpFade 0.6s ease-out 0.9s both; }
