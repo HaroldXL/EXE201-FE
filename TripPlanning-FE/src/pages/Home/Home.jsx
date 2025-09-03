@@ -182,6 +182,7 @@ function Home() {
           </div>
         </div>
       </section>
+
       <div className="wrapper">
         {/* Content Sections */}
         <main className="wrapper-content">

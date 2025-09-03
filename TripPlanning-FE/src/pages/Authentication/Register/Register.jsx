@@ -45,7 +45,6 @@ function Register() {
 
   return (
     <>
-      <Header />
       <div className="register-container">
         <div className="register-card">
           <div className="register-header">
