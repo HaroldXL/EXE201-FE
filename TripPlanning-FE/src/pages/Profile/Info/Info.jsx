@@ -6,6 +6,7 @@ import {
   Mail,
   Phone,
   ChevronDown,
+  AtSign,
 } from "lucide-react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
@@ -14,6 +15,7 @@ import "./Info.css";
 function Info() {
   const [formData, setFormData] = useState({
     fullName: "",
+    username: "",
     email: "",
     phone: "",
     gender: "",
@@ -43,6 +45,20 @@ function Info() {
             <h1 className="wrapper-info__title">Thông Tin Cá Nhân</h1>
           </div>
 
+          {/* Profile Avatar */}
+          <div className="wrapper-info__avatar-section">
+            <div className="wrapper-info__avatar">
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                alt="User Avatar"
+                className="wrapper-info__avatar-image"
+              />
+            </div>
+            <button className="wrapper-info__change-avatar-btn">
+              Thay đổi Avatar
+            </button>
+          </div>
+
           {/* Form Section */}
           <form className="wrapper-info__form" onSubmit={handleSubmit}>
             <div className="wrapper-info__form-group">
@@ -54,6 +70,21 @@ function Info() {
                   name="fullName"
                   placeholder="Họ và Tên"
                   value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="wrapper-info__input"
+                />
+              </div>
+            </div>
+
+            <div className="wrapper-info__form-group">
+              <label className="wrapper-info__label">Tên tài khoản</label>
+              <div className="wrapper-info__input-wrapper">
+                <AtSign size={20} className="wrapper-info__input-icon" />
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Tên tài khoản"
+                  value={formData.username}
                   onChange={handleInputChange}
                   className="wrapper-info__input"
                 />
@@ -112,7 +143,7 @@ function Info() {
             </div>
 
             <button type="submit" className="wrapper-info__save-btn">
-              Save
+              Lưu Thay Đổi
             </button>
           </form>
         </div>

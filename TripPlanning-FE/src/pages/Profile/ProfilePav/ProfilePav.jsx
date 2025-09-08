@@ -6,11 +6,22 @@ import {
   LogOut,
   ChevronRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../../components/header/header";
 import "./ProfilePav.css";
 import Footer from "../../../components/footer/footer";
 
 function ProfilePav() {
+  const navigate = useNavigate();
+
+  const handleMenuClick = (item) => {
+    if (item.id === 1) {
+      // Thông Tin Cá Nhân
+      navigate("/profile/info");
+    }
+    // Có thể thêm các điều hướng khác ở đây
+  };
+
   const profileMenuItems = [
     {
       id: 1,
@@ -29,8 +40,8 @@ function ProfilePav() {
     {
       id: 3,
       icon: CreditCard,
-      title: "Phương Thức Thanh Toán",
-      description: "Quản lý thẻ và phương thức thanh toán",
+      title: "Ví Của Bạn",
+      description: "Quản lý số dư tài khoản của bạn",
       hasArrow: true,
     },
     {
@@ -77,6 +88,8 @@ function ProfilePav() {
                   className={`wrapper-profile__menu-item ${
                     item.isLogout ? "wrapper-profile__menu-item--logout" : ""
                   }`}
+                  onClick={() => handleMenuClick(item)}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className="wrapper-profile__menu-item-left">
                     <div className="wrapper-profile__menu-item-icon">
