@@ -7,6 +7,7 @@ import Layout from "./components/layout/Layout";
 import ProfilePav from "./pages/Profile/ProfilePav/ProfilePav";
 import Info from "./pages/Profile/Info/Info";
 import Test from "./pages/test/test";
+import Explore from "./pages/Explore/Explore";
 
 function App() {
   const router = createBrowserRouter([
@@ -32,6 +33,10 @@ function App() {
           ),
         },
         {
+          path: "explore",
+          element: <Explore />,
+        },
+        {
           path: "profile",
           element: (
             //<ProtectRouteAuth>
@@ -47,6 +52,7 @@ function App() {
             //</ProtectRouteAuth>
           ),
         },
+
         {
           path: "test",
           element: (

@@ -52,7 +52,7 @@ function Header() {
             <HomeIcon size={20} />
             <span>Trang Chủ</span>
           </Link>
-          <Link to="#" className="header-sidebar-link">
+          <Link to="/explore" className="header-sidebar-link">
             <Map size={20} />
             <span>Khám Phá</span>
           </Link>
@@ -100,7 +100,7 @@ function Header() {
             <Link to="/" className="header-nav-link">
               Trang Chủ
             </Link>
-            <Link to="#" className="header-nav-link">
+            <Link to="/explore" className="header-nav-link">
               Khám Phá
             </Link>
             <Link to="#" className="header-nav-link">

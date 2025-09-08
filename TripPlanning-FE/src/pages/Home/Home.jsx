@@ -61,11 +61,11 @@ function Home() {
           </button>
         </div>
         <div className="sidebar-content">
-          <a href="#" className="sidebar-link">
+          <a href="/" className="sidebar-link">
             <HomeIcon size={20} />
             <span>Trang Chủ</span>
           </a>
-          <a href="#" className="sidebar-link">
+          <a href="/explore" className="sidebar-link">
             <Map size={20} />
             <span>Khám Phá</span>
           </a>
@@ -117,10 +117,10 @@ function Home() {
           {/* Desktop Navigation */}
           <div className="desktop-nav">
             <div className="nav-links">
-              <a href="#" className="nav-link">
+              <a href="/" className="nav-link">
                 Trang Chủ
               </a>
-              <a href="#" className="nav-link">
+              <a href="/explore" className="nav-link">
                 Khám Phá
               </a>
               <a href="#" className="nav-link">
