@@ -17,9 +17,11 @@ import {
 import "./Home.css";
 import { useSelector } from "react-redux";
 import Footer from "../../components/footer/footer";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -171,7 +173,10 @@ function Home() {
               <Percent size={24} />
               <span>Tạo Kế Hoạch</span>
             </button>
-            <button className="category-btn">
+            <button
+              className="category-btn"
+              onClick={() => navigate("/explore")}
+            >
               <Map size={24} />
               <span>Khám Phá</span>
             </button>

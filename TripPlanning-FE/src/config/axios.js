@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://localhost:7214/api/", 
+    baseURL: "https://prjapi-bya9f9bzb3chgkaf.southeastasia-01.azurewebsites.net/api/", 
 });
 
 const handleBefore = (config) => {
