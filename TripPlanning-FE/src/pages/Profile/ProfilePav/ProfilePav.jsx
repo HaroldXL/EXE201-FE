@@ -7,17 +7,52 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 import Header from "../../../components/header/header";
 import "./ProfilePav.css";
 import Footer from "../../../components/footer/footer";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/redux/features/userSlice";
 
 function ProfilePav() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    Modal.confirm({
+      title: "Xác nhận Đăng Xuất",
+      content: "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?",
+      okText: "Đăng xuất",
+      cancelText: "Hủy",
+      centered: true,
+      onOk() {
+        dispatch(logout());
+        navigate("/");
+      },
+      onCancel() {},
+    });
+  };
 
   const handleMenuClick = (item) => {
     if (item.id === 1) {
       // Thông Tin Cá Nhân
       navigate("/profile/info");
+    }
+    if (item.id === 2) {
+      // Lịch Sử (Kế Hoạch Chuyến Đi)
+      navigate("/profile/history");
+    }
+    if (item.id === 3) {
+      // Ví Của Bạn
+      navigate("/profile/wallet");
+    }
+    if (item.id === 4) {
+      // Trợ Giúp
+      navigate("/profile/help");
+    }
+    if (item.id === 5) {
+      // Đăng Xuất
+      handleLogout();
     }
     // Có thể thêm các điều hướng khác ở đây
   };

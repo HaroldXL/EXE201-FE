@@ -41,7 +41,7 @@
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  padding: 15px 20px;
+  padding: 10px 20px;
 }
 
 .mobile-menu-btn {
@@ -64,8 +64,8 @@
 }
 
 .hero-navigation.scrolled .mobile-menu-btn:hover {
-  background: rgba(10, 82, 181, 0.15);
-  box-shadow: 0 4px 12px rgba(10, 82, 181, 0.2);
+  background: rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .mobile-menu-btn svg {
@@ -74,7 +74,7 @@
 }
 
 .hero-navigation.scrolled .mobile-menu-btn svg {
-  color: #0A52B5;
+  color: #3b82f6;
 }
 
 .hero-navigation.scrolled .mobile-menu-btn {
@@ -108,8 +108,8 @@
 }
 
 .hero-navigation.scrolled .mobile-nav-icon-btn:hover {
-  background: rgba(10, 82, 181, 0.15);
-  box-shadow: 0 4px 12px rgba(10, 82, 181, 0.2);
+  background: rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .mobile-nav-icon-btn svg {
@@ -119,13 +119,88 @@
 }
 
 .hero-navigation.scrolled .mobile-nav-icon-btn svg {
-  color: #0A52B5;
+  color: #3b82f6;
   filter: none;
 }
 
 .hero-navigation.scrolled .mobile-nav-icon-btn {
   background: transparent;
   backdrop-filter: none;
+}
+
+/* Mobile Auth Buttons */
+.mobile-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.mobile-login-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-login-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-register-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-register-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrolled state for mobile auth buttons */
+.hero-navigation.scrolled .mobile-login-btn {
+  background: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+  backdrop-filter: none;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.hero-navigation.scrolled .mobile-login-btn:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.hero-navigation.scrolled .mobile-register-btn {
+  background: #E6F4FF;
+  color: #3b82f6;
+  border: none;
+  backdrop-filter: none;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.hero-navigation.scrolled .mobile-register-btn:hover {
+  background: #BADFFF;
+  color: #3b82f6;
+  border: none;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .desktop-nav {
@@ -319,7 +394,7 @@
 .search-icon {
   position: absolute;
   left: 16px;
-  color: #0A52B5;
+  color: #3b82f6;
   z-index: 1;
 }
 
@@ -368,7 +443,7 @@
 }
 
 .category-btn svg {
-  color: #0A52B5;
+  color: #3b82f6;
   flex-shrink: 0;
 }
 
@@ -402,7 +477,7 @@
 .wrapper-section__title {
   font-size: 18px;
   font-weight: 600;
-  color: #0A52B5;
+  color: #3b82f6;
   margin: 0;
 }
 
@@ -559,7 +634,7 @@
 
   .search-icon {
     left: 20px;
-    color: #0A52B5;
+    color: #3b82f6;
   }
 
   .category-buttons {
@@ -675,8 +750,8 @@
   }
 
   .hero-navigation.scrolled .nav-link:hover {
-    background: rgba(10, 82, 181, 0.1);
-    color: #0A52B5;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
   }
 
   .nav-actions {
@@ -732,7 +807,7 @@
   }
 
   .hero-navigation.scrolled .nav-icon-btn:hover {
-    background: rgba(10, 82, 181, 0.1);
+    background: rgba(59, 130, 246, 0.1);
   }
 
   .nav-icon-btn svg {
@@ -741,11 +816,92 @@
   }
 
   .hero-navigation.scrolled .nav-icon-btn svg {
-    color: #0A52B5;
+    color: #3b82f6;
   }
 
   .nav-icon-btn svg {
     color: white;
+  }
+
+  /* Desktop Auth Buttons */
+  .desktop-auth-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .desktop-auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .desktop-login-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .desktop-login-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .desktop-register-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+  }
+
+  .desktop-register-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Scrolled state for desktop auth buttons */
+  .hero-navigation.scrolled .desktop-login-btn {
+    background: #3b82f6;
+    color: white;
+    border: 1px solid #3b82f6;
+    backdrop-filter: none;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .hero-navigation.scrolled .desktop-login-btn:hover {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  }
+
+  .hero-navigation.scrolled .desktop-register-btn {
+    background: #E6F4FF;
+    color: #3b82f6;
+    border: none;
+    backdrop-filter: none;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .hero-navigation.scrolled .desktop-register-btn:hover {
+    background: #BADFFF;
+    color: #3b82f6;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
   }
 
   .mobile-sidebar {

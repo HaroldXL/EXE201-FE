@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 15px 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -48,13 +48,13 @@
 }
 
 .header-mobile-menu-btn:hover {
-  background: rgba(10, 82, 181, 0.15);
+  background: rgba(59, 130, 246, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(10, 82, 181, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .header-mobile-menu-btn svg {
-  color: #0A52B5;
+  color: #3b82f6;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -77,14 +77,54 @@
 }
 
 .header-mobile-nav-icon-btn:hover {
-  background: rgba(10, 82, 181, 0.15);
+  background: rgba(59, 130, 246, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(10, 82, 181, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .header-mobile-nav-icon-btn svg {
-  color: #0A52B5;
+  color: #3b82f6;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Mobile Auth Buttons */
+.header-mobile-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.header-mobile-login-btn {
+  background: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+}
+
+.header-mobile-login-btn:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.header-mobile-register-btn {
+  background: #E6F4FF;
+  color: #3b82f6;
+  border: none;
+}
+
+.header-mobile-register-btn:hover {
+  background: #BADFFF;
+  color: #3b82f6;
+  border: none;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .header-desktop-nav {
@@ -236,8 +276,8 @@
   }
 
   .header-nav-link:hover {
-    background: rgba(10, 82, 181, 0.1);
-    color: #0A52B5;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
     transform: translateY(-1px);
   }
 
@@ -273,13 +313,57 @@
   }
 
   .header-nav-icon-btn:hover {
-    background: rgba(10, 82, 181, 0.1);
+    background: rgba(59, 130, 246, 0.1);
     transform: translateY(-1px);
   }
 
   .header-nav-icon-btn svg {
-    color: #0A52B5;
+    color: #3b82f6;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Desktop Auth Buttons */
+  .header-desktop-auth-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .header-desktop-auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .header-desktop-login-btn {
+    background: #3b82f6;
+    color: #ffff;
+  }
+
+  .header-desktop-login-btn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  }
+
+  .header-desktop-register-btn {
+    background: #E6F4FF;
+    color: #3b82f6;
+    border: none;
+  }
+
+  .header-desktop-register-btn:hover {
+    background: #BADFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(186, 223, 255, 0.3);
   }
 
   .header-mobile-sidebar {

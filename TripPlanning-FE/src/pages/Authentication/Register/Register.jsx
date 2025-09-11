@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import api from "../../../config/axios";
 import Header from "../../../components/header/header";
+import { message, notification } from "antd";
 
 function Register() {
   const navigate = useNavigate();
@@ -33,11 +34,16 @@ function Register() {
         email: formData.email,
         password: formData.password,
       });
+      message.success("Đăng ký thành công!");
       console.log("Registration successful:", response.data);
       navigate("/login");
     } catch (err) {
       console.error("Registration error:", err);
-      alert("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.");
+      notification.error({
+        message: "Đăng ký thất bại!",
+        description: "Vui lòng thử lại sau.",
+        duration: 2,
+      });
     } finally {
       setIsLoading(false);
     }

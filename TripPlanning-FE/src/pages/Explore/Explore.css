@@ -52,7 +52,7 @@
 .wrapper-explore__search-icon {
   position: absolute;
   left: 16px;
-  color: #0A52B5;
+  color: #3b82f6;
   z-index: 1;
 }
 
@@ -244,7 +244,7 @@
 
   .wrapper-explore__search-icon {
     left: 20px;
-    color: #0A52B5;
+    color: #3b82f6;
   }
 
   .wrapper-explore__search-input {
@@ -305,7 +305,7 @@
 
   .wrapper-explore__search-icon {
     left: 20px;
-    color: #0A52B5;
+    color: #3b82f6;
   }
 
   .wrapper-explore__tabs {

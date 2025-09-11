@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import api from "../../../config/axios";
 import { login } from "../../../store/redux/features/userSlice";
+import { message, notification } from "antd";
 
 function Login() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ function Login() {
         email: formData.email,
         password: formData.password,
       });
+      message.success("Đăng nhập thành công!");
       console.log("Login successful:", response.data);
 
       // Store token if provided
@@ -47,9 +49,14 @@ function Login() {
       // Navigate to home page
       navigate("/");
     } catch (err) {
-      console.error("Login error:", err);
-      // Handle error (show message to user)
-      alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+      notification.error({
+        message: "Đăng nhập thất bại",
+        description:
+          "Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin.",
+        placement: "topRight",
+        duration: 2,
+      });
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
@@ -109,11 +116,7 @@ function Login() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={isLoading}
-          >
+          <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? (
               <div className="loading-content">
                 <CircularProgress size={20} color="inherit" />

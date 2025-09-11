@@ -108,12 +108,33 @@ function Home() {
 
           {/* Mobile Actions */}
           <div className="mobile-nav-actions">
-            <button className="mobile-nav-icon-btn">
-              <Bell size={20} />
-            </button>
-            <button className="mobile-nav-icon-btn">
-              <User size={20} />
-            </button>
+            {user && user.token ? (
+              // Hiển thị notification và avatar khi đã login
+              <>
+                <button className="mobile-nav-icon-btn">
+                  <Bell size={20} />
+                </button>
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="mobile-nav-icon-btn"
+                >
+                  <User size={20} />
+                </button>
+              </>
+            ) : (
+              // Hiển thị nút login và register khi chưa login
+              <>
+                <a href="/login" className="mobile-auth-btn mobile-login-btn">
+                  Đăng nhập
+                </a>
+                <a
+                  href="/register"
+                  className="mobile-auth-btn mobile-register-btn"
+                >
+                  Đăng ký
+                </a>
+              </>
+            )}
           </div>
 
           {/* Desktop Navigation */}
@@ -128,7 +149,7 @@ function Home() {
               <a href="#" className="nav-link">
                 Tạo Kế Hoạch
               </a>
-              <a href="#" className="nav-link">
+              <a href="/chatbot" className="nav-link">
                 Hỏi Đáp AI
               </a>
               <a href="#" className="nav-link">
@@ -136,16 +157,40 @@ function Home() {
               </a>
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <div className="nav-notifications">
-                <button className="nav-icon-btn">
-                  <Bell size={20} />
-                </button>
-              </div>
-              <div className="nav-user-profile">
-                <button className="nav-icon-btn">
-                  <User size={20} />
-                </button>
-              </div>
+              {user && user.token ? (
+                // Hiển thị notification và avatar khi đã login
+                <>
+                  <div className="nav-notifications">
+                    <button className="nav-icon-btn">
+                      <Bell size={20} />
+                    </button>
+                  </div>
+                  <div className="nav-user-profile">
+                    <button
+                      onClick={() => navigate("/profile")}
+                      className="nav-icon-btn"
+                    >
+                      <User size={20} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                // Hiển thị nút login và register khi chưa login
+                <div className="desktop-auth-buttons">
+                  <a
+                    href="/login"
+                    className="desktop-auth-btn desktop-login-btn"
+                  >
+                    Đăng nhập
+                  </a>
+                  <a
+                    href="/register"
+                    className="desktop-auth-btn desktop-register-btn"
+                  >
+                    Đăng ký
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </nav>
@@ -180,7 +225,10 @@ function Home() {
               <Map size={24} />
               <span>Khám Phá</span>
             </button>
-            <button className="category-btn">
+            <button
+              className="category-btn"
+              onClick={() => navigate("/chatbot")}
+            >
               <MessageCircle size={24} />
               <span>Hỏi đáp AI</span>
             </button>

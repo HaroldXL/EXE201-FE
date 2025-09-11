@@ -11,11 +11,14 @@ import {
   Info,
 } from "lucide-react";
 import "./header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Header() {
+  const user = useSelector((store) => store.user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +63,7 @@ function Header() {
             <Percent size={20} />
             <span>Tạo Kế Hoạch</span>
           </Link>
-          <Link to="#" className="header-sidebar-link">
+          <Link to="/chatbot" className="header-sidebar-link">
             <MessageCircle size={20} />
             <span>Hỏi Đáp AI</span>
           </Link>
@@ -86,12 +89,36 @@ function Header() {
 
         {/* Mobile Actions */}
         <div className="header-mobile-nav-actions">
-          <button className="header-mobile-nav-icon-btn">
-            <Bell size={20} />
-          </button>
-          <button className="header-mobile-nav-icon-btn">
-            <User size={20} />
-          </button>
+          {user && user.token ? (
+            // Hiển thị notification và avatar khi đã login
+            <>
+              <button className="header-mobile-nav-icon-btn">
+                <Bell size={20} />
+              </button>
+              <button
+                onClick={() => navigate("/profile")}
+                className="header-mobile-nav-icon-btn"
+              >
+                <User size={20} />
+              </button>
+            </>
+          ) : (
+            // Hiển thị nút login và register khi chưa login
+            <>
+              <Link
+                to="/login"
+                className="header-mobile-auth-btn header-mobile-login-btn"
+              >
+                Đăng nhập
+              </Link>
+              <Link
+                to="/register"
+                className="header-mobile-auth-btn header-mobile-register-btn"
+              >
+                Đăng ký
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Desktop Navigation */}
@@ -106,7 +133,7 @@ function Header() {
             <Link to="#" className="header-nav-link">
               Tạo Kế Hoạch
             </Link>
-            <Link to="#" className="header-nav-link">
+            <Link to="/chatbot" className="header-nav-link">
               Hỏi Đáp AI
             </Link>
             <Link to="#" className="header-nav-link">
@@ -114,16 +141,40 @@ function Header() {
             </Link>
           </div>
           <div className="header-nav-actions">
-            <div className="header-nav-notifications">
-              <button className="header-nav-icon-btn">
-                <Bell size={20} />
-              </button>
-            </div>
-            <div className="header-nav-user-profile">
-              <button className="header-nav-icon-btn">
-                <User size={20} />
-              </button>
-            </div>
+            {user && user.token ? (
+              // Hiển thị notification và avatar khi đã login
+              <>
+                <div className="header-nav-notifications">
+                  <button className="header-nav-icon-btn">
+                    <Bell size={20} />
+                  </button>
+                </div>
+                <div className="header-nav-user-profile">
+                  <button
+                    onClick={() => navigate("/profile")}
+                    className="header-nav-icon-btn"
+                  >
+                    <User size={20} />
+                  </button>
+                </div>
+              </>
+            ) : (
+              // Hiển thị nút login và register khi chưa login
+              <div className="header-desktop-auth-buttons">
+                <Link
+                  to="/login"
+                  className="header-desktop-auth-btn header-desktop-login-btn"
+                >
+                  Đăng nhập
+                </Link>
+                <Link
+                  to="/register"
+                  className="header-desktop-auth-btn header-desktop-register-btn"
+                >
+                  Đăng ký
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </nav>
