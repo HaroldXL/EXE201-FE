@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import Chatbot from "./pages/Chatbot/Chatbot";
 import Explore from "./pages/Explore/LocationList/Explore";
 import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
+import Search from "./pages/Search/Search";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -89,6 +90,10 @@ function App() {
             <Chatbot />
             //</ProtectRouteAuth>
           ),
+        },
+        {
+          path: "search",
+          element: <Search />,
         },
         {
           path: "test",

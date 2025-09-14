@@ -286,6 +286,15 @@
     gap: 8px;
   }
 
+  .header-nav-search {
+    display: flex;
+    background: transparent;
+    border-radius: 12px;
+    padding: 8px;
+    margin-right: 16px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
   .header-nav-notifications {
     display: flex;
     background: transparent;

@@ -9,6 +9,7 @@ import {
   Percent,
   MessageCircle,
   Info,
+  Search,
 } from "lucide-react";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -90,8 +91,11 @@ function Header() {
         {/* Mobile Actions */}
         <div className="header-mobile-nav-actions">
           {user && user.token ? (
-            // Hiển thị notification và avatar khi đã login
+            // Hiển thị search, notification và avatar khi đã login
             <>
+              <button className="header-mobile-nav-icon-btn">
+                <Search size={20} />
+              </button>
               <button className="header-mobile-nav-icon-btn">
                 <Bell size={20} />
               </button>
@@ -103,8 +107,11 @@ function Header() {
               </button>
             </>
           ) : (
-            // Hiển thị nút login và register khi chưa login
+            // Hiển thị search, login và register khi chưa login
             <>
+              <button className="header-mobile-nav-icon-btn">
+                <Search size={20} />
+              </button>
               <Link
                 to="/login"
                 className="header-mobile-auth-btn header-mobile-login-btn"
@@ -142,8 +149,13 @@ function Header() {
           </div>
           <div className="header-nav-actions">
             {user && user.token ? (
-              // Hiển thị notification và avatar khi đã login
+              // Hiển thị search, notification và avatar khi đã login
               <>
+                <div className="header-nav-search">
+                  <button className="header-nav-icon-btn">
+                    <Search size={20} />
+                  </button>
+                </div>
                 <div className="header-nav-notifications">
                   <button className="header-nav-icon-btn">
                     <Bell size={20} />
@@ -159,21 +171,28 @@ function Header() {
                 </div>
               </>
             ) : (
-              // Hiển thị nút login và register khi chưa login
-              <div className="header-desktop-auth-buttons">
-                <Link
-                  to="/login"
-                  className="header-desktop-auth-btn header-desktop-login-btn"
-                >
-                  Đăng nhập
-                </Link>
-                <Link
-                  to="/register"
-                  className="header-desktop-auth-btn header-desktop-register-btn"
-                >
-                  Đăng ký
-                </Link>
-              </div>
+              // Hiển thị search, login và register khi chưa login
+              <>
+                <div className="header-nav-search">
+                  <button className="header-nav-icon-btn">
+                    <Search size={20} />
+                  </button>
+                </div>
+                <div className="header-desktop-auth-buttons">
+                  <Link
+                    to="/login"
+                    className="header-desktop-auth-btn header-desktop-login-btn"
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="header-desktop-auth-btn header-desktop-register-btn"
+                  >
+                    Đăng ký
+                  </Link>
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -80,6 +80,19 @@ function LocationDetail() {
     navigate(`/explore/${locationId}`);
   };
 
+  const handleGoogleMapClick = () => {
+    if (location.googlePlaceId) {
+      // Open Google Maps with place ID
+      const googleMapsUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
+      window.open(googleMapsUrl, "_blank");
+    } else if (location.address || location.name) {
+      // Fallback to search query if no place ID
+      const query = encodeURIComponent(location.address || location.name);
+      const googleMapsUrl = `https://www.google.com/maps/search/${query}`;
+      window.open(googleMapsUrl, "_blank");
+    }
+  };
+
   if (loading) {
     return (
       <div>
@@ -319,7 +332,10 @@ function LocationDetail() {
               </div>
 
               {/* View on Google Maps button */}
-              <button className="wrapper-location-detail__maps-btn">
+              <button
+                className="wrapper-location-detail__maps-btn"
+                onClick={handleGoogleMapClick}
+              >
                 <ExternalLink size={16} />
                 <span>Xem trên Google Map</span>
               </button>
