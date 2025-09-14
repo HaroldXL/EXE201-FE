@@ -11,9 +11,10 @@ import Layout from "./components/layout/Layout";
 import ProfilePav from "./pages/Profile/ProfilePav/ProfilePav";
 import Info from "./pages/Profile/Info/Info";
 import Test from "./pages/test/test";
-import Explore from "./pages/Explore/Explore";
 import { useSelector } from "react-redux";
 import Chatbot from "./pages/Chatbot/Chatbot";
+import Explore from "./pages/Explore/LocationList/Explore";
+import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -60,6 +61,10 @@ function App() {
         {
           path: "explore",
           element: <Explore />,
+        },
+        {
+          path: "explore/:id",
+          element: <LocationDetail />,
         },
         {
           path: "profile",

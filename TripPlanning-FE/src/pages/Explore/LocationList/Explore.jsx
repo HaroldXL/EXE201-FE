@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Search, Star, MapPin } from "lucide-react";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
-import api from "../../config/axios";
+import { Skeleton } from "@mui/material";
+import { Empty } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../../../components/header/header";
+import Footer from "../../../components/footer/footer";
+import api from "../../../config/axios";
 import "./Explore.css";
 
 function Explore() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("noi-bat");
   const [attractions, setAttractions] = useState([]);
@@ -13,7 +18,41 @@ function Explore() {
   const [loading, setLoading] = useState(true);
   const [_currentPage, setCurrentPage] = useState(1);
   const [_totalCount, setTotalCount] = useState(0);
-  const pageSize = 10;
+  const pageSize = 100;
+
+  // Skeleton Card Component
+  const SkeletonCard = () => (
+    <div className="wrapper-explore__card">
+      <div className="wrapper-explore__card-image">
+        <Skeleton
+          variant="rectangular"
+          width="100%"
+          height={200}
+          animation="wave"
+          sx={{ borderRadius: "12px 12px 0 0" }}
+        />
+      </div>
+      <div className="wrapper-explore__card-content">
+        <div className="wrapper-explore__card-top">
+          <Skeleton variant="text" width={80} height={24} animation="wave" />
+          <Skeleton variant="text" width={60} height={20} animation="wave" />
+        </div>
+        <Skeleton
+          variant="text"
+          width="90%"
+          height={28}
+          animation="wave"
+          sx={{ mt: 1 }}
+        />
+        <div
+          className="wrapper-explore__card-location"
+          style={{ marginTop: "8px" }}
+        >
+          <Skeleton variant="text" width="70%" height={20} animation="wave" />
+        </div>
+      </div>
+    </div>
+  );
 
   // API calls
   const fetchTopics = async () => {
@@ -25,15 +64,28 @@ function Explore() {
     }
   };
 
-  const fetchAttractions = async (page = 1) => {
+  const fetchAttractions = async (topicId = null, page = 1) => {
     try {
       setLoading(true);
-      const response = await api.get("/Location/list", {
-        params: {
-          page: page,
-          pageSize: pageSize,
-        },
-      });
+      let response;
+
+      if (topicId) {
+        // Fetch locations by specific topic
+        response = await api.get(`/Location/topic/${topicId}`, {
+          params: {
+            page: page,
+            pageSize: pageSize,
+          },
+        });
+      } else {
+        // Fetch all locations for "Nổi Bật" tab
+        response = await api.get("/Location/list", {
+          params: {
+            page: page,
+            pageSize: pageSize,
+          },
+        });
+      }
 
       if (response.data) {
         setAttractions(response.data.items || []);
@@ -50,26 +102,62 @@ function Explore() {
 
   useEffect(() => {
     fetchTopics();
-    fetchAttractions();
-  }, []);
+
+    // Check for topic parameter in URL
+    const urlParams = new URLSearchParams(location.search);
+    const topicParam = urlParams.get("topic");
+
+    if (topicParam) {
+      // If topic parameter exists, we need to wait for topics to load first
+      // The tab setting will be handled in the second useEffect
+      fetchAttractions(parseInt(topicParam), 1);
+    } else {
+      fetchAttractions();
+    }
+  }, [location.search]);
+
+  // Handle URL topic parameter after topics are loaded
+  useEffect(() => {
+    if (topics.length > 0) {
+      const urlParams = new URLSearchParams(location.search);
+      const topicParam = urlParams.get("topic");
+
+      if (topicParam) {
+        const topicId = parseInt(topicParam);
+        const matchingTopic = topics.find((topic) => topic.id === topicId);
+
+        if (matchingTopic) {
+          const tabId = matchingTopic.name.toLowerCase().replace(/\s+/g, "-");
+          setActiveTab(tabId);
+        }
+      }
+    }
+  }, [topics, location.search]);
 
   // Update tabs based on API topics
   const tabs = [
-    { id: "noi-bat", label: "Nổi Bật" },
+    { id: "noi-bat", label: "Nổi Bật", topicId: null },
     ...topics.map((topic) => ({
       id: topic.name.toLowerCase().replace(/\s+/g, "-"),
       label: topic.name,
+      topicId: topic.id, // Use topic.id as topicId
     })),
   ];
+
+  // Handle tab change and fetch attractions for selected topic
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    const selectedTab = tabs.find((tab) => tab.id === tabId);
+    if (selectedTab) {
+      fetchAttractions(selectedTab.topicId, 1);
+    }
+  };
 
   const filteredAttractions = attractions.filter((attraction) => {
     const matchesSearch = attraction.name
       ?.toLowerCase()
       .includes(searchQuery.toLowerCase());
-    const matchesTab =
-      activeTab === "noi-bat" ||
-      attraction.topicName === tabs.find((tab) => tab.id === activeTab)?.label;
-    return matchesSearch && matchesTab;
+    return matchesSearch; // No need to filter by tab since API already filters by topic
   });
 
   return (
@@ -104,7 +192,7 @@ function Explore() {
                 className={`wrapper-explore__tab ${
                   activeTab === tab.id ? "wrapper-explore__tab--active" : ""
                 }`}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
               >
                 <span>{tab.label}</span>
               </button>
@@ -114,14 +202,17 @@ function Explore() {
           {/* Attractions Grid */}
           <div className="wrapper-explore__grid">
             {loading ? (
-              <div className="wrapper-explore__loading">
-                <p>Đang tải dữ liệu...</p>
-              </div>
+              // Show skeleton cards while loading
+              Array.from({ length: 6 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
             ) : filteredAttractions.length > 0 ? (
-              filteredAttractions.map((attraction) => (
+              filteredAttractions.map((attraction, index) => (
                 <div
-                  key={attraction.locationId}
-                  className="wrapper-explore__card"
+                  key={attraction.id}
+                  className="wrapper-explore__card wrapper-explore__card--fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => navigate(`/explore/${attraction.id}`)}
                 >
                   <div className="wrapper-explore__card-image">
                     <img
@@ -131,6 +222,12 @@ function Explore() {
                       }
                       alt={attraction.name}
                       className="wrapper-explore__card-img"
+                      onLoad={(e) => {
+                        e.target.style.opacity = "1";
+                      }}
+                      onError={(e) => {
+                        e.target.style.opacity = "1";
+                      }}
                     />
                   </div>
                   <div className="wrapper-explore__card-content">
@@ -144,8 +241,7 @@ function Explore() {
                           className="wrapper-explore__card-star"
                         />
                         <span className="wrapper-explore__card-rating-text">
-                          {attraction.averageRating || 0} (
-                          {attraction.reviewCount || 0})
+                          {attraction.averageRating || 0}
                         </span>
                       </div>
                     </div>
@@ -166,7 +262,10 @@ function Explore() {
               ))
             ) : (
               <div className="wrapper-explore__no-results">
-                <p>Không tìm thấy địa điểm nào</p>
+                <Empty
+                  description="Không tìm thấy địa điểm nào"
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                />
               </div>
             )}
           </div>

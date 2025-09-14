@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Search,
   Percent,
@@ -13,11 +13,14 @@ import {
   User,
   Home as HomeIcon,
   Info,
+  Star,
 } from "lucide-react";
 import "./Home.css";
+import "../Explore/LocationList/Explore.css";
 import { useSelector } from "react-redux";
 import Footer from "../../components/footer/footer";
 import { useNavigate } from "react-router-dom";
+import api from "../../config/axios";
 
 function Home() {
   const user = useSelector((store) => store.user);
@@ -25,6 +28,71 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [popularLocations, setPopularLocations] = useState([]);
+  const [historyLocations, setHistoryLocations] = useState([]);
+  const [cultureLocations, setCultureLocations] = useState([]);
+  const [natureLocations, setNatureLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch popular locations
+  const fetchPopularLocations = async () => {
+    try {
+      const response = await api.get("/Location/list", {
+        params: { page: 1, pageSize: 6 },
+      });
+      setPopularLocations(response.data.items || []);
+    } catch (error) {
+      console.error("Error fetching popular locations:", error);
+    }
+  };
+
+  // Fetch entertainment locations (topic ID 7 is "Giải trí")
+  const fetchHistoryLocations = async () => {
+    try {
+      const response = await api.get("/Location/topic/3", {
+        params: { page: 1, pageSize: 3 },
+      });
+      setHistoryLocations(response.data.items || []);
+    } catch (error) {
+      console.error("Error fetching history locations:", error);
+    }
+  };
+
+  // Fetch culture locations (topic ID 2 is "Văn Hóa")
+  const fetchCultureLocations = async () => {
+    try {
+      const response = await api.get("/Location/topic/5", {
+        params: { page: 1, pageSize: 3 },
+      });
+      setCultureLocations(response.data.items || []);
+    } catch (error) {
+      console.error("Error fetching culture locations:", error);
+    }
+  };
+
+  // Fetch nature locations (topic ID 3 is "Thiên Nhiên")
+  const fetchNatureLocations = async () => {
+    try {
+      const response = await api.get("/Location/topic/1", {
+        params: { page: 1, pageSize: 3 },
+      });
+      setNatureLocations(response.data.items || []);
+    } catch (error) {
+      console.error("Error fetching nature locations:", error);
+    }
+  };
+
+  // Fetch all data on component mount
+  const fetchHomeData = useCallback(async () => {
+    setLoading(true);
+    await Promise.all([
+      fetchPopularLocations(),
+      fetchHistoryLocations(),
+      fetchCultureLocations(),
+      fetchNatureLocations(),
+    ]);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -43,6 +111,10 @@ function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    fetchHomeData();
+  }, [fetchHomeData]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -310,121 +382,343 @@ function Home() {
           <section className="wrapper-section">
             <div className="wrapper-section__header">
               <h2 className="wrapper-section__title">Địa Điểm Nổi Bật</h2>
-              <button className="wrapper-section__view-more">Xem Thêm</button>
+              <button
+                className="wrapper-section__view-more"
+                onClick={() => navigate("/explore")}
+              >
+                Xem Thêm
+              </button>
             </div>
             <div className="wrapper-cards wrapper-cards--destination">
-              <div className="wrapper-card wrapper-card--destination">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
-                    alt="Dinh Độc Lập"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="wrapper-card wrapper-card--destination">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
-                    alt="Dinh Độc Lập"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="wrapper-card wrapper-card--destination">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop"
-                    alt="Dinh Độc Lập"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Dinh Độc Lập</h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Thành, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="wrapper-card wrapper-card--destination">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
-                    alt="Nhà Thờ Đức Bà Sài Gòn"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">
-                    Nhà Thờ Đức Bà Sài Gòn
-                  </h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
+              {loading
+                ? // Show loading placeholders
+                  Array.from({ length: 6 }).map((_, index) => (
+                    <div key={index} className="wrapper-explore__card">
+                      <div className="wrapper-explore__card-image">
+                        <div className="loading-placeholder"></div>
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="loading-text"></div>
+                          <div className="loading-text-small"></div>
+                        </div>
+                        <div className="loading-text"></div>
+                        <div className="loading-text-small"></div>
+                      </div>
+                    </div>
+                  ))
+                : popularLocations.map((location) => (
+                    <div
+                      key={location.id}
+                      className="wrapper-explore__card"
+                      onClick={() => navigate(`/explore/${location.id}`)}
+                    >
+                      <div className="wrapper-explore__card-image">
+                        <img
+                          src={
+                            location.imageUrl ||
+                            "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400&h=300&fit=crop"
+                          }
+                          alt={location.name}
+                          className="wrapper-explore__card-img"
+                          onLoad={(e) => {
+                            e.target.style.opacity = "1";
+                          }}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400&h=300&fit=crop";
+                            e.target.style.opacity = "1";
+                          }}
+                        />
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="wrapper-explore__card-category">
+                            {location.topicName || "Địa điểm"}
+                          </div>
+                          <div className="wrapper-explore__card-rating">
+                            <Star
+                              size={16}
+                              className="wrapper-explore__card-star"
+                            />
+                            <span className="wrapper-explore__card-rating-text">
+                              {location.averageRating || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="wrapper-explore__card-title">
+                          {location.name}
+                        </h3>
+                        <div className="wrapper-explore__card-location">
+                          <MapPin
+                            size={14}
+                            className="wrapper-explore__card-location-icon"
+                          />
+                          <span className="wrapper-explore__card-location-text">
+                            {location.districtName}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
             </div>
           </section>
 
-          {/* Vui Chơi */}
+          {/* Lịch Sử */}
           <section className="wrapper-section">
             <div className="wrapper-section__header">
-              <h2 className="wrapper-section__title">Vui Chơi</h2>
-              <button className="wrapper-section__view-more">Xem Thêm</button>
+              <h2 className="wrapper-section__title">Lịch Sử</h2>
+              <button
+                className="wrapper-section__view-more"
+                onClick={() => navigate("/explore?topic=3")}
+              >
+                Xem Thêm
+              </button>
             </div>
-            <div className="wrapper-cards wrapper-cards--entertainment">
-              <div className="wrapper-card wrapper-card--entertainment">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&h=200&fit=crop"
-                    alt="Thảo Cầm Viên"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Thảo Cầm Viên</h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
+            <div className="wrapper-cards wrapper-cards--history">
+              {loading
+                ? // Show loading placeholders
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="wrapper-explore__card">
+                      <div className="wrapper-explore__card-image">
+                        <div className="loading-placeholder"></div>
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="loading-text"></div>
+                          <div className="loading-text-small"></div>
+                        </div>
+                        <div className="loading-text"></div>
+                        <div className="loading-text-small"></div>
+                      </div>
+                    </div>
+                  ))
+                : historyLocations.map((location) => (
+                    <div
+                      key={location.id}
+                      className="wrapper-explore__card"
+                      onClick={() => navigate(`/explore/${location.id}`)}
+                    >
+                      <div className="wrapper-explore__card-image">
+                        <img
+                          src={
+                            location.imageUrl ||
+                            "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
+                          }
+                          alt={location.name}
+                          className="wrapper-explore__card-img"
+                          onLoad={(e) => {
+                            e.target.style.opacity = "1";
+                          }}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop";
+                            e.target.style.opacity = "1";
+                          }}
+                        />
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="wrapper-explore__card-category">
+                            {location.topicName || "Lịch sử"}
+                          </div>
+                          <div className="wrapper-explore__card-rating">
+                            <Star
+                              size={16}
+                              className="wrapper-explore__card-star"
+                            />
+                            <span className="wrapper-explore__card-rating-text">
+                              {location.averageRating || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="wrapper-explore__card-title">
+                          {location.name}
+                        </h3>
+                        <div className="wrapper-explore__card-location">
+                          <MapPin
+                            size={14}
+                            className="wrapper-explore__card-location-icon"
+                          />
+                          <span className="wrapper-explore__card-location-text">
+                            {location.districtName}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          </section>
 
-              <div className="wrapper-card wrapper-card--entertainment">
-                <div className="wrapper-card__image-container">
-                  <img
-                    src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
-                    alt="Phố Đi Bộ Nguyễn Huệ"
-                    className="wrapper-card__image"
-                  />
-                </div>
-                <div className="wrapper-card__info">
-                  <h3 className="wrapper-card__title">Phố Đi Bộ Nguyễn Huệ</h3>
-                  <div className="wrapper-card__meta-item wrapper-card__meta-item--location">
-                    <MapPin size={16} />
-                    <span>Bến Nghé, Quận 1, Hồ Chí Minh</span>
-                  </div>
-                </div>
-              </div>
+          {/* Văn Hóa */}
+          <section className="wrapper-section">
+            <div className="wrapper-section__header">
+              <h2 className="wrapper-section__title">Văn Hóa</h2>
+              <button
+                className="wrapper-section__view-more"
+                onClick={() => navigate("/explore?topic=5")}
+              >
+                Xem Thêm
+              </button>
+            </div>
+            <div className="wrapper-cards wrapper-cards--culture">
+              {loading
+                ? // Show loading placeholders
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="wrapper-explore__card">
+                      <div className="wrapper-explore__card-image">
+                        <div className="loading-placeholder"></div>
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="loading-text"></div>
+                          <div className="loading-text-small"></div>
+                        </div>
+                        <div className="loading-text"></div>
+                        <div className="loading-text-small"></div>
+                      </div>
+                    </div>
+                  ))
+                : cultureLocations.map((location) => (
+                    <div
+                      key={location.id}
+                      className="wrapper-explore__card"
+                      onClick={() => navigate(`/explore/${location.id}`)}
+                    >
+                      <div className="wrapper-explore__card-image">
+                        <img
+                          src={
+                            location.imageUrl ||
+                            "https://images.unsplash.com/photo-1555400113-d6ec8afb3c0d?w=400&h=300&fit=crop"
+                          }
+                          alt={location.name}
+                          className="wrapper-explore__card-img"
+                          onLoad={(e) => {
+                            e.target.style.opacity = "1";
+                          }}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://images.unsplash.com/photo-1555400113-d6ec8afb3c0d?w=400&h=300&fit=crop";
+                            e.target.style.opacity = "1";
+                          }}
+                        />
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="wrapper-explore__card-category">
+                            {location.topicName || "Văn hóa"}
+                          </div>
+                          <div className="wrapper-explore__card-rating">
+                            <Star
+                              size={16}
+                              className="wrapper-explore__card-star"
+                            />
+                            <span className="wrapper-explore__card-rating-text">
+                              {location.averageRating || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="wrapper-explore__card-title">
+                          {location.name}
+                        </h3>
+                        <div className="wrapper-explore__card-location">
+                          <MapPin
+                            size={14}
+                            className="wrapper-explore__card-location-icon"
+                          />
+                          <span className="wrapper-explore__card-location-text">
+                            {location.districtName}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          </section>
+
+          {/* Thiên Nhiên */}
+          <section className="wrapper-section">
+            <div className="wrapper-section__header">
+              <h2 className="wrapper-section__title">Thiên Nhiên</h2>
+              <button
+                className="wrapper-section__view-more"
+                onClick={() => navigate("/explore?topic=1")}
+              >
+                Xem Thêm
+              </button>
+            </div>
+            <div className="wrapper-cards wrapper-cards--nature">
+              {loading
+                ? // Show loading placeholders
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="wrapper-explore__card">
+                      <div className="wrapper-explore__card-image">
+                        <div className="loading-placeholder"></div>
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="loading-text"></div>
+                          <div className="loading-text-small"></div>
+                        </div>
+                        <div className="loading-text"></div>
+                        <div className="loading-text-small"></div>
+                      </div>
+                    </div>
+                  ))
+                : natureLocations.map((location) => (
+                    <div
+                      key={location.id}
+                      className="wrapper-explore__card"
+                      onClick={() => navigate(`/explore/${location.id}`)}
+                    >
+                      <div className="wrapper-explore__card-image">
+                        <img
+                          src={
+                            location.imageUrl ||
+                            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+                          }
+                          alt={location.name}
+                          className="wrapper-explore__card-img"
+                          onLoad={(e) => {
+                            e.target.style.opacity = "1";
+                          }}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop";
+                            e.target.style.opacity = "1";
+                          }}
+                        />
+                      </div>
+                      <div className="wrapper-explore__card-content">
+                        <div className="wrapper-explore__card-top">
+                          <div className="wrapper-explore__card-category">
+                            {location.topicName || "Thiên nhiên"}
+                          </div>
+                          <div className="wrapper-explore__card-rating">
+                            <Star
+                              size={16}
+                              className="wrapper-explore__card-star"
+                            />
+                            <span className="wrapper-explore__card-rating-text">
+                              {location.averageRating || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="wrapper-explore__card-title">
+                          {location.name}
+                        </h3>
+                        <div className="wrapper-explore__card-location">
+                          <MapPin
+                            size={14}
+                            className="wrapper-explore__card-location-icon"
+                          />
+                          <span className="wrapper-explore__card-location-text">
+                            {location.districtName}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
             </div>
           </section>
         </main>

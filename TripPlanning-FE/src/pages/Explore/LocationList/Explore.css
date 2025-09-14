@@ -144,6 +144,24 @@
   cursor: pointer;
 }
 
+/* Fade-in animation for cards when loading completes */
+.wrapper-explore__card--fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeIn 0.6s ease-out forwards;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .wrapper-explore__card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -160,11 +178,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.5s ease;
+  opacity: 0;
 }
 
 .wrapper-explore__card:hover .wrapper-explore__card-img {
   transform: scale(1.05);
+}
+
+/* Ensure loaded images are visible */
+.wrapper-explore__card-img[style*="opacity: 1"] {
+  opacity: 1 !important;
 }
 
 .wrapper-explore__card-category {
@@ -352,10 +376,51 @@
   padding: 40px 20px;
   color: #6b7280;
   font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper-explore__no-results .ant-empty {
+  margin: 0;
+}
+
+.wrapper-explore__no-results .ant-empty-description {
+  color: #6b7280;
+  font-size: 16px;
 }
 
 .wrapper-explore__loading {
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* Skeleton Cards Animation */
+.wrapper-explore__card .MuiSkeleton-root {
+  animation-duration: 1.5s;
+}
+
+.wrapper-explore__card:nth-child(1) .MuiSkeleton-root {
+  animation-delay: 0s;
+}
+
+.wrapper-explore__card:nth-child(2) .MuiSkeleton-root {
+  animation-delay: 0.1s;
+}
+
+.wrapper-explore__card:nth-child(3) .MuiSkeleton-root {
+  animation-delay: 0.2s;
+}
+
+.wrapper-explore__card:nth-child(4) .MuiSkeleton-root {
+  animation-delay: 0.3s;
+}
+
+.wrapper-explore__card:nth-child(5) .MuiSkeleton-root {
+  animation-delay: 0.4s;
+}
+
+.wrapper-explore__card:nth-child(6) .MuiSkeleton-root {
+  animation-delay: 0.5s;
 }
 
 @keyframes pulse {
