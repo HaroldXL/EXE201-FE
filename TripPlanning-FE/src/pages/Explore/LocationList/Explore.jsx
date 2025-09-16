@@ -95,6 +95,7 @@ function Explore() {
     } catch (error) {
       console.error("Error fetching attractions:", error);
       setAttractions([]);
+      // You could add a toast notification here to show user-friendly error message
     } finally {
       setLoading(false);
     }
