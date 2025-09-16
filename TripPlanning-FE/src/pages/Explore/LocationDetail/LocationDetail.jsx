@@ -81,15 +81,42 @@ function LocationDetail() {
   };
 
   const handleGoogleMapClick = () => {
+    // Detect if user is on mobile device
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
     if (location.googlePlaceId) {
-      // Open Google Maps with place ID
-      const googleMapsUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
-      window.open(googleMapsUrl, "_blank");
+      if (isMobile) {
+        // For mobile: Use Google Maps app URL scheme
+        const mobileUrl = `https://maps.google.com/?q=place_id:${location.googlePlaceId}`;
+        window.open(mobileUrl, "_blank");
+      } else {
+        // For desktop: Use web Google Maps
+        const desktopUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
+        window.open(desktopUrl, "_blank");
+      }
     } else if (location.address || location.name) {
-      // Fallback to search query if no place ID
-      const query = encodeURIComponent(location.address || location.name);
-      const googleMapsUrl = `https://www.google.com/maps/search/${query}`;
-      window.open(googleMapsUrl, "_blank");
+      // Build search query with more specific information
+      let searchQuery = location.name;
+      if (location.address) {
+        searchQuery += `, ${location.address}`;
+      } else if (location.districtName) {
+        searchQuery += `, ${location.districtName}, Ho Chi Minh City, Vietnam`;
+      }
+
+      const encodedQuery = encodeURIComponent(searchQuery);
+
+      if (isMobile) {
+        // For mobile: Use Google Maps app URL scheme
+        const mobileUrl = `https://maps.google.com/?q=${encodedQuery}`;
+        window.open(mobileUrl, "_blank");
+      } else {
+        // For desktop: Use web Google Maps
+        const desktopUrl = `https://www.google.com/maps/search/${encodedQuery}`;
+        window.open(desktopUrl, "_blank");
+      }
     }
   };
 
