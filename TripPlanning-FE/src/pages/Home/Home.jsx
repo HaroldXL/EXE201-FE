@@ -143,7 +143,7 @@ function Home() {
             <Map size={20} />
             <span>Khám Phá</span>
           </a>
-          <a href="#" className="sidebar-link">
+          <a href="/trip-planning" className="sidebar-link">
             <Percent size={20} />
             <span>Tạo Kế Hoạch</span>
           </a>
@@ -224,7 +224,7 @@ function Home() {
               <a href="/explore" className="nav-link">
                 Khám Phá
               </a>
-              <a href="#" className="nav-link">
+              <a href="/trip-planning" className="nav-link">
                 Tạo Kế Hoạch
               </a>
               <a href="/chatbot" className="nav-link">
@@ -304,7 +304,10 @@ function Home() {
 
           {/* Category Buttons */}
           <div className="category-buttons">
-            <button className="category-btn">
+            <button
+              className="category-btn"
+              onClick={() => navigate("/trip-planning")}
+            >
               <Percent size={24} />
               <span>Tạo Kế Hoạch</span>
             </button>

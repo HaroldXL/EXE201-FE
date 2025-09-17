@@ -60,7 +60,7 @@ function Header() {
             <Map size={20} />
             <span>Khám Phá</span>
           </Link>
-          <Link to="#" className="header-sidebar-link">
+          <Link to="/trip-planning" className="header-sidebar-link">
             <Percent size={20} />
             <span>Tạo Kế Hoạch</span>
           </Link>
@@ -137,7 +137,7 @@ function Header() {
             <Link to="/explore" className="header-nav-link">
               Khám Phá
             </Link>
-            <Link to="#" className="header-nav-link">
+            <Link to="/trip-planning" className="header-nav-link">
               Tạo Kế Hoạch
             </Link>
             <Link to="/chatbot" className="header-nav-link">

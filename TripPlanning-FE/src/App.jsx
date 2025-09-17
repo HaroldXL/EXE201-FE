@@ -16,6 +16,7 @@ import Chatbot from "./pages/Chatbot/Chatbot";
 import Explore from "./pages/Explore/LocationList/Explore";
 import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
 import Search from "./pages/Search/Search";
+import TripPlanning from "./pages/TripPlanning/TripPlanning";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -94,6 +95,11 @@ function App() {
         {
           path: "search",
           element: <Search />,
+        },
+
+        {
+          path: "trip-planning",
+          element: <TripPlanning />,
         },
         {
           path: "test",
