@@ -16,7 +16,8 @@ import Chatbot from "./pages/Chatbot/Chatbot";
 import Explore from "./pages/Explore/LocationList/Explore";
 import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
 import Search from "./pages/Search/Search";
-import TripPlanning from "./pages/TripPlanning/TripPlanning";
+import TripPlanning from "./pages/TripPlanning/TripCreate/TripPlanning";
+import History from "./pages/Profile/History/History";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -85,20 +86,27 @@ function App() {
           ),
         },
         {
-          path: "chatbot",
+          path: "profile/history",
           element: (
-            //<ProtectRouteAuth>
-            <Chatbot />
-            //</ProtectRouteAuth>
+            <ProtectUserProfile>
+              <History />
+            </ProtectUserProfile>
           ),
+        },
+        {
+          path: "chatbot",
+          element: <Chatbot />,
         },
         {
           path: "search",
           element: <Search />,
         },
-
         {
           path: "trip-planning",
+          element: <TripPlanning />,
+        },
+        {
+          path: "trip-planning/:id",
           element: <TripPlanning />,
         },
         {

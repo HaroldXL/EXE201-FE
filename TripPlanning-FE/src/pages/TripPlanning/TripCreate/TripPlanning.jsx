@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { Calendar, TimePicker, ConfigProvider, Modal } from "antd";
+import React, { use, useState } from "react";
+import {
+  Calendar,
+  TimePicker,
+  ConfigProvider,
+  Modal,
+  notification,
+} from "antd";
 import dayjs from "dayjs";
 import locale from "antd/locale/vi_VN";
 import "dayjs/locale/vi";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Clock,
@@ -17,9 +24,10 @@ import {
   Star,
   Globe,
 } from "lucide-react";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
+import Header from "../../../components/header/header";
+import Footer from "../../../components/footer/footer";
 import "./TripPlanning.css";
+import { useSelector } from "react-redux";
 
 // Set dayjs locale to Vietnamese
 dayjs.locale("vi");
@@ -441,10 +449,26 @@ const Step4 = ({ data, onUpdate, onNext, onBack }) => {
 function TripPlanning() {
   const [currentStep, setCurrentStep] = useState(-1); // -1 for welcome screen
   const [tripData, setTripData] = useState({});
+  const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
 
   const totalSteps = 5;
 
   const handleStart = () => {
+    // Check if user is logged in
+    if (!user) {
+      notification.warning({
+        message: "Yêu cầu đăng nhập",
+        description:
+          "Bạn cần đăng nhập để tạo kế hoạch chuyến đi. Vui lòng đăng nhập trước.",
+        duration: 3,
+        placement: "topRight",
+      });
+      // Navigate to login page
+      navigate("/login");
+      return;
+    }
+
     setCurrentStep(0);
   };
 

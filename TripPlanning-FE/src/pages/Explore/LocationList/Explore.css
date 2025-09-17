@@ -258,7 +258,7 @@
 /* Tablet Styles */
 @media (min-width: 768px) {
   .wrapper-explore {
-    max-width: 800px;
+    max-width: 1060px;
     padding: 100px 40px 40px;
   }
 
@@ -307,8 +307,8 @@
 /* Desktop Styles */
 @media (min-width: 1024px) {
   .wrapper-explore {
-    max-width: 1200px;
-    padding: 100px 60px 60px;
+    max-width: 1060px;
+    padding: 100px 0px 60px;
   }
 
   .wrapper-explore__header {
@@ -354,7 +354,7 @@
 /* Large Desktop */
 @media (min-width: 1400px) {
   .wrapper-explore {
-    max-width: 1400px;
+    max-width: 1060px;
   }
 
   .wrapper-explore__grid {
