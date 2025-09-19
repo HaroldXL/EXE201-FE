@@ -439,9 +439,8 @@ const Step4 = ({ data, onUpdate, onNext, onBack }) => {
     onUpdate({ budget: { type: budgetId } });
   };
 
-  const handleFinish = () => {
-    // Handle trip creation
-    console.log("Creating trip with data:", { ...data, budget });
+  const handleNext = () => {
+    onNext();
   };
 
   return (
@@ -479,8 +478,57 @@ const Step4 = ({ data, onUpdate, onNext, onBack }) => {
 
       <button
         className={`step-next-btn ${budget.type ? "active" : ""}`}
-        onClick={handleFinish}
+        onClick={handleNext}
         disabled={!budget.type}
+      >
+        Tiếp Theo
+      </button>
+    </div>
+  );
+};
+
+// Step 5 - Trip Title
+const Step5 = ({ data, onUpdate, onNext, onBack }) => {
+  const [title, setTitle] = useState(data.title || "");
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleFinish = () => {
+    onUpdate({ title });
+    // Handle trip creation
+    console.log("Creating trip with data:", { ...data, title });
+  };
+
+  return (
+    <div className="step-container">
+      <div className="step-header">
+        <h2 className="step-title">Đặt Tiêu Đề Cho Kế Hoạch Của Bạn</h2>
+        <p className="step-description">
+          Hãy đặt một tiêu đề thú vị cho chuyến đi của bạn để dễ dàng nhận biết
+          và chia sẻ với bạn bè.
+        </p>
+      </div>
+
+      <div className="title-input-container">
+        <div className="title-input-wrapper">
+          <input
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Nhập tiêu đề cho chuyến đi của bạn..."
+            className="title-input"
+            maxLength={50}
+          />
+          <div className="title-char-count">{title.length}/50</div>
+        </div>
+      </div>
+
+      <button
+        className={`step-next-btn ${title.trim() ? "active" : ""}`}
+        onClick={handleFinish}
+        disabled={!title.trim()}
       >
         Tạo Kế Hoạch
       </button>
@@ -495,7 +543,7 @@ function TripPlanning() {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   const handleStart = () => {
     // Check if user is logged in
@@ -585,6 +633,15 @@ function TripPlanning() {
       case 4:
         return (
           <Step4
+            data={tripData}
+            onUpdate={handleUpdateData}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+        );
+      case 5:
+        return (
+          <Step5
             data={tripData}
             onUpdate={handleUpdateData}
             onNext={handleNext}

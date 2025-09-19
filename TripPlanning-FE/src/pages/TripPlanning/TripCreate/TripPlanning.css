@@ -846,3 +846,87 @@
     margin: 0 auto;
   }
 }
+
+/* Title Input Styles */
+.title-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.title-input-wrapper {
+  position: relative;
+}
+
+.title-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+
+.title-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.title-input::placeholder {
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.title-char-count {
+  position: absolute;
+  bottom: -6px;
+  right: 12px;
+  font-size: 12px;
+  color: #64748b;
+  background: white;
+  padding: 0 4px;
+}
+
+.title-preview {
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.preview-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.preview-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* Responsive Title Input */
+@media (min-width: 768px) {
+  .title-input {
+    font-size: 18px;
+    padding: 18px 24px;
+  }
+
+  .title-input::placeholder {
+    font-size: 18px;
+  }
+
+  .preview-title {
+    font-size: 20px;
+  }
+}

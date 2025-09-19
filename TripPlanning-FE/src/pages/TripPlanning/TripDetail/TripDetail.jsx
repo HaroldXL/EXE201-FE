@@ -7,9 +7,9 @@ import {
   MoreHorizontal,
   Navigation,
   Share2,
-  Heart,
-  Map,
   Edit,
+  ChevronRight,
+  MapPinned,
 } from "lucide-react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
@@ -124,62 +124,80 @@ function TripDetail() {
                   </div>
                 </div>
               </div>
-
-              <div className="trip-detail__actions">
-                <button className="trip-detail__action-btn trip-detail__action-btn--secondary">
-                  <Heart size={20} />
-                  Sắp diễn ra
-                </button>
-                <button className="trip-detail__action-btn trip-detail__action-btn--primary">
-                  <MapPin size={20} />
-                  Thêm địa điểm
-                </button>
-              </div>
             </div>
 
             {/* Itinerary Timeline */}
             <div className="trip-detail__itinerary">
               <div className="trip-detail__timeline">
                 {tripData.itinerary.map((item, index) => (
-                  <div key={item.id} className="trip-detail__timeline-item">
-                    <div className="trip-detail__timeline-marker">
-                      <div className="trip-detail__timeline-dot">
-                        <span>{index + 1}</span>
-                      </div>
-                      {/* Hiển thị line cho tất cả item trừ item cuối */}
-                      <div className="trip-detail__timeline-line"></div>
-                    </div>
-
-                    <div className="trip-detail__timeline-content">
-                      <div className="trip-detail__timeline-time">
-                        <Clock size={16} />
-                        <span>{item.time}</span>
-                        <button className="trip-detail__more-btn">
-                          <MoreHorizontal size={16} />
-                        </button>
-                      </div>
-
-                      <div className="trip-detail__location-card">
-                        <div className="trip-detail__location-image">
-                          <img src={item.image} alt={item.title} />
+                  <React.Fragment key={item.id}>
+                    <div className="trip-detail__timeline-item">
+                      <div className="trip-detail__timeline-marker">
+                        <div className="trip-detail__timeline-dot">
+                          <span>{index + 1}</span>
                         </div>
+                        {/* Hiển thị line cho tất cả item trừ item cuối */}
+                        <div className="trip-detail__timeline-line"></div>
+                      </div>
 
-                        <div className="trip-detail__location-info">
-                          <h3 className="trip-detail__location-title">
-                            {item.title}
-                          </h3>
-                          <div className="trip-detail__location-address">
-                            <MapPin size={14} />
-                            <span>{item.location}</span>
-                          </div>
-                          <button className="trip-detail__view-map-btn">
-                            <Map size={16} />
-                            View on Google Map
+                      <div className="trip-detail__timeline-content">
+                        <div className="trip-detail__timeline-time">
+                          <Clock size={16} />
+                          <span>{item.time}</span>
+                          <button className="trip-detail__more-btn">
+                            <MoreHorizontal size={16} />
                           </button>
                         </div>
+
+                        <div className="trip-detail__location-card">
+                          <div className="trip-detail__location-image">
+                            <img src={item.image} alt={item.title} />
+                          </div>
+
+                          <div className="trip-detail__location-info">
+                            <h3 className="trip-detail__location-title">
+                              {item.title}
+                            </h3>
+                            <div className="trip-detail__location-address">
+                              <MapPin size={14} />
+                              <span>{item.location}</span>
+                            </div>
+                            <button className="trip-detail__view-map-btn">
+                              <ChevronRight size={16} />
+                              Xem chi tiết
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+
+                    {/* Travel Time between locations (except for the last item) */}
+                    {index < tripData.itinerary.length - 1 && (
+                      <div className="trip-detail__travel-time">
+                        <div className="trip-detail__travel-time-marker">
+                          <div className="trip-detail__travel-time-icon-wrapper">
+                            <MapPinned size={16} />
+                          </div>
+                        </div>
+                        <div className="trip-detail__travel-time-content">
+                          <div className="trip-detail__travel-time-info">
+                            <div className="trip-detail__travel-time-details">
+                              <span className="trip-detail__travel-time-duration">
+                                25m
+                              </span>
+                              <span className="trip-detail__travel-time-method">
+                                Di chuyển
+                              </span>
+                            </div>
+                            <button className="trip-detail__direction-btn">
+                              <span>Direction</span>
+                              <ChevronRight size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
                 ))}
               </div>
             </div>
