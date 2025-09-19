@@ -17,6 +17,7 @@ import Explore from "./pages/Explore/LocationList/Explore";
 import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
 import Search from "./pages/Search/Search";
 import TripPlanning from "./pages/TripPlanning/TripCreate/TripPlanning";
+import TripDetail from "./pages/TripPlanning/TripDetail/TripDetail";
 import History from "./pages/Profile/History/History";
 
 const ProtectRouteAuth = ({ children }) => {
@@ -106,16 +107,8 @@ function App() {
           element: <TripPlanning />,
         },
         {
-          path: "trip-planning/:id",
-          element: <TripPlanning />,
-        },
-        {
           path: "test",
-          element: (
-            //<ProtectRouteAuth>
-            <Test />
-            //</ProtectRouteAuth>
-          ),
+          element: <TripDetail />,
         },
       ],
     },

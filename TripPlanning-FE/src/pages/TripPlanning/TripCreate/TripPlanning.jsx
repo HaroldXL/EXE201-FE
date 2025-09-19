@@ -1,11 +1,5 @@
-import React, { use, useState } from "react";
-import {
-  Calendar,
-  TimePicker,
-  ConfigProvider,
-  Modal,
-  notification,
-} from "antd";
+import React, { use, useState, useEffect } from "react";
+import { Calendar, TimePicker, ConfigProvider, Modal, message } from "antd";
 import dayjs from "dayjs";
 import locale from "antd/locale/vi_VN";
 import "dayjs/locale/vi";
@@ -23,9 +17,17 @@ import {
   Banknote,
   Star,
   Globe,
+  TreePine,
+  Building,
+  ShoppingBag,
+  Gamepad2,
+  Zap,
+  Dumbbell,
+  Palette,
 } from "lucide-react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
+import api from "../../../config/axios";
 import "./TripPlanning.css";
 import { useSelector } from "react-redux";
 
@@ -158,11 +160,15 @@ const Step1 = ({ data, onUpdate, onNext, onBack }) => {
   );
 
   const handleStartTimeChange = (time) => {
-    setStartTime(time);
+    if (time) {
+      setStartTime(time);
+    }
   };
 
   const handleEndTimeChange = (time) => {
-    setEndTime(time);
+    if (time) {
+      setEndTime(time);
+    }
   };
 
   const handleNext = () => {
@@ -206,6 +212,7 @@ const Step1 = ({ data, onUpdate, onNext, onBack }) => {
               placeholder="Chọn giờ bắt đầu"
               className="ant-timepicker"
               size="large"
+              allowClear={false}
             />
           </div>
 
@@ -220,15 +227,18 @@ const Step1 = ({ data, onUpdate, onNext, onBack }) => {
               placeholder="Chọn giờ kết thúc"
               className="ant-timepicker"
               size="large"
+              allowClear={false}
             />
           </div>
         </div>
 
         <div className="time-slider">
           <div className="time-scale">
-            <span>5:00</span>
+            <span>0:00</span>
+            <span>6:00</span>
             <span>12:00</span>
-            <span>20:00</span>
+            <span>18:00</span>
+            <span>24:00</span>
           </div>
           <div className="slider-track">
             <div
@@ -254,10 +264,10 @@ const Step2 = ({ data, onUpdate, onNext, onBack }) => {
   const [companion, setCompanion] = useState(data.companion || "");
 
   const companionOptions = [
-    { id: "alone", label: "Chỉ mình tôi", icon: User },
-    { id: "family", label: "Với gia đình", icon: Heart },
-    { id: "friends", label: "Với người yêu", icon: Users },
-    { id: "couple", label: "Với bạn bè", icon: Users },
+    { id: "1", label: "1 người", icon: User },
+    { id: "2", label: "2 người", icon: Users },
+    { id: "3-5", label: "3-5 người", icon: Users },
+    { id: "6+", label: "6+ người", icon: Users },
   ];
 
   const handleNext = () => {
@@ -270,10 +280,10 @@ const Step2 = ({ data, onUpdate, onNext, onBack }) => {
   return (
     <div className="step-container">
       <div className="step-header">
-        <h2 className="step-title">Bạn Đồng Hành Chuyến Đi</h2>
+        <h2 className="step-title">Số Người Tham Gia Chuyến Đi</h2>
         <p className="step-description">
-          Cho chúng tôi biết bạn sẽ đi cùng ai để thiết kế hành trình phù hợp
-          nhất cho bạn.
+          Cho chúng tôi biết số lượng người tham gia để thiết kế hành trình phù
+          hợp nhất cho nhóm của bạn.
         </p>
       </div>
 
@@ -308,22 +318,41 @@ const Step2 = ({ data, onUpdate, onNext, onBack }) => {
 
 // Step 3 - Personalization
 const Step3 = ({ data, onUpdate, onNext, onBack }) => {
-  const [preferences, setPreferences] = useState(data.preferences || {});
+  const [preferences, setPreferences] = useState(data.preferences || []);
+  const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const preferenceCategories = [
-    { id: "nature", label: "Thiên Nhiên", icon: Mountain },
-    { id: "food", label: "Ẩm Thực", icon: Utensils },
-    { id: "history", label: "Địa Điểm Lịch Sử", icon: MapPin },
-    { id: "entertainment", label: "Lễ Hội Ẩm Nhạc", icon: Star },
-    { id: "art", label: "Nghệ Thuật", icon: Camera },
-    { id: "relaxation", label: "Thư Giãn", icon: Heart },
-  ];
+  // Fetch topics from API
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get("/Topic/list-active");
+        setTopics(response.data || []);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+        message.error("Không thể tải danh sách chủ đề. Vui lòng thử lại.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const togglePreference = (prefId) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [prefId]: !prev[prefId],
-    }));
+    fetchTopics();
+  }, []);
+
+  const togglePreference = (topicId) => {
+    setPreferences((prev) => {
+      if (prev.includes(topicId)) {
+        return prev.filter((id) => id !== topicId);
+      } else {
+        // Giới hạn tối đa 3 topics
+        if (prev.length >= 3) {
+          message.warning("Bạn chỉ có thể chọn tối đa 3 chủ đề yêu thích.");
+          return prev;
+        }
+        return [...prev, topicId];
+      }
+    });
   };
 
   const handleNext = () => {
@@ -336,29 +365,43 @@ const Step3 = ({ data, onUpdate, onNext, onBack }) => {
       <div className="step-header">
         <h2 className="step-title">Cá Nhân Hóa Chuyến Đi Của Bạn!</h2>
         <p className="step-description">
-          Chọn sở thích của bạn để tùy chỉnh kế hoạch chuyến đi.
+          Chọn tối đa 3 chủ đề yêu thích của bạn để tùy chỉnh kế hoạch chuyến
+          đi.
         </p>
       </div>
 
       <div className="preferences-grid">
-        {preferenceCategories.map((category) => {
-          const IconComponent = category.icon;
-          const isSelected = preferences[category.id];
+        {loading
+          ? // Loading skeleton
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="preference-item loading">
+                <div className="preference-text-skeleton"></div>
+              </div>
+            ))
+          : topics.map((topic) => {
+              const isSelected = preferences.includes(topic.id);
+              const isDisabled = !isSelected && preferences.length >= 3;
 
-          return (
-            <div
-              key={category.id}
-              className={`preference-item ${isSelected ? "selected" : ""}`}
-              onClick={() => togglePreference(category.id)}
-            >
-              <IconComponent size={20} className="preference-icon" />
-              <span>{category.label}</span>
-            </div>
-          );
-        })}
+              return (
+                <div
+                  key={topic.id}
+                  className={`preference-item ${isSelected ? "selected" : ""} ${
+                    isDisabled ? "disabled" : ""
+                  }`}
+                  onClick={() => !isDisabled && togglePreference(topic.id)}
+                  title={topic.description}
+                >
+                  <span>{topic.name}</span>
+                </div>
+              );
+            })}
       </div>
 
-      <button className="step-next-btn active" onClick={handleNext}>
+      <button
+        className="step-next-btn active"
+        onClick={handleNext}
+        disabled={loading}
+      >
         Tiếp Theo
       </button>
     </div>
@@ -374,13 +417,13 @@ const Step4 = ({ data, onUpdate, onNext, onBack }) => {
     {
       id: "moderate",
       label: "Kinh Tế",
-      amount: "Từ 300.000 VNĐ đến 1.000.000 VNĐ",
+      amount: "Tối đa 1.000.000 VNĐ",
       icon: Banknote,
     },
     {
       id: "premium",
       label: "Cao Cấp",
-      amount: "Từ 1.000.000 VNĐ đến 3.000.000 VNĐ",
+      amount: "Tối đa 3.000.000 VNĐ",
       icon: Star,
     },
     {
@@ -457,13 +500,9 @@ function TripPlanning() {
   const handleStart = () => {
     // Check if user is logged in
     if (!user) {
-      notification.warning({
-        message: "Yêu cầu đăng nhập",
-        description:
-          "Bạn cần đăng nhập để tạo kế hoạch chuyến đi. Vui lòng đăng nhập trước.",
-        duration: 3,
-        placement: "topRight",
-      });
+      message.warning(
+        "Bạn cần đăng nhập để tạo kế hoạch chuyến đi. Vui lòng đăng nhập trước."
+      );
       // Navigate to login page
       navigate("/login");
       return;

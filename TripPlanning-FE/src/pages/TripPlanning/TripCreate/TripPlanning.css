@@ -288,6 +288,17 @@
   margin: 0;
 }
 
+.selection-counter {
+  font-size: 13px;
+  color: #3b82f6;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+  display: inline-block;
+}
+
 /* Calendar Styles */
 .calendar-container {
   flex: 1;
@@ -525,26 +536,26 @@
 /* Preferences Grid */
 .preferences-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
   flex: 1;
   margin-bottom: 40px;
 }
 
 .preference-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 24px 16px;
+  justify-content: center;
+  padding: 8px 12px;
   border: 2px solid #e5e7eb;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   background: white;
   text-align: center;
   position: relative;
   overflow: hidden;
+  min-height: 30px;
 }
 
 .preference-item::before {
@@ -585,6 +596,12 @@
   transform: scale(1.15) rotate(5deg);
 }
 
+.preference-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .preference-item span {
   font-size: 14px;
   font-weight: 500;
@@ -595,11 +612,53 @@
 @media (max-width: 768px) {
   .preferences-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 10px;
   }
   
   .preference-item {
-    padding: 20px 12px;
+    padding: 10px 12px;
+    min-height: 36px;
+  }
+
+  .preference-item.loading {
+    padding: 10px 12px;
+    min-height: 36px;
+  }
+
+  .preference-text-skeleton {
+    width: 60px;
+    height: 14px;
+  }
+}
+
+/* Loading skeleton for preferences */
+.preference-item.loading {
+  cursor: default;
+  pointer-events: none;
+  border-color: #f3f4f6;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  min-height: 30px;
+}
+
+.preference-text-skeleton {
+  width: 70px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 
@@ -758,7 +817,18 @@
   }
   
   .preference-item {
-    padding: 28px 20px;
+    padding: 12px 16px;
+    min-height: 30px;
+  }
+
+  .preference-item.loading {
+    padding: 12px 16px;
+    min-height: 30px;
+  }
+
+  .preference-text-skeleton {
+    width: 80px;
+    height: 16px;
   }
 }
 
