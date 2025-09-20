@@ -1,4 +1,114 @@
 /* Trip Planning Styles - Mobile First */
+/* Animation keyframes */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Page load animation - only for main container */
+.trip-planning-container {
+  opacity: 0;
+  animation: slideUpFade 0.6s ease-out forwards;
+}
+
+.trip-planning-container--loaded {
+  opacity: 1;
+}
+
+/* Step transition animations */
+.step-content {
+  transition: all 0.3s ease-in-out;
+}
+
+.step-content--transitioning {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.step-content--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Welcome screen animations */
+.welcome-content {
+  animation: slideUpFade 0.8s ease-out forwards;
+}
+
+.welcome-content h2 {
+  animation: slideUpFade 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.welcome-content p {
+  animation: slideUpFade 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.welcome-content .start-button {
+  animation: slideUpFade 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+/* Form elements animations */
+.form-container > * {
+  animation: slideUpFade 0.6s ease-out forwards;
+}
+
+.form-container > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.form-container > *:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.form-container > *:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.form-container > *:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+/* Step navigation animation */
+.step-navigation {
+  animation: slideUpFade 0.6s ease-out 0.2s forwards;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
 .trip-planning-page {
   min-height: 100vh;
   background: #f8fafc;

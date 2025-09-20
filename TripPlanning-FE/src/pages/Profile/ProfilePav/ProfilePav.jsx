@@ -68,7 +68,7 @@ function ProfilePav() {
     {
       id: 2,
       icon: Clock,
-      title: "Lịch Sử (Kế Hoạch Chuyến Đi)",
+      title: "Chuyến Đi Của Tôi",
       description: "Xem các chuyến đi đã lập kế hoạch",
       hasArrow: true,
     },

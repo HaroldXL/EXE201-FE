@@ -9,6 +9,27 @@
   margin-bottom: 0px; 
 }
 
+/* Page animations */
+.trip-detail--fade-in {
+  opacity: 0;
+  animation: slideUpFade 0.8s ease-out forwards;
+}
+
+.trip-detail--loading {
+  animation: slideUpFade 0.8s ease-out;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Map Section */
 .trip-detail__map {
   position: relative;
@@ -16,6 +37,11 @@
   background: #e2e8f0;
   overflow: hidden;
   border-radius: 12px; /* Bo viền bản đồ */
+}
+
+.trip-detail__map--fade-in {
+  opacity: 0;
+  animation: slideUpFade 0.8s ease-out 0.1s forwards;
 }
 
 .trip-detail__map-container {
@@ -111,6 +137,11 @@
   padding: 24px;
 }
 
+.trip-detail__info--fade-in {
+  opacity: 0;
+  animation: slideUpFade 0.8s ease-out 0.2s forwards;
+}
+
 .trip-detail__header {
   margin-bottom: 32px;
 }
@@ -158,6 +189,23 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.trip-detail__meta--fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: metaFadeIn 0.6s ease-out forwards;
+}
+
+@keyframes metaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .trip-detail__meta-item {
@@ -235,6 +283,23 @@
 .trip-detail__timeline-item {
   display: flex;
   gap: 16px;
+}
+
+.trip-detail__timeline-item--fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: timelineItemFadeIn 0.6s ease-out forwards;
+}
+
+@keyframes timelineItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .trip-detail__timeline-marker {
@@ -512,6 +577,23 @@
   gap: 16px;
 }
 
+.trip-detail__travel-time.trip-detail__timeline-item--fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: travelTimeFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes travelTimeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .trip-detail__travel-time-marker {
   width: 32px;
   display: flex;
@@ -581,11 +663,17 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .trip-detail__direction-btn:hover {
-  background: #eff6ff;
+  background: #dbeafe;
+  transform: translateX(2px);
+  color: #2563eb;
+}
+
+.trip-detail__direction-btn:hover svg {
+  transform: translateX(2px);
 }
 
 /* Desktop Travel Time Styles */

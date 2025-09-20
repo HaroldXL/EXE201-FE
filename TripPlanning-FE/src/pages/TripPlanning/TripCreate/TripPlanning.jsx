@@ -1,5 +1,12 @@
-import React, { use, useState, useEffect } from "react";
-import { Calendar, TimePicker, ConfigProvider, Modal, message } from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Calendar,
+  TimePicker,
+  ConfigProvider,
+  Modal,
+  message,
+  Spin,
+} from "antd";
 import dayjs from "dayjs";
 import locale from "antd/locale/vi_VN";
 import "dayjs/locale/vi";
@@ -35,7 +42,7 @@ import { useSelector } from "react-redux";
 dayjs.locale("vi");
 
 // Welcome Screen Component
-const WelcomeScreen = ({ onStart }) => {
+const WelcomeScreen = ({ onStart, isTransitioning }) => {
   return (
     <div className="trip-planning-welcome">
       <div className="welcome-content">
@@ -75,7 +82,15 @@ const WelcomeScreen = ({ onStart }) => {
           </h1>
         </div>
 
-        <button className="welcome-start-btn" onClick={onStart}>
+        <button
+          className="welcome-start-btn"
+          onClick={onStart}
+          disabled={isTransitioning}
+          style={{
+            opacity: isTransitioning ? 0.5 : 1,
+            cursor: isTransitioning ? "not-allowed" : "pointer",
+          }}
+        >
           Tạo Kế Hoạch
         </button>
       </div>
@@ -172,9 +187,12 @@ const Step1 = ({ data, onUpdate, onNext, onBack }) => {
   };
 
   const handleNext = () => {
+    const startTimeFormatted = startTime.format("HH:mm:ss");
+    const endTimeFormatted = endTime.format("HH:mm:ss");
+
     onUpdate({
-      startTime: startTime.format("HH:mm"),
-      endTime: endTime.format("HH:mm"),
+      startTime: startTimeFormatted,
+      endTime: endTimeFormatted,
     });
     onNext();
   };
@@ -267,7 +285,7 @@ const Step2 = ({ data, onUpdate, onNext, onBack }) => {
     { id: "1", label: "1 người", icon: User },
     { id: "2", label: "2 người", icon: Users },
     { id: "3-5", label: "3-5 người", icon: Users },
-    { id: "6+", label: "6+ người", icon: Users },
+    { id: "6-10", label: "6-10 người", icon: Users },
   ];
 
   const handleNext = () => {
@@ -345,17 +363,17 @@ const Step3 = ({ data, onUpdate, onNext, onBack }) => {
       if (prev.includes(topicId)) {
         return prev.filter((id) => id !== topicId);
       } else {
-        // Giới hạn tối đa 3 topics
-        if (prev.length >= 3) {
-          message.warning("Bạn chỉ có thể chọn tối đa 3 chủ đề yêu thích.");
-          return prev;
-        }
+        // Cho phép chọn nhiều topics, không giới hạn tối đa
         return [...prev, topicId];
       }
     });
   };
 
   const handleNext = () => {
+    if (preferences.length < 3) {
+      message.warning("Bạn cần chọn ít nhất 3 chủ đề yêu thích để tiếp tục.");
+      return;
+    }
     onUpdate({ preferences });
     onNext();
   };
@@ -365,9 +383,12 @@ const Step3 = ({ data, onUpdate, onNext, onBack }) => {
       <div className="step-header">
         <h2 className="step-title">Cá Nhân Hóa Chuyến Đi Của Bạn!</h2>
         <p className="step-description">
-          Chọn tối đa 3 chủ đề yêu thích của bạn để tùy chỉnh kế hoạch chuyến
+          Chọn ít nhất 3 chủ đề yêu thích của bạn để tùy chỉnh kế hoạch chuyến
           đi.
         </p>
+        <div className="selection-counter">
+          Đã chọn: {preferences.length}/3 (tối thiểu)
+        </div>
       </div>
 
       <div className="preferences-grid">
@@ -380,15 +401,12 @@ const Step3 = ({ data, onUpdate, onNext, onBack }) => {
             ))
           : topics.map((topic) => {
               const isSelected = preferences.includes(topic.id);
-              const isDisabled = !isSelected && preferences.length >= 3;
 
               return (
                 <div
                   key={topic.id}
-                  className={`preference-item ${isSelected ? "selected" : ""} ${
-                    isDisabled ? "disabled" : ""
-                  }`}
-                  onClick={() => !isDisabled && togglePreference(topic.id)}
+                  className={`preference-item ${isSelected ? "selected" : ""}`}
+                  onClick={() => togglePreference(topic.id)}
                   title={topic.description}
                 >
                   <span>{topic.name}</span>
@@ -398,9 +416,9 @@ const Step3 = ({ data, onUpdate, onNext, onBack }) => {
       </div>
 
       <button
-        className="step-next-btn active"
+        className={`step-next-btn ${preferences.length >= 3 ? "active" : ""}`}
         onClick={handleNext}
-        disabled={loading}
+        disabled={loading || preferences.length < 3}
       >
         Tiếp Theo
       </button>
@@ -488,17 +506,35 @@ const Step4 = ({ data, onUpdate, onNext, onBack }) => {
 };
 
 // Step 5 - Trip Title
-const Step5 = ({ data, onUpdate, onNext, onBack }) => {
+const Step5 = ({
+  data,
+  onUpdate,
+  onNext,
+  onBack,
+  onCreateTrip,
+  isCreating,
+}) => {
   const [title, setTitle] = useState(data.title || "");
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleFinish = () => {
-    onUpdate({ title });
-    // Handle trip creation
-    console.log("Creating trip with data:", { ...data, title });
+  const handleFinish = async () => {
+    if (!title.trim()) {
+      message.error("Vui lòng nhập tiêu đề cho chuyến đi.");
+      return;
+    }
+
+    // Create final data with all current state
+    const finalData = {
+      ...data,
+      title: title.trim(),
+    };
+
+    // Update local state and call API
+    onUpdate({ title: title.trim() });
+    await onCreateTrip(finalData);
   };
 
   return (
@@ -520,17 +556,27 @@ const Step5 = ({ data, onUpdate, onNext, onBack }) => {
             placeholder="Nhập tiêu đề cho chuyến đi của bạn..."
             className="title-input"
             maxLength={50}
+            disabled={isCreating}
           />
           <div className="title-char-count">{title.length}/50</div>
         </div>
       </div>
 
       <button
-        className={`step-next-btn ${title.trim() ? "active" : ""}`}
+        className={`step-next-btn ${
+          title.trim() && !isCreating ? "active" : ""
+        }`}
         onClick={handleFinish}
-        disabled={!title.trim()}
+        disabled={!title.trim() || isCreating}
       >
-        Tạo Kế Hoạch
+        {isCreating ? (
+          <>
+            <Spin size="small" style={{ marginRight: 8 }} />
+            Đang tạo kế hoạch...
+          </>
+        ) : (
+          "Tạo Kế Hoạch"
+        )}
       </button>
     </div>
   );
@@ -540,10 +586,109 @@ const Step5 = ({ data, onUpdate, onNext, onBack }) => {
 function TripPlanning() {
   const [currentStep, setCurrentStep] = useState(-1); // -1 for welcome screen
   const [tripData, setTripData] = useState({});
+  const [isCreating, setIsCreating] = useState(false);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
 
   const totalSteps = 6;
+
+  // Page load animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Helper function to convert companion selection to numPeople
+  const getNumPeople = (companion) => {
+    switch (companion) {
+      case "1":
+        return 1;
+      case "2":
+        return 2;
+      case "3-5":
+        return 5;
+      case "6-10":
+        return 10;
+      default:
+        return 1;
+    }
+  };
+
+  // Helper function to convert budget selection to maximumPrice
+  const getMaximumPrice = (budgetType) => {
+    switch (budgetType) {
+      case "cheap":
+        return 300000;
+      case "moderate":
+        return 1000000;
+      case "premium":
+        return 3000000;
+      case "flexible":
+        return 10000000;
+      default:
+        return 1000000;
+    }
+  };
+
+  // API call to create trip
+  const createTrip = async (finalData) => {
+    try {
+      setIsCreating(true);
+
+      // Validate required fields
+      if (!finalData.title || !finalData.title.trim()) {
+        message.error("Vui lòng nhập tiêu đề cho chuyến đi.");
+        return;
+      }
+
+      if (!finalData.companion) {
+        message.error("Vui lòng chọn số người tham gia.");
+        return;
+      }
+
+      if (!finalData.budget?.type) {
+        message.error("Vui lòng chọn ngân sách cho chuyến đi.");
+        return;
+      }
+
+      if (!finalData.preferences || finalData.preferences.length < 3) {
+        message.error("Vui lòng chọn ít nhất 3 chủ đề yêu thích.");
+        return;
+      }
+
+      const requestData = {
+        Title: finalData.title.trim(),
+        NumPeople: getNumPeople(finalData.companion),
+        TripDate: finalData.date,
+        StartTime: finalData.startTime,
+        EndTime: finalData.endTime,
+        TopicIds: finalData.preferences || [],
+        MaximumPrice: getMaximumPrice(finalData.budget?.type),
+      };
+
+      const response = await api.post("/Itinerary/create", requestData);
+
+      if (response.data && response.data.success) {
+        message.success(
+          response.data.message || "Tạo kế hoạch chuyến đi thành công!"
+        );
+        // Navigate to trip detail page using itineraryId
+        navigate(`/trip-planning/${response.data.itineraryId}`);
+      }
+    } catch (error) {
+      console.error("Error creating trip:", error);
+      message.error(
+        error.response?.data?.message ||
+          "Không thể tạo kế hoạch chuyến đi. Vui lòng thử lại."
+      );
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   const handleStart = () => {
     // Check if user is logged in
@@ -556,18 +701,35 @@ function TripPlanning() {
       return;
     }
 
-    setCurrentStep(0);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentStep(0);
+      setIsTransitioning(false);
+    }, 200);
   };
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+        setIsTransitioning(false);
+      }, 200);
     }
   };
 
   const handleBack = () => {
+    // Prevent going back when creating trip
+    if (isCreating) {
+      return;
+    }
+
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(currentStep - 1);
+        setIsTransitioning(false);
+      }, 200);
     } else if (currentStep === 0) {
       // Show confirmation modal when backing from first step
       Modal.confirm({
@@ -577,7 +739,11 @@ function TripPlanning() {
         okText: "Có, hủy kế hoạch",
         cancelText: "Không, tiếp tục",
         onOk() {
-          setCurrentStep(-1);
+          setIsTransitioning(true);
+          setTimeout(() => {
+            setCurrentStep(-1);
+            setIsTransitioning(false);
+          }, 200);
         },
         onCancel() {
           // Do nothing, stay on current step
@@ -593,7 +759,12 @@ function TripPlanning() {
   const renderStep = () => {
     switch (currentStep) {
       case -1:
-        return <WelcomeScreen onStart={handleStart} />;
+        return (
+          <WelcomeScreen
+            onStart={handleStart}
+            isTransitioning={isTransitioning}
+          />
+        );
       case 0:
         return (
           <Step0
@@ -646,6 +817,8 @@ function TripPlanning() {
             onUpdate={handleUpdateData}
             onNext={handleNext}
             onBack={handleBack}
+            onCreateTrip={createTrip}
+            isCreating={isCreating}
           />
         );
       default:
@@ -658,18 +831,39 @@ function TripPlanning() {
       <div className="trip-planning-page header-page-container">
         <Header />
 
-        <div className="trip-planning-container">
+        <div
+          className={`trip-planning-container ${
+            isPageLoaded ? "trip-planning-container--loaded" : ""
+          }`}
+        >
           {/* Show progress bar and back button only for steps, not welcome screen */}
           {currentStep >= 0 && (
             <div className="step-navigation">
-              <button className="back-button" onClick={handleBack}>
+              <button
+                className="back-button"
+                onClick={handleBack}
+                disabled={isCreating || isTransitioning}
+                style={{
+                  opacity: isCreating || isTransitioning ? 0.5 : 1,
+                  cursor:
+                    isCreating || isTransitioning ? "not-allowed" : "pointer",
+                }}
+              >
                 <ArrowLeft size={20} />
               </button>
               <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
             </div>
           )}
 
-          <div className="step-content">{renderStep()}</div>
+          <div
+            className={`step-content ${
+              isTransitioning
+                ? "step-content--transitioning"
+                : "step-content--visible"
+            }`}
+          >
+            {renderStep()}
+          </div>
         </div>
 
         <Footer />

@@ -107,7 +107,7 @@ function App() {
           element: <TripPlanning />,
         },
         {
-          path: "test",
+          path: "trip-planning/:id",
           element: <TripDetail />,
         },
       ],

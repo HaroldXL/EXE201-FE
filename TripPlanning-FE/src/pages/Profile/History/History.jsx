@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Users, MoreHorizontal } from "lucide-react";
 import { Empty } from "antd";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
-import axiosInstance from "../../../config/axios";
+import api from "../../../config/axios";
 import "./History.css";
 
 function History() {
+  const navigate = useNavigate();
   const [tripHistory, setTripHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,13 +18,24 @@ function History() {
     totalCount: 0,
   });
 
+  // Handle card click to navigate to trip detail
+  const handleCardClick = (tripId) => {
+    navigate(`/trip-planning/${tripId}`);
+  };
+
+  // Handle menu click to prevent card navigation
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
+    // Add menu functionality here if needed
+  };
+
   // Fetch trip history from API
   const fetchTripHistory = async (page = 1, pageSize = 10) => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await axiosInstance.get("/Itinerary", {
+      const response = await api.get("/Itinerary", {
         params: {
           page: page,
           pageSize: pageSize,
@@ -80,7 +93,7 @@ function History() {
         <div className="wrapper-history__container">
           {/* Header */}
           <div className="wrapper-history__header">
-            <h1 className="wrapper-history__title">Lịch Sử Chuyến Đi</h1>
+            <h1 className="wrapper-history__title">Chuyến Đi Của Tôi</h1>
           </div>
 
           {/* Trip History Cards */}
@@ -140,6 +153,7 @@ function History() {
                     key={trip.id}
                     className="wrapper-history__card wrapper-history__card--fade-in"
                     style={{ animationDelay: `${index * 0.1 + 0.4}s` }}
+                    onClick={() => handleCardClick(trip.id)}
                   >
                     <div className="wrapper-history__card-image-container">
                       <img
@@ -154,7 +168,10 @@ function History() {
                         <h3 className="wrapper-history__card-title">
                           {trip.title}
                         </h3>
-                        <button className="wrapper-history__card-menu">
+                        <button
+                          className="wrapper-history__card-menu"
+                          onClick={handleMenuClick}
+                        >
                           <MoreHorizontal size={20} />
                         </button>
                       </div>
