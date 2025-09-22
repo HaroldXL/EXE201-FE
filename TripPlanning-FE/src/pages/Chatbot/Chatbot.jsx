@@ -24,11 +24,24 @@ function Chatbot() {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
   };
 
   useEffect(() => {
+    // Scroll ngay lập tức và sau delay để đảm bảo
     scrollToBottom();
+
+    const timeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 200);
+
+    return () => clearTimeout(timeoutId);
   }, [messages]);
 
   const handleSendMessage = async (messageText = inputValue) => {
@@ -46,6 +59,9 @@ function Chatbot() {
     setInputValue("");
     setIsLoading(true);
 
+    // Scroll sau khi thêm user message
+    setTimeout(() => scrollToBottom(), 50);
+
     try {
       const response = await api.post("/Chat/message", {
         message: messageText,
@@ -61,6 +77,8 @@ function Chatbot() {
             response.data.suggestedLocations?.map((loc) => loc.name) || [],
         };
         setMessages((prev) => [...prev, botMessage]);
+        // Scroll sau khi thêm bot message
+        setTimeout(() => scrollToBottom(), 50);
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -71,6 +89,8 @@ function Chatbot() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+      // Scroll sau khi thêm error message
+      setTimeout(() => scrollToBottom(), 50);
     } finally {
       setIsLoading(false);
     }
@@ -164,7 +184,7 @@ function Chatbot() {
               </div>
             )}
 
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} style={{ height: "20px" }} />
           </div>
 
           {/* Input */}

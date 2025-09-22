@@ -13,7 +13,7 @@ import {
   Loader,
   CircleDollarSign,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { message, Spin } from "antd";
 import { Skeleton } from "@mui/material";
 import Header from "../../../components/header/header";
@@ -26,6 +26,7 @@ function TripDetail() {
   const [tripData, setTripData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Skeleton Components
   const SkeletonMap = () => (
@@ -358,7 +359,10 @@ function TripDetail() {
                           <div className="trip-detail__location-card">
                             <div className="trip-detail__location-image">
                               <img
-                                src="/api/placeholder/280/200"
+                                src={
+                                  location.imageUrl ||
+                                  "/api/placeholder/280/200"
+                                }
                                 alt={location.locationName}
                               />
                             </div>
@@ -369,9 +373,14 @@ function TripDetail() {
                               </h3>
                               <div className="trip-detail__location-address">
                                 <MapPin size={14} />
-                                <span>{location.locationName}</span>
+                                <span>{location.address}</span>
                               </div>
-                              <button className="trip-detail__view-map-btn">
+                              <button
+                                onClick={() =>
+                                  navigate(`/explore/${location.locationId}`)
+                                }
+                                className="trip-detail__view-map-btn"
+                              >
                                 <ChevronRight size={16} />
                                 Xem chi tiết
                               </button>
