@@ -181,11 +181,8 @@ function Home() {
           {/* Mobile Actions */}
           <div className="mobile-nav-actions">
             {user && user.token ? (
-              // Hiển thị search, notification và avatar khi đã login
+              // Hiển thị notification và avatar khi đã login
               <>
-                <button className="mobile-nav-icon-btn">
-                  <Search size={20} />
-                </button>
                 <button className="mobile-nav-icon-btn">
                   <Bell size={20} />
                 </button>
@@ -197,11 +194,8 @@ function Home() {
                 </button>
               </>
             ) : (
-              // Hiển thị search, login và register khi chưa login
+              // Hiển thị login và register khi chưa login
               <>
-                <button className="mobile-nav-icon-btn">
-                  <Search size={20} />
-                </button>
                 <a href="/login" className="mobile-auth-btn mobile-login-btn">
                   Đăng nhập
                 </a>
@@ -236,13 +230,8 @@ function Home() {
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               {user && user.token ? (
-                // Hiển thị search, notification và avatar khi đã login
+                // Hiển thị notification và avatar khi đã login
                 <>
-                  <div className="nav-search">
-                    <button className="nav-icon-btn">
-                      <Search size={20} />
-                    </button>
-                  </div>
                   <div className="nav-notifications">
                     <button className="nav-icon-btn">
                       <Bell size={20} />
@@ -258,13 +247,8 @@ function Home() {
                   </div>
                 </>
               ) : (
-                // Hiển thị search, login và register khi chưa login
+                // Hiển thị login và register khi chưa login
                 <>
-                  <div className="nav-search">
-                    <button className="nav-icon-btn">
-                      <Search size={20} />
-                    </button>
-                  </div>
                   <div className="desktop-auth-buttons">
                     <a
                       href="/login"
