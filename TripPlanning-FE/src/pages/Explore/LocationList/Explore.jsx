@@ -162,11 +162,11 @@ function Explore() {
     if (selectedTab) {
       fetchAttractions(selectedTab.topicId, newPage);
     }
-    
+
     // Scroll to top when changing pages
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
