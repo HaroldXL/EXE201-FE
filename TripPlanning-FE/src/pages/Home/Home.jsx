@@ -118,7 +118,17 @@ function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Search query:", searchQuery);
+    // Navigate to Search page with search query
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate("/search");
+    }
+  };
+
+  const handleSearchClick = () => {
+    // Navigate to Search page immediately when clicking on search input
+    navigate("/search");
   };
 
   const toggleMobileMenu = () => {
@@ -280,6 +290,7 @@ function Home() {
                   placeholder="Tìm kiếm địa điểm hoặc gói tour"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onClick={handleSearchClick}
                   className="search-input"
                 />
               </div>

@@ -3,6 +3,18 @@
 .search-page {
   min-height: 100vh;
   background-color: #f8fafc;
+  /* Remove page enter animation to show header immediately */
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .search-content {
@@ -10,7 +22,7 @@
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 40px; /* Added more bottom padding for footer */
-  animation: slideUpFade 0.8s ease-out;
+  /* Removed animation for search content */
 }
 
 @keyframes slideUpFade {
@@ -42,6 +54,12 @@
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.search-input-container:focus-within {
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
 }
 
 .search-input-icon {
@@ -49,6 +67,12 @@
   left: 16px;
   color: #3b82f6;
   z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.search-input-container:focus-within .search-input-icon {
+  color: #2563eb;
+  transform: scale(1.1);
 }
 
 .search-input {
@@ -60,10 +84,12 @@
   background: transparent;
   color: #374151;
   font-weight: 400;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .search-input:focus {
   outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .search-input::placeholder {

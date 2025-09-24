@@ -334,6 +334,9 @@
 
   .wrapper-explore__tabs {
     margin-bottom: 32px;
+    justify-content: flex-start;
+    flex-wrap: wrap; /* Allow wrapping on desktop */
+    overflow-x: visible; /* Remove scroll on desktop */
   }
 
   .wrapper-explore__grid {
@@ -440,5 +443,22 @@
 @media (min-width: 768px) {
   .header-page-container {
     padding-top: 70px;
+  }
+}
+
+/* Pagination */
+.wrapper-explore__pagination {
+  margin-top: 50px;
+}
+
+/* Desktop topic layout - show all topics without scrolling */
+@media (min-width: 768px) {
+  .wrapper-explore__topics {
+    overflow-x: visible !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .wrapper-explore__topic {
+    margin: 0.25rem !important;
   }
 }

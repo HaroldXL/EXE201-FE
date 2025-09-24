@@ -40,6 +40,11 @@ function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleSearchClick = () => {
+    // Navigate to Search page when clicking search icon
+    navigate("/search");
+  };
+
   return (
     <>
       {/* Mobile Sidebar Menu */}
@@ -93,7 +98,10 @@ function Header() {
           {user && user.token ? (
             // Hiển thị search, notification và avatar khi đã login
             <>
-              <button className="header-mobile-nav-icon-btn">
+              <button
+                className="header-mobile-nav-icon-btn"
+                onClick={handleSearchClick}
+              >
                 <Search size={20} />
               </button>
               <button className="header-mobile-nav-icon-btn">
@@ -109,7 +117,10 @@ function Header() {
           ) : (
             // Hiển thị search, login và register khi chưa login
             <>
-              <button className="header-mobile-nav-icon-btn">
+              <button
+                className="header-mobile-nav-icon-btn"
+                onClick={handleSearchClick}
+              >
                 <Search size={20} />
               </button>
               <Link
@@ -152,7 +163,10 @@ function Header() {
               // Hiển thị search, notification và avatar khi đã login
               <>
                 <div className="header-nav-search">
-                  <button className="header-nav-icon-btn">
+                  <button
+                    className="header-nav-icon-btn"
+                    onClick={handleSearchClick}
+                  >
                     <Search size={20} />
                   </button>
                 </div>
@@ -174,7 +188,10 @@ function Header() {
               // Hiển thị search, login và register khi chưa login
               <>
                 <div className="header-nav-search">
-                  <button className="header-nav-icon-btn">
+                  <button
+                    className="header-nav-icon-btn"
+                    onClick={handleSearchClick}
+                  >
                     <Search size={20} />
                   </button>
                 </div>

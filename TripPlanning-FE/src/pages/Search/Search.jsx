@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Search as SearchIcon, MapPin, Star } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import api from "../../config/axios";
@@ -8,6 +8,8 @@ import "./Search.css";
 
 function Search() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchInputRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -129,13 +131,30 @@ function Search() {
     // Fetch topics and initial attractions on component mount
     fetchTopics();
     fetchAttractions(); // Fetch all attractions initially
-  }, []);
+
+    // Check for search query in URL parameters
+    const urlParams = new URLSearchParams(location.search);
+    const queryParam = urlParams.get("query");
+
+    if (queryParam) {
+      setSearchQuery(decodeURIComponent(queryParam));
+    }
+
+    // Auto-focus the search input when component mounts
+    const timer = setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 300); // Small delay to ensure smooth animation
+
+    return () => clearTimeout(timer);
+  }, [location.search]);
 
   // Get filtered results for display
   const filteredResults = handleSearch();
 
   return (
-    <div className="search-page route-transition">
+    <div className="search-page">
       <Header />
 
       <div className="search-content">
@@ -145,8 +164,9 @@ function Search() {
             <div className="search-input-container">
               <SearchIcon className="search-input-icon" size={20} />
               <input
+                ref={searchInputRef}
                 type="text"
-                placeholder="Tìm kiếm điểm đến hoặc địa điểm..."
+                placeholder="Tìm kiếm điểm đến hoặc địa điểm..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"

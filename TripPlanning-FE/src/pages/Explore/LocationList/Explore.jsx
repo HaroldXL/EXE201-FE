@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, Star, MapPin } from "lucide-react";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Pagination } from "@mui/material";
 import { Empty } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../../components/header/header";
@@ -16,9 +16,9 @@ function Explore() {
   const [attractions, setAttractions] = useState([]);
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [_currentPage, setCurrentPage] = useState(1);
-  const [_totalCount, setTotalCount] = useState(0);
-  const pageSize = 100;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const pageSize = 9; // Changed to 10 items per page
 
   // Skeleton Card Component
   const SkeletonCard = () => (
@@ -90,7 +90,7 @@ function Explore() {
       if (response.data) {
         setAttractions(response.data.items || []);
         setTotalCount(response.data.totalCount || 0);
-        setCurrentPage(response.data.page || 1);
+        setCurrentPage(response.data.page || page);
       }
     } catch (error) {
       console.error("Error fetching attractions:", error);
@@ -137,7 +137,7 @@ function Explore() {
 
   // Update tabs based on API topics
   const tabs = [
-    { id: "noi-bat", label: "Nổi Bật", topicId: null },
+    { id: "noi-bat", label: "Tất Cả", topicId: null },
     ...topics.map((topic) => ({
       id: topic.name.toLowerCase().replace(/\s+/g, "-"),
       label: topic.name,
@@ -148,10 +148,26 @@ function Explore() {
   // Handle tab change and fetch attractions for selected topic
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
+    setCurrentPage(1); // Reset to first page when changing tabs
     const selectedTab = tabs.find((tab) => tab.id === tabId);
     if (selectedTab) {
       fetchAttractions(selectedTab.topicId, 1);
     }
+  };
+
+  // Handle pagination change
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+    const selectedTab = tabs.find((tab) => tab.id === activeTab);
+    if (selectedTab) {
+      fetchAttractions(selectedTab.topicId, newPage);
+    }
+    
+    // Scroll to top when changing pages
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const filteredAttractions = attractions.filter((attraction) => {
@@ -270,6 +286,39 @@ function Explore() {
               </div>
             )}
           </div>
+
+          {/* Pagination */}
+          {!loading &&
+            filteredAttractions.length > 0 &&
+            totalCount > pageSize && (
+              <div className="wrapper-explore__pagination">
+                <Pagination
+                  count={Math.ceil(totalCount / pageSize)}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  color="primary"
+                  size="large"
+                  showFirstButton
+                  showLastButton
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 4,
+                    "& .MuiPaginationItem-root": {
+                      color: "#3b82f6",
+                      fontWeight: 500,
+                    },
+                    "& .MuiPaginationItem-root.Mui-selected": {
+                      backgroundColor: "#3b82f6",
+                      color: "white",
+                    },
+                    "& .MuiPaginationItem-root:hover": {
+                      backgroundColor: "#eff6ff",
+                    },
+                  }}
+                />
+              </div>
+            )}
         </div>
       </div>
       <Footer />
