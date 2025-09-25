@@ -87,50 +87,8 @@ function LocationDetail() {
         navigator.userAgent
       );
 
-    if (location.googlePlaceId) {
-      if (isMobile) {
-        // For mobile: Try Google Maps app first, fallback to web
-        try {
-          // Use intent URL for Android, and maps:// for iOS
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-          if (isAndroid) {
-            // Android: Use intent to open Google Maps app directly
-            const intentUrl = `intent://maps.google.com/maps?q=place_id:${location.googlePlaceId}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
-            window.location.href = intentUrl;
-          } else if (isIOS) {
-            // iOS: Use comgooglemaps:// scheme for Google Maps app
-            const iosUrl = `comgooglemaps://?q=place_id:${location.googlePlaceId}`;
-            window.location.href = iosUrl;
-
-            // Fallback to web version after 2 seconds if app not installed
-            setTimeout(() => {
-              window.open(
-                `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
-                "_blank"
-              );
-            }, 2000);
-          } else {
-            // Other mobile devices: use web version
-            window.open(
-              `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
-              "_blank"
-            );
-          }
-        } catch {
-          // Fallback to web version
-          window.open(
-            `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
-            "_blank"
-          );
-        }
-      } else {
-        // For desktop: Use web Google Maps
-        const desktopUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
-        window.open(desktopUrl, "_blank");
-      }
-    } else if (location.address || location.name) {
+    // For mobile, always use search query instead of place_id because place_id doesn't work well on mobile apps
+    if (isMobile) {
       // Build search query with more specific information
       let searchQuery = location.name;
       if (location.address) {
@@ -141,44 +99,51 @@ function LocationDetail() {
 
       const encodedQuery = encodeURIComponent(searchQuery);
 
-      if (isMobile) {
-        // For mobile: Try Google Maps app first, fallback to web
-        try {
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      try {
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-          if (isAndroid) {
-            // Android: Use intent to open Google Maps app directly
-            const intentUrl = `intent://maps.google.com/maps?q=${encodedQuery}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
-            window.location.href = intentUrl;
-          } else if (isIOS) {
-            // iOS: Use comgooglemaps:// scheme for Google Maps app
-            const iosUrl = `comgooglemaps://?q=${encodedQuery}`;
-            window.location.href = iosUrl;
+        if (isAndroid) {
+          // Android: Use intent to open Google Maps app directly with search query
+          const intentUrl = `intent://maps.google.com/maps?q=${encodedQuery}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
+          window.location.href = intentUrl;
+        } else if (isIOS) {
+          // iOS: Use comgooglemaps:// scheme for Google Maps app with search query
+          const iosUrl = `comgooglemaps://?q=${encodedQuery}`;
+          window.location.href = iosUrl;
 
-            // Fallback to web version after 2 seconds if app not installed
-            setTimeout(() => {
-              window.open(
-                `https://maps.google.com/maps?q=${encodedQuery}`,
-                "_blank"
-              );
-            }, 2000);
-          } else {
-            // Other mobile devices: use web version
+          // Fallback to web version after 1.5 seconds if app not installed
+          setTimeout(() => {
             window.open(
               `https://maps.google.com/maps?q=${encodedQuery}`,
               "_blank"
             );
-          }
-        } catch {
-          // Fallback to web version
+          }, 1500);
+        } else {
+          // Other mobile devices: use web version
           window.open(
             `https://maps.google.com/maps?q=${encodedQuery}`,
             "_blank"
           );
         }
+      } catch {
+        // Fallback to web version
+        window.open(`https://maps.google.com/maps?q=${encodedQuery}`, "_blank");
+      }
+    } else {
+      // For desktop, prefer place_id if available, otherwise use search query
+      if (location.googlePlaceId) {
+        const desktopUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
+        window.open(desktopUrl, "_blank");
       } else {
-        // For desktop: Use web Google Maps
+        // Build search query for desktop
+        let searchQuery = location.name;
+        if (location.address) {
+          searchQuery += `, ${location.address}`;
+        } else if (location.districtName) {
+          searchQuery += `, ${location.districtName}, Ho Chi Minh City, Vietnam`;
+        }
+        const encodedQuery = encodeURIComponent(searchQuery);
         const desktopUrl = `https://www.google.com/maps/search/${encodedQuery}`;
         window.open(desktopUrl, "_blank");
       }
