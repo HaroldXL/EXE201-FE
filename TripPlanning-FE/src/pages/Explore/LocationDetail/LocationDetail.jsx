@@ -89,9 +89,42 @@ function LocationDetail() {
 
     if (location.googlePlaceId) {
       if (isMobile) {
-        // For mobile: Use universal Google Maps URL that works on both app and web
-        const universalUrl = `https://www.google.com/maps/search/?api=1&query=place_id:${location.googlePlaceId}`;
-        window.open(universalUrl, "_blank");
+        // For mobile: Try Google Maps app first, fallback to web
+        try {
+          // Use intent URL for Android, and maps:// for iOS
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+          if (isAndroid) {
+            // Android: Use intent to open Google Maps app directly
+            const intentUrl = `intent://maps.google.com/maps?q=place_id:${location.googlePlaceId}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
+            window.location.href = intentUrl;
+          } else if (isIOS) {
+            // iOS: Use comgooglemaps:// scheme for Google Maps app
+            const iosUrl = `comgooglemaps://?q=place_id:${location.googlePlaceId}`;
+            window.location.href = iosUrl;
+
+            // Fallback to web version after 2 seconds if app not installed
+            setTimeout(() => {
+              window.open(
+                `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
+                "_blank"
+              );
+            }, 2000);
+          } else {
+            // Other mobile devices: use web version
+            window.open(
+              `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
+              "_blank"
+            );
+          }
+        } catch {
+          // Fallback to web version
+          window.open(
+            `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}`,
+            "_blank"
+          );
+        }
       } else {
         // For desktop: Use web Google Maps
         const desktopUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
@@ -109,9 +142,41 @@ function LocationDetail() {
       const encodedQuery = encodeURIComponent(searchQuery);
 
       if (isMobile) {
-        // For mobile: Use universal Google Maps URL
-        const universalUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
-        window.open(universalUrl, "_blank");
+        // For mobile: Try Google Maps app first, fallback to web
+        try {
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+          if (isAndroid) {
+            // Android: Use intent to open Google Maps app directly
+            const intentUrl = `intent://maps.google.com/maps?q=${encodedQuery}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
+            window.location.href = intentUrl;
+          } else if (isIOS) {
+            // iOS: Use comgooglemaps:// scheme for Google Maps app
+            const iosUrl = `comgooglemaps://?q=${encodedQuery}`;
+            window.location.href = iosUrl;
+
+            // Fallback to web version after 2 seconds if app not installed
+            setTimeout(() => {
+              window.open(
+                `https://maps.google.com/maps?q=${encodedQuery}`,
+                "_blank"
+              );
+            }, 2000);
+          } else {
+            // Other mobile devices: use web version
+            window.open(
+              `https://maps.google.com/maps?q=${encodedQuery}`,
+              "_blank"
+            );
+          }
+        } catch {
+          // Fallback to web version
+          window.open(
+            `https://maps.google.com/maps?q=${encodedQuery}`,
+            "_blank"
+          );
+        }
       } else {
         // For desktop: Use web Google Maps
         const desktopUrl = `https://www.google.com/maps/search/${encodedQuery}`;
