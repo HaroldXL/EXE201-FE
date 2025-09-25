@@ -891,7 +891,7 @@
 /* Desktop Styles */
 @media (min-width: 768px) {
   .trip-planning-container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 16px auto;
     height: calc(100vh - 100px);
     max-height: calc(100vh - 100px);
@@ -944,7 +944,7 @@
 
 @media (min-width: 1024px) {
   .trip-planning-container {
-    max-width: 700px;
+    max-width: 800px;
     margin: 20px auto;
     height: calc(100vh - 120px);
     max-height: calc(100vh - 120px);

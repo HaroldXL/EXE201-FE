@@ -12,6 +12,9 @@ import {
   MapPinned,
   Loader,
   CircleDollarSign,
+  RefreshCw,
+  PencilLine,
+  LucidePencil,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { message, Spin } from "antd";
@@ -85,32 +88,39 @@ function TripDetail() {
               width="100%"
               height={160}
               animation="wave"
-              sx={{ borderRadius: "12px 12px 0 0" }}
             />
           </div>
-          <div className="trip-detail__location-info">
-            <Skeleton variant="text" width="80%" height={24} animation="wave" />
+          <div style={{ padding: "16px" }}>
             <Skeleton
               variant="text"
-              width="60%"
+              width="100%"
               height={20}
               animation="wave"
-              sx={{ mt: 1 }}
             />
-            <Skeleton
-              variant="text"
-              width="50%"
-              height={16}
-              animation="wave"
-              sx={{ mt: 1 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width={100}
-              height={32}
-              animation="wave"
-              sx={{ borderRadius: "16px", mt: 1 }}
-            />
+            <Skeleton variant="text" width="60%" height={16} animation="wave" />
+            {/* Skeleton for action buttons */}
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "12px",
+              }}
+            >
+              <Skeleton
+                variant="rectangular"
+                width="50%"
+                height={36}
+                animation="wave"
+                sx={{ borderRadius: "20px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width="50%"
+                height={36}
+                animation="wave"
+                sx={{ borderRadius: "20px" }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -315,7 +325,7 @@ function TripDetail() {
                     <div className="trip-detail__meta-item">
                       <CircleDollarSign size={16} />
                       <span>
-                        Dự kiến tổng chi phí:{" "}
+                        Dự kiến tổng chi phí:{" "}
                         <span style={{ fontWeight: "600", color: "#3b82f6" }}>
                           {tripData.totalPrice?.toLocaleString("vi-VN")} VNĐ
                         </span>
@@ -375,15 +385,30 @@ function TripDetail() {
                                 <MapPin size={14} />
                                 <span>{location.address}</span>
                               </div>
-                              <button
-                                onClick={() =>
-                                  navigate(`/explore/${location.locationId}`)
-                                }
-                                className="trip-detail__view-map-btn"
-                              >
-                                <ChevronRight size={16} />
-                                Xem chi tiết
-                              </button>
+                              <div className="trip-detail__location-actions">
+                                <button
+                                  onClick={() =>
+                                    navigate(`/explore/${location.locationId}`)
+                                  }
+                                  className="trip-detail__view-detail-btn"
+                                >
+                                  <ChevronRight size={16} />
+                                  Xem chi tiết
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    // Handle change location logic here
+                                    console.log(
+                                      "Change location for order:",
+                                      location.orderIndex
+                                    );
+                                  }}
+                                  className="trip-detail__change-location-btn"
+                                >
+                                  <LucidePencil size={16} />
+                                  Thay đổi địa điểm
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -412,13 +437,13 @@ function TripDetail() {
                                       tripData.locations[index + 1]
                                         .travelTimeFromPrevious
                                     }{" "}
-                                    phút
+                                    phút
                                   </span>
                                   <span className="trip-detail__travel-time-method">
                                     Di chuyển (
                                     {tripData.locations[
                                       index + 1
-                                    ].distanceFromPreviousKm?.toFixed(1)}
+                                    ].distanceFromPreviousKm?.toFixed(1)}{" "}
                                     km)
                                   </span>
                                 </div>
@@ -432,7 +457,7 @@ function TripDetail() {
                                     )
                                   }
                                 >
-                                  <span>Xem hướng đi</span>
+                                  <span>Xem hướng đi</span>
                                   <ChevronRight size={16} />
                                 </button>
                               </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Search,
-  User,
   Mail,
   Phone,
   ChevronDown,
@@ -14,23 +13,30 @@ import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import api from "../../../config/axios";
 import "./Info.css";
+import { message } from "antd";
 
 function Info() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
+    email: "",
+    phone: "",
+    dob: "",
+  });
+  const [originalData, setOriginalData] = useState({
     username: "",
     email: "",
     phone: "",
     dob: "",
   });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [_userId, setUserId] = useState(null);
 
   // Skeleton Form Component
   const SkeletonForm = () => (
     <div className="wrapper-info__form">
       {/* Skeleton for form fields */}
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length: 4 }).map((_, index) => (
         <div key={index} className="wrapper-info__form-group">
           <Skeleton
             variant="text"
@@ -69,13 +75,14 @@ function Info() {
 
       if (response.data) {
         const userData = response.data;
-        setFormData({
-          fullName: userData.fullName || "",
+        const profileData = {
           username: userData.username || "",
           email: userData.email || "",
           phone: userData.phone || "",
           dob: userData.dob || "",
-        });
+        };
+        setFormData(profileData);
+        setOriginalData(profileData);
         setUserId(userData.id);
       }
     } catch (error) {
@@ -83,6 +90,15 @@ function Info() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Check if form data has changed
+  const hasChanges = () => {
+    return (
+      formData.username !== originalData.username ||
+      formData.phone !== originalData.phone ||
+      formData.dob !== originalData.dob
+    );
   };
 
   useEffect(() => {
@@ -97,10 +113,45 @@ function Info() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data:", formData);
-    // Handle form submission here
+
+    if (!hasChanges()) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      // Prepare data for API - wrap in editProfileDto object
+      const requestData = {
+        editProfileDto: {
+          username: formData.username,
+          phone: formData.phone,
+          dob: formData.dob,
+        },
+      };
+
+      const response = await api.patch("/User/edit-profile", requestData);
+
+      if (response.status === 200) {
+        // Update original data to reflect saved changes
+        setOriginalData(formData);
+        message.success("Cập nhật thông tin thành công!");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      if (error.response?.data?.errors) {
+        const errorMessages = Object.values(error.response.data.errors).flat();
+        message.error(`Có lỗi xảy ra: ${errorMessages.join(", ")}`);
+      } else {
+        message.error(
+          "Có lỗi xảy ra khi cập nhật thông tin. Vui lòng thử lại."
+        );
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -133,21 +184,6 @@ function Info() {
           ) : (
             <form className="wrapper-info__form" onSubmit={handleSubmit}>
               <div className="wrapper-info__form-group">
-                <label className="wrapper-info__label">Họ và Tên</label>
-                <div className="wrapper-info__input-wrapper">
-                  <User size={20} className="wrapper-info__input-icon" />
-                  <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Họ và Tên"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="wrapper-info__input"
-                  />
-                </div>
-              </div>
-
-              <div className="wrapper-info__form-group">
                 <label className="wrapper-info__label">Tên tài khoản</label>
                 <div className="wrapper-info__input-wrapper">
                   <AtSign size={20} className="wrapper-info__input-icon" />
@@ -172,7 +208,9 @@ function Info() {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="wrapper-info__input"
+                    className="wrapper-info__input wrapper-info__input--disabled"
+                    disabled
+                    readOnly
                   />
                 </div>
               </div>
@@ -209,8 +247,14 @@ function Info() {
                 </div>
               </div>
 
-              <button type="submit" className="wrapper-info__save-btn">
-                Lưu Thay Đổi
+              <button
+                type="submit"
+                className={`wrapper-info__save-btn ${
+                  !hasChanges() ? "wrapper-info__save-btn--disabled" : ""
+                }`}
+                disabled={!hasChanges() || saving}
+              >
+                {saving ? "Đang lưu..." : "Lưu Thay Đổi"}
               </button>
             </form>
           )}

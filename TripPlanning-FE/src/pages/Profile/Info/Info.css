@@ -163,6 +163,19 @@
   color: #9ca3af;
 }
 
+/* Disabled Input Styles */
+.wrapper-info__input--disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.wrapper-info__input--disabled:focus {
+  border-color: #e5e7eb;
+  box-shadow: none;
+}
+
 /* Phone Input Styles */
 .wrapper-info__phone-wrapper {
   display: flex;
@@ -273,6 +286,22 @@
   transform: translateY(0);
 }
 
+/* Disabled Save Button */
+.wrapper-info__save-btn--disabled {
+  background: #e5e7eb !important;
+  color: #9ca3af !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.wrapper-info__save-btn--disabled:hover {
+  background: #e5e7eb !important;
+  color: #9ca3af !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 /* Tablet Styles */
 @media (min-width: 768px) {
   .wrapper-info {
@@ -350,7 +379,6 @@
     padding: 30px;
     background: white;
     border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     height: fit-content;
@@ -399,7 +427,6 @@
     padding: 30px;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
   }
@@ -493,6 +520,26 @@
     background: linear-gradient(135deg, #1d4ed8, #1e40af);
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+  }
+
+  /* Desktop Disabled Button Override */
+  .wrapper-info__save-btn--disabled {
+    background: #e5e7eb !important;
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .wrapper-info__save-btn--disabled:hover {
+    background: #e5e7eb !important;
+    color: #9ca3af !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .wrapper-info__save-btn--disabled::before {
+    display: none;
   }
 }
 

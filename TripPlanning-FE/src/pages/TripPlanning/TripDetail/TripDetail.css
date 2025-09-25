@@ -325,7 +325,7 @@
 
 .trip-detail__timeline-line {
   width: 2px;
-  height: 280px; /* Tăng đáng kể để che phủ toàn bộ khoảng cách */
+  height: 310px; /* Tăng đáng kể để che phủ toàn bộ khoảng cách */
   background: #e5e7eb;
   margin-top: 8px;
 }
@@ -430,6 +430,58 @@
   background: #dbeafe;
 }
 
+/* Location Action Buttons */
+.trip-detail__location-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.trip-detail__view-detail-btn {
+  background: #eff6ff;
+  color: #3b82f6;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.trip-detail__view-detail-btn:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.trip-detail__change-location-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.trip-detail__change-location-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
 /* Desktop Styles */
 @media (min-width: 768px) {
   .trip-detail {
@@ -475,7 +527,7 @@
   }
 
   .trip-detail__timeline-line {
-    height: 300px; /* Tăng cho desktop */
+    height: 320px; /* Tăng cho desktop */
   }
 
   .trip-detail__location-card {
@@ -517,7 +569,7 @@
   }
 
   .trip-detail__timeline-line {
-    height: 320px; /* Tăng đáng kể cho large desktop */
+    height: 340px; /* Tăng đáng kể cho large desktop */
   }
 
   .trip-detail__location-image {
