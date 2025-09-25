@@ -90,7 +90,7 @@ function LocationDetail() {
     if (location.googlePlaceId) {
       if (isMobile) {
         // For mobile: Use universal Google Maps URL that works on both app and web
-        const universalUrl = `https://maps.google.com/?q=place_id:${location.googlePlaceId}`;
+        const universalUrl = `https://www.google.com/maps/search/?api=1&query=place_id:${location.googlePlaceId}`;
         window.open(universalUrl, "_blank");
       } else {
         // For desktop: Use web Google Maps
@@ -110,7 +110,7 @@ function LocationDetail() {
 
       if (isMobile) {
         // For mobile: Use universal Google Maps URL
-        const universalUrl = `https://maps.google.com/?q=${encodedQuery}`;
+        const universalUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
         window.open(universalUrl, "_blank");
       } else {
         // For desktop: Use web Google Maps
