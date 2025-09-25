@@ -89,14 +89,9 @@ function LocationDetail() {
 
     if (location.googlePlaceId) {
       if (isMobile) {
-        // For mobile: Use proper Google Maps app URL scheme
-        const mobileUrl = `https://maps.google.com/maps?q=place_id:${location.googlePlaceId}&t=m`;
-        // Try app scheme first, fallback to web
-        window.location.href = `googlemaps://maps?q=place_id:${location.googlePlaceId}`;
-        // Fallback to web version after a short delay
-        setTimeout(() => {
-          window.open(mobileUrl, "_blank");
-        }, 1000);
+        // For mobile: Use universal Google Maps URL that works on both app and web
+        const universalUrl = `https://maps.google.com/?q=place_id:${location.googlePlaceId}`;
+        window.open(universalUrl, "_blank");
       } else {
         // For desktop: Use web Google Maps
         const desktopUrl = `https://www.google.com/maps/place/?q=place_id:${location.googlePlaceId}`;
@@ -114,14 +109,9 @@ function LocationDetail() {
       const encodedQuery = encodeURIComponent(searchQuery);
 
       if (isMobile) {
-        // For mobile: Use proper Google Maps app URL scheme
-        const mobileUrl = `https://maps.google.com/maps?q=${encodedQuery}&t=m`;
-        // Try app scheme first
-        window.location.href = `googlemaps://maps?q=${encodedQuery}`;
-        // Fallback to web version after a short delay
-        setTimeout(() => {
-          window.open(mobileUrl, "_blank");
-        }, 1000);
+        // For mobile: Use universal Google Maps URL
+        const universalUrl = `https://maps.google.com/?q=${encodedQuery}`;
+        window.open(universalUrl, "_blank");
       } else {
         // For desktop: Use web Google Maps
         const desktopUrl = `https://www.google.com/maps/search/${encodedQuery}`;
