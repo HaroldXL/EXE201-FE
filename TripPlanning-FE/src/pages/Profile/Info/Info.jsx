@@ -123,14 +123,37 @@ function Info() {
     try {
       setSaving(true);
 
-      // Prepare data for API - wrap in editProfileDto object
-      const requestData = {
-        editProfileDto: {
-          username: formData.username,
-          phone: formData.phone,
-          dob: formData.dob,
-        },
-      };
+      // Only send changed fields
+      const requestData = {};
+
+      // Check each field and only include if changed
+      if (formData.username !== originalData.username) {
+        requestData.username = formData.username;
+      }
+
+      if (formData.phone !== originalData.phone) {
+        requestData.phone = formData.phone;
+      }
+
+      if (formData.dob !== originalData.dob) {
+        requestData.dob = formData.dob;
+      }
+
+      console.log("Changed fields being sent:", requestData);
+      console.log("Changes detected:", {
+        username:
+          formData.username !== originalData.username
+            ? `"${originalData.username}" → "${formData.username}"`
+            : "no change",
+        phone:
+          formData.phone !== originalData.phone
+            ? `"${originalData.phone}" → "${formData.phone}"`
+            : "no change",
+        dob:
+          formData.dob !== originalData.dob
+            ? `"${originalData.dob}" → "${formData.dob}"`
+            : "no change",
+      });
 
       const response = await api.patch("/User/edit-profile", requestData);
 
