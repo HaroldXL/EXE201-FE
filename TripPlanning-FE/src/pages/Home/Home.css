@@ -159,12 +159,10 @@
   overflow: hidden;
   border-radius: 0 0 20px 20px;
   margin-bottom: 20px;
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       rgba(0, 0, 0, 0.2) 0%,
       rgba(0, 0, 0, 0.4) 60%,
-      rgba(0, 0, 0, 0.6) 100%
-    ),
+      rgba(0, 0, 0, 0.6) 100%),
     url('/City.jpg') center/cover no-repeat;
 }
 
@@ -773,9 +771,12 @@
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -786,9 +787,12 @@
 }
 
 @keyframes floatTranslate {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(-50%, 0px);
   }
+
   50% {
     transform: translate(-50%, -10px);
   }
@@ -942,7 +946,8 @@
 .destinations-section .wrapper-explore__card {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03); /* Different shadow from Explore */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  /* Different shadow from Explore */
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -950,7 +955,8 @@
 
 .destinations-section .wrapper-explore__card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08); /* Different hover shadow */
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  /* Different hover shadow */
 }
 
 .destinations-section .wrapper-explore__card-image {
@@ -1264,6 +1270,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -1661,6 +1668,7 @@ html {
     opacity: 0;
     transform: translateY(50px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1672,6 +1680,7 @@ html {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1683,6 +1692,7 @@ html {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1694,6 +1704,7 @@ html {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1705,6 +1716,7 @@ html {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -1716,6 +1728,7 @@ html {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1727,6 +1740,7 @@ html {
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -1738,6 +1752,7 @@ html {
     opacity: 0;
     transform: translateX(-30px) scale(0.9);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -1808,10 +1823,12 @@ html {
     transform: scale(0);
     opacity: 0.3;
   }
+
   70% {
     transform: scale(1.2);
     opacity: 0;
   }
+
   100% {
     transform: scale(1.2);
     opacity: 0;
@@ -1828,9 +1845,9 @@ html {
 }
 
 .custom-divider {
-    width: 40%;
-    height: 0.5px;
-    background-color: #D6D1D1;
-    margin: 40px auto;
-    border: none;
+  width: 40%;
+  height: 0.5px;
+  background-color: #D6D1D1;
+  margin: 40px auto;
+  border: none;
 }
