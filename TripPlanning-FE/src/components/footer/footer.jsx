@@ -43,22 +43,22 @@ function Footer() {
           <h4 className="footer-title">Liên Kết Nhanh</h4>
           <ul className="footer-links">
             <li>
-              <a href="#" className="footer-link">
+              <a href="/" className="footer-link">
                 Trang Chủ
               </a>
             </li>
             <li>
-              <a href="#" className="footer-link">
+              <a href="/explore" className="footer-link">
                 Khám Phá
               </a>
             </li>
             <li>
-              <a href="#" className="footer-link">
+              <a href="/create-plan" className="footer-link">
                 Tạo Kế Hoạch
               </a>
             </li>
             <li>
-              <a href="#" className="footer-link">
+              <a href="/chatbot" className="footer-link">
                 Hỏi Đáp AI
               </a>
             </li>
