@@ -21,31 +21,15 @@
 /* Profile Header */
 .wrapper-profile__header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
   animation: slideUpFade 0.8s ease-out 0.2s both;
 }
 
-.wrapper-profile__avatar {
-  display: inline-block;
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.wrapper-profile__avatar-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid white;
-  transition: all 0.3s ease;
-}
-
-.wrapper-profile__avatar-image:hover {
-  transform: scale(1.02);
-}
-
 .wrapper-profile__username {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #1f2937;
   margin: 0;
@@ -187,20 +171,16 @@
 /* Tablet Styles */
 @media (min-width: 768px) {
   .wrapper-profile {
-    padding: 120px 0 40px 0; 
+    padding: 120px 40px 40px 40px; 
   }
   
   .wrapper-profile__header {
-    margin-bottom: 50px;
-  }
-  
-  .wrapper-profile__avatar-image {
-    width: 120px;
-    height: 120px;
+    margin-bottom: 40px;
+    padding: 28px;
   }
   
   .wrapper-profile__username {
-    font-size: 28px;
+    font-size: 32px;
   }
   
   .wrapper-profile__menu-item {
@@ -226,28 +206,19 @@
 /* Desktop Styles */
 @media (min-width: 1024px) {
   .wrapper-profile {
-    max-width: 800px;
-    display: grid;
-    padding: 120px 0 40px 0; 
-    grid-template-columns: 300px 1fr;
-    gap: 60px;
-    align-items: start;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    padding: 120px 40px 40px 40px; 
   }
   
   .wrapper-profile__header {
-    margin-bottom: 0;
-    position: sticky;
-    top: 120px;
-  }
-  
-  .wrapper-profile__avatar-image {
-    width: 140px;
-    height: 140px;
+    margin-bottom: 32px;
+    padding: 32px;
   }
   
   .wrapper-profile__username {
-    font-size: 32px;
-    margin-top: 20px;
+    font-size: 36px;
   }
   
   .wrapper-profile__menu {
@@ -287,9 +258,11 @@
 /* Large Desktop */
 @media (min-width: 1200px) {
   .wrapper-profile {
-    max-width: 1060px;
-    grid-template-columns: 350px 1fr;
-    gap: 80px;
+    max-width: 800px;
+  }
+  
+  .wrapper-profile__header {
+    padding: 36px;
   }
 }
 

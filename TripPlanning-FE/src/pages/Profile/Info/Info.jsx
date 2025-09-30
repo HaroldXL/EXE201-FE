@@ -187,20 +187,6 @@ function Info() {
             <h1 className="wrapper-info__title">Thông Tin Cá Nhân</h1>
           </div>
 
-          {/* Profile Avatar */}
-          <div className="wrapper-info__avatar-section">
-            <div className="wrapper-info__avatar">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-                alt="User Avatar"
-                className="wrapper-info__avatar-image"
-              />
-            </div>
-            <button className="wrapper-info__change-avatar-btn">
-              Thay đổi Avatar
-            </button>
-          </div>
-
           {/* Form Section */}
           {loading ? (
             <SkeletonForm />

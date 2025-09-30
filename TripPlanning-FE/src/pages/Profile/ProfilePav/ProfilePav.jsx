@@ -102,16 +102,6 @@ function ProfilePav() {
       <div className="wrapper">
         <div className="wrapper-profile">
           {/* Profile Header */}
-          <div className="wrapper-profile__header">
-            <div className="wrapper-profile__avatar">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-                alt="User Avatar"
-                className="wrapper-profile__avatar-image"
-              />
-            </div>
-            <h2 className="wrapper-profile__username">harold2996s</h2>
-          </div>
 
           {/* Profile Menu */}
           <div className="wrapper-profile__menu">
