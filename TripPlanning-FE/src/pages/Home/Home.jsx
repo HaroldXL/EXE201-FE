@@ -166,10 +166,16 @@ function Home() {
           {/* Mobile Actions */}
           <div className="mobile-nav-actions">
             {user && user.token ? (
-              // Hiển thị notification và avatar khi đã login
+              // Hiển thị notification, search và avatar khi đã login
               <>
                 <button className="mobile-nav-icon-btn">
                   <Bell size={20} />
+                </button>
+                <button
+                  onClick={() => navigate("/search")}
+                  className="mobile-nav-icon-btn"
+                >
+                  <Search size={20} />
                 </button>
                 <button
                   onClick={() => navigate("/profile")}
@@ -215,13 +221,23 @@ function Home() {
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               {user && user.token ? (
-                // Hiển thị notification và avatar khi đã login
+                // Hiển thị notification, search và avatar khi đã login
                 <>
+                  <div className="nav-search">
+                    <button
+                      onClick={() => navigate("/search")}
+                      className="nav-icon-btn"
+                    >
+                      <Search size={20} />
+                    </button>
+                  </div>
+
                   <div className="nav-notifications">
                     <button className="nav-icon-btn">
                       <Bell size={20} />
                     </button>
                   </div>
+
                   <div className="nav-user-profile">
                     <button
                       onClick={() => navigate("/profile")}

@@ -101,6 +101,28 @@ function Explore() {
     }
   };
 
+  const searchAttractions = async (query, page = 1) => {
+    try {
+      setLoading(true);
+      // Encode the search query to handle Vietnamese characters properly
+      const encodedQuery = encodeURIComponent(query);
+      const response = await api.get(
+        `/Location/search?name=${encodedQuery}&page=${page}&pageSize=${pageSize}`
+      );
+
+      if (response.data) {
+        setAttractions(response.data.items || []);
+        setTotalCount(response.data.totalCount || 0);
+        setCurrentPage(response.data.page || page);
+      }
+    } catch (error) {
+      console.error("Error searching attractions:", error);
+      setAttractions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchTopics();
 
@@ -149,18 +171,48 @@ function Explore() {
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     setCurrentPage(1); // Reset to first page when changing tabs
+    setSearchQuery(""); // Clear search when changing tabs
     const selectedTab = tabs.find((tab) => tab.id === tabId);
     if (selectedTab) {
       fetchAttractions(selectedTab.topicId, 1);
     }
   };
 
+  // Handle search input change with debounce
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      if (searchQuery.trim()) {
+        searchAttractions(searchQuery.trim(), 1);
+        setActiveTab(""); // Clear active tab when searching
+      } else {
+        // If search is cleared, reload based on active tab
+        const selectedTab = tabs.find((tab) => tab.id === activeTab);
+        if (selectedTab) {
+          fetchAttractions(selectedTab.topicId, 1);
+        } else if (activeTab === "noi-bat" || !activeTab) {
+          setActiveTab("noi-bat");
+          fetchAttractions(null, 1);
+        }
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(delaySearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
   // Handle pagination change
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
-    const selectedTab = tabs.find((tab) => tab.id === activeTab);
-    if (selectedTab) {
-      fetchAttractions(selectedTab.topicId, newPage);
+
+    if (searchQuery.trim()) {
+      // If searching, paginate search results
+      searchAttractions(searchQuery.trim(), newPage);
+    } else {
+      // Otherwise paginate by tab
+      const selectedTab = tabs.find((tab) => tab.id === activeTab);
+      if (selectedTab) {
+        fetchAttractions(selectedTab.topicId, newPage);
+      }
     }
 
     // Scroll to top when changing pages
@@ -170,12 +222,7 @@ function Explore() {
     });
   };
 
-  const filteredAttractions = attractions.filter((attraction) => {
-    const matchesSearch = attraction.name
-      ?.toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesSearch; // No need to filter by tab since API already filters by topic
-  });
+  const filteredAttractions = attractions;
 
   return (
     <div>
