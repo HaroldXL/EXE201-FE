@@ -518,10 +518,10 @@
 @media (min-width: 1024px) {
   .search-content {
     padding-top: 120px;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 0px;
+    padding-right: 0px;
     padding-bottom: 60px;
-    max-width: 1200px;
+    max-width: 1060px;
   }
 
   .category-filter {
@@ -602,7 +602,9 @@
 /* Large Desktop Styles */
 @media (min-width: 1280px) {
   .search-content {
-    max-width: 1400px;
+    padding-left: 0px;
+    padding-right: 0px;
+    max-width: 1060px;
   }
 
   .search-results-grid {

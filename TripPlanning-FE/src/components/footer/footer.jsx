@@ -109,13 +109,21 @@ function Footer() {
             Theo dõi chúng tôi để cập nhật những điểm đến mới nhất
           </p>
           <div className="footer-social">
-            <a href="#" className="social-link">
+            <a
+              href="https://www.facebook.com/minhthien.phung.5"
+              target="_blank"
+              className="social-link"
+            >
               <Facebook size={20} />
             </a>
             <a href="#" className="social-link">
               <Twitter size={20} />
             </a>
-            <a href="#" className="social-link">
+            <a
+              href="https://www.instagram.com/harold2996s"
+              target="_blank"
+              className="social-link"
+            >
               <Instagram size={20} />
             </a>
             <a href="#" className="social-link">
