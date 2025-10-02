@@ -598,6 +598,26 @@
   }
 }
 
+/* Spin animation for loading icon */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-animation {
+  animation: spin 1s linear infinite;
+}
+
+/* Change location button disabled state */
+.trip-detail__change-location-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive Map Controls */
 @media (max-width: 768px) {
   .trip-detail {

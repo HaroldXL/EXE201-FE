@@ -15,6 +15,7 @@ import {
   RefreshCw,
   PencilLine,
   LucidePencil,
+  LoaderCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { message, Spin } from "antd";
@@ -29,6 +30,8 @@ function TripDetail() {
   const [tripData, setTripData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [topics, setTopics] = useState([]);
+  const [changingLocation, setChangingLocation] = useState(false);
   const navigate = useNavigate();
 
   // Skeleton Components
@@ -159,11 +162,62 @@ function TripDetail() {
     }
   }, [id]);
 
+  // Fetch topics from API
+  const fetchTopics = useCallback(async () => {
+    try {
+      const response = await api.get("/Topic/list-active");
+      setTopics(response.data || []);
+    } catch (err) {
+      console.error("Error fetching topics:", err);
+    }
+  }, []);
+
+  // Handle change location
+  const handleChangeLocation = async (orderIndex) => {
+    try {
+      setChangingLocation(true);
+
+      // Get all topic IDs
+      const topicIds = topics.map((topic) => topic.id);
+
+      const requestBody = {
+        topicIds: topicIds,
+        itineraryId: parseInt(id),
+        orderIndex: orderIndex,
+      };
+
+      console.log("Sending change location request:", requestBody);
+
+      const response = await api.post("/Location/suggest-replace", requestBody);
+
+      if (response.data) {
+        // Navigate to SuggestReplace page with data
+        navigate(
+          `/trip-planning/${parseInt(id)}/suggest-replace/${orderIndex}`,
+          {
+            state: {
+              suggestions: response.data,
+            },
+          }
+        );
+      }
+    } catch (err) {
+      console.error("Error changing location:", err);
+      message.error(
+        err.response?.data?.message ||
+          "Không thể lấy danh sách đề xuất. Vui lòng thử lại."
+      );
+    } finally {
+      setChangingLocation(false);
+    }
+  };
+
   useEffect(() => {
     if (id) {
       fetchTripDetail();
+      fetchTopics();
     }
-  }, [id, fetchTripDetail]);
+  }, [id, fetchTripDetail, fetchTopics]);
 
   return (
     <div>
@@ -396,17 +450,26 @@ function TripDetail() {
                                   Xem chi tiết
                                 </button>
                                 <button
-                                  onClick={() => {
-                                    // Handle change location logic here
-                                    console.log(
-                                      "Change location for order:",
-                                      location.orderIndex
-                                    );
-                                  }}
+                                  onClick={() =>
+                                    handleChangeLocation(location.orderIndex)
+                                  }
+                                  disabled={changingLocation}
                                   className="trip-detail__change-location-btn"
                                 >
-                                  <LucidePencil size={16} />
-                                  Thay đổi địa điểm
+                                  {changingLocation ? (
+                                    <>
+                                      <LoaderCircle
+                                        size={16}
+                                        className="spin-animation"
+                                      />
+                                      Đang tải...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <LucidePencil size={16} />
+                                      Thay đổi địa điểm
+                                    </>
+                                  )}
                                 </button>
                               </div>
                             </div>

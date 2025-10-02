@@ -19,6 +19,7 @@ import Search from "./pages/Search/Search";
 import TripPlanning from "./pages/TripPlanning/TripCreate/TripPlanning";
 import TripDetail from "./pages/TripPlanning/TripDetail/TripDetail";
 import History from "./pages/Profile/History/History";
+import SuggestReplace from "./pages/TripPlanning/SuggestReplace/SuggestReplace";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -109,6 +110,10 @@ function App() {
         {
           path: "trip-planning/:id",
           element: <TripDetail />,
+        },
+        {
+          path: "trip-planning/:itineraryId/suggest-replace/:orderIndex",
+          element: <SuggestReplace />,
         },
       ],
     },
