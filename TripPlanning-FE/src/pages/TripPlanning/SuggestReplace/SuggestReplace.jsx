@@ -4,7 +4,6 @@ import {
   MapPin,
   ArrowLeft,
   ChevronRight,
-  CheckCircle,
   MapPinCheck,
 } from "lucide-react";
 import { Skeleton, Pagination } from "@mui/material";

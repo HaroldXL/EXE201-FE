@@ -251,18 +251,18 @@ function Home() {
                 // Hiển thị login và register khi chưa login
                 <>
                   <div className="desktop-auth-buttons">
-                    <a
-                      href="/login"
+                    <Link
+                      to="/login"
                       className="desktop-auth-btn desktop-login-btn"
                     >
                       Đăng nhập
-                    </a>
-                    <a
-                      href="/register"
+                    </Link>
+                    <Link
+                      to="/register"
                       className="desktop-auth-btn desktop-register-btn"
                     >
                       Đăng ký
-                    </a>
+                    </Link>
                   </div>
                 </>
               )}

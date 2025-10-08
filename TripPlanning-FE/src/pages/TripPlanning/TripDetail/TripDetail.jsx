@@ -303,10 +303,9 @@ function TripDetail() {
                 {/* This would be replaced with actual Google Maps component */}
                 <div className="trip-detail__map-placeholder">
                   <iframe
-                    src={
-                      tripData.googleRouteData ||
-                      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5346138030296!2d106.69514731533456!3d10.776530161875896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f38f9ed887b%3A0x14aded5703768989!2zVHLGsOG7nW5nIHThuKNpIGjhu41jIFThuq1uZyBD4buNbmcgSOG7kyBDaMOtIE1pbmggLSBVbml2ZXJzaXR5IG9mIFRlY2hub2xvZ3ksIEhvIENoaSBNaW5oIENpdHk!5e0!3m2!1svi!2s!4v1621234567890!5m2!1svi!2s"
-                    }
+                    src={`https://www.google.com/maps/embed/v1/place?key=${
+                      import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+                    }&q=Space+Needle,Seattle+WA`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

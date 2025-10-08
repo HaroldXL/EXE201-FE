@@ -4,7 +4,6 @@ import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import api from "../../../config/axios";
-import Header from "../../../components/header/header";
 import { message, notification } from "antd";
 
 function Register() {
