@@ -75,8 +75,8 @@ function ProfilePav() {
     {
       id: 3,
       icon: CreditCard,
-      title: "Ví Của Bạn",
-      description: "Quản lý số dư tài khoản của bạn",
+      title: "Ví Của Tôi",
+      description: "Quản lý số dư tài khoản của tôi",
       hasArrow: true,
     },
     {

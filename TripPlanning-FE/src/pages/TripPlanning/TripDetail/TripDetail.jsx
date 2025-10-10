@@ -1,25 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   MapPin,
   Calendar,
   Users,
   Clock,
   MoreHorizontal,
-  Navigation,
-  Share2,
   Edit,
   ChevronRight,
   MapPinned,
-  Loader,
   CircleDollarSign,
-  RefreshCw,
-  PencilLine,
   LucidePencil,
   LoaderCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { message, Spin } from "antd";
+import { message } from "antd";
 import { Skeleton } from "@mui/material";
+import * as maptilersdk from "@maptiler/sdk";
+import "@maptiler/sdk/dist/maptiler-sdk.css";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import api from "../../../config/axios";
@@ -32,6 +29,8 @@ function TripDetail() {
   const [error, setError] = useState(null);
   const [topics, setTopics] = useState([]);
   const [changingLocation, setChangingLocation] = useState(false);
+  const mapContainer = useRef(null);
+  const map = useRef(null);
   const navigate = useNavigate();
 
   // Skeleton Components
@@ -212,6 +211,95 @@ function TripDetail() {
     }
   };
 
+  // Initialize MapTiler map
+  useEffect(() => {
+    if (map.current || !tripData?.locations?.length) return;
+
+    maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+
+    // Calculate center from all locations
+    const bounds = new maptilersdk.LngLatBounds();
+    let hasValidLocation = false;
+
+    tripData.locations.forEach((location) => {
+      if (location.longitude && location.latitude) {
+        bounds.extend([location.longitude, location.latitude]);
+        hasValidLocation = true;
+      }
+    });
+
+    // Default center (Ho Chi Minh City) if no valid locations
+    const defaultCenter = [106.6297, 10.8231];
+    const center = hasValidLocation
+      ? bounds.getCenter()
+      : { lng: defaultCenter[0], lat: defaultCenter[1] };
+
+    map.current = new maptilersdk.Map({
+      container: mapContainer.current,
+      style: maptilersdk.MapStyle.STREETS, // You can change to: OUTDOOR, SATELLITE, etc.
+      center: [center.lng, center.lat],
+      zoom: hasValidLocation ? 12 : 11,
+    });
+
+    // Add markers for each location
+    tripData.locations.forEach((location) => {
+      if (location.longitude && location.latitude) {
+        // Create custom marker element
+        const el = document.createElement("div");
+        el.className = "trip-detail__map-marker";
+        el.textContent = location.orderIndex;
+        el.style.backgroundColor = "#3b82f6";
+        el.style.color = "white";
+        el.style.width = "32px";
+        el.style.height = "32px";
+        el.style.borderRadius = "50%";
+        el.style.display = "flex";
+        el.style.alignItems = "center";
+        el.style.justifyContent = "center";
+        el.style.fontWeight = "600";
+        el.style.fontSize = "14px";
+        el.style.cursor = "pointer";
+        el.style.border = "3px solid white";
+        el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
+
+        // Add marker
+        const marker = new maptilersdk.Marker({ element: el })
+          .setLngLat([location.longitude, location.latitude])
+          .addTo(map.current);
+
+        // Add popup with location info
+        const popup = new maptilersdk.Popup({ offset: 25 }).setHTML(
+          `<div style="padding: 8px;">
+            <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${location.locationName}</h3>
+            <p style="margin: 0; font-size: 12px; color: #666;">${location.address}</p>
+          </div>`
+        );
+
+        marker.setPopup(popup);
+
+        // Click marker to open popup
+        el.addEventListener("click", () => {
+          popup.addTo(map.current);
+        });
+      }
+    });
+
+    // Fit map to show all markers
+    if (hasValidLocation && tripData.locations.length > 1) {
+      map.current.fitBounds(bounds, {
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+        maxZoom: 14,
+      });
+    }
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, [tripData]);
+
   useEffect(() => {
     if (id) {
       fetchTripDetail();
@@ -299,45 +387,11 @@ function TripDetail() {
           <div className="trip-detail trip-detail--fade-in">
             {/* Map Section */}
             <div className="trip-detail__map trip-detail__map--fade-in">
-              <div className="trip-detail__map-container">
-                {/* This would be replaced with actual Google Maps component */}
-                <div className="trip-detail__map-placeholder">
-                  <iframe
-                    src={`https://www.google.com/maps/embed/v1/place?key=${
-                      import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-                    }&q=Space+Needle,Seattle+WA`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Trip Route Map"
-                  ></iframe>
-                </div>{" "}
-                {/* Map Controls */}
-                <div className="trip-detail__map-controls">
-                  <button className="trip-detail__map-control-btn">
-                    <Navigation size={20} />
-                  </button>
-                  <button className="trip-detail__map-control-btn">
-                    <Share2 size={20} />
-                  </button>
-                </div>
-                {/* Route Points */}
-                <div className="trip-detail__route-points">
-                  {tripData.locations?.map((location, index) => (
-                    <div
-                      key={location.orderIndex}
-                      className={`trip-detail__route-point trip-detail__route-point--${
-                        index + 1
-                      }`}
-                    >
-                      {location.orderIndex}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <div
+                ref={mapContainer}
+                className="trip-detail__map-container"
+                style={{ width: "100%", height: "100%" }}
+              />
             </div>
 
             {/* Trip Info Section */}
