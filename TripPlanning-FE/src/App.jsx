@@ -21,6 +21,7 @@ import TripDetail from "./pages/TripPlanning/TripDetail/TripDetail";
 import History from "./pages/Profile/History/History";
 import SuggestReplace from "./pages/TripPlanning/SuggestReplace/SuggestReplace";
 import Wallet from "./pages/Profile/Wallet/Wallet";
+import AboutUs from "./pages/AboutUs/AboutUs";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -107,6 +108,10 @@ function App() {
         {
           path: "chatbot",
           element: <Chatbot />,
+        },
+        {
+          path: "about-us",
+          element: <AboutUs />,
         },
         {
           path: "search",

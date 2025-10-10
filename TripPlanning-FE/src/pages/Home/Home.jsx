@@ -141,7 +141,7 @@ function Home() {
             <MessageCircle size={20} />
             <span>Hỏi Đáp AI</span>
           </Link>
-          <Link to="#" className="header-sidebar-link">
+          <Link to="/about-us" className="header-sidebar-link">
             <Info size={20} />
             <span>Về Chúng Tôi</span>
           </Link>
@@ -215,7 +215,7 @@ function Home() {
               <a href="/chatbot" className="nav-link">
                 Hỏi Đáp AI
               </a>
-              <a href="#about" className="nav-link">
+              <a href="/about-us" className="nav-link">
                 Về Chúng Tôi
               </a>
             </div>

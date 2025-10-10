@@ -73,7 +73,7 @@ function Header() {
             <MessageCircle size={20} />
             <span>Hỏi Đáp AI</span>
           </Link>
-          <Link to="#" className="header-sidebar-link">
+          <Link to="/about-us" className="header-sidebar-link">
             <Info size={20} />
             <span>Về Chúng Tôi</span>
           </Link>
@@ -154,7 +154,7 @@ function Header() {
             <Link to="/chatbot" className="header-nav-link">
               Hỏi Đáp AI
             </Link>
-            <Link to="#" className="header-nav-link">
+            <Link to="/about-us" className="header-nav-link">
               Về Chúng Tôi
             </Link>
           </div>
