@@ -22,6 +22,7 @@ import History from "./pages/Profile/History/History";
 import SuggestReplace from "./pages/TripPlanning/SuggestReplace/SuggestReplace";
 import Wallet from "./pages/Profile/Wallet/Wallet";
 import AboutUs from "./pages/AboutUs/AboutUs";
+import Help from "./pages/Profile/Help/Help";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -102,6 +103,14 @@ function App() {
           element: (
             <ProtectUserProfile>
               <Wallet />
+            </ProtectUserProfile>
+          ),
+        },
+        {
+          path: "profile/help",
+          element: (
+            <ProtectUserProfile>
+              <Help />
             </ProtectUserProfile>
           ),
         },

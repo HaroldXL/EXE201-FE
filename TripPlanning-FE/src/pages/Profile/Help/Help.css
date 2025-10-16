@@ -1,0 +1,298 @@
+/* Help Page - Matching Profile Pages Style */
+
+.help-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+}
+
+.wrapper-help {
+  flex: 1;
+  padding: 20px 16px;
+}
+
+.help-container {
+  max-width: 1060px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Header */
+.help-header {
+  text-align: center;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.help-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.025em;
+}
+
+.help-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Contact Section */
+.help-contact-section {
+  margin-bottom: 48px;
+  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+
+.help-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.help-contact-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.help-contact-card:hover {
+  transform: translateY(-4px);
+}
+
+.help-contact-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.help-contact-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.help-contact-description {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+}
+
+.help-contact-btn {
+  width: 100%;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.help-contact-btn:hover {
+  transform: scale(1.02);
+}
+
+/* FAQ Section */
+.help-faq-section {
+  margin-bottom: 48px;
+  animation: fadeInUp 0.6s ease-out 0.4s backwards;
+}
+
+.help-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.help-faq-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.help-faq-item:hover {
+  transform: translateY(-2px);
+}
+
+.help-faq-item.expanded {
+  border: 1px solid #3b82f6;
+}
+
+.help-faq-question {
+  width: 100%;
+  padding: 26px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.help-faq-question:hover {
+  background-color: #f8fafc;
+}
+
+.help-faq-question-content {
+  flex: 1;
+}
+
+.help-faq-category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3b82f6;
+  margin-bottom: 12px;
+}
+
+.help-faq-question h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.help-faq-toggle {
+  color: #64748b;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.help-faq-item.expanded .help-faq-toggle {
+  color: #3b82f6;
+  transform: rotate(180deg);
+}
+
+.help-faq-answer {
+  padding: 5px 26px 26px 26px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.help-faq-answer p {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* No Results */
+.help-no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.help-no-results svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.help-no-results p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 8px 0;
+}
+
+.help-no-results span {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .wrapper-help {
+    padding: 32px 20px;
+  }
+
+  .help-title {
+    font-size: 32px;
+  }
+
+  .help-subtitle {
+    font-size: 16px;
+  }
+
+  .help-contact-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .help-faq-question h3 {
+    font-size: 18px;
+  }
+
+  .help-faq-answer p {
+    font-size: 16px;
+  }
+
+  .help-section-title {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapper-help {
+    padding: 40px 0;
+  }
+
+  .help-title {
+    font-size: 36px;
+  }
+
+  .help-contact-section,
+  .help-faq-section {
+    margin-bottom: 56px;
+  }
+}
