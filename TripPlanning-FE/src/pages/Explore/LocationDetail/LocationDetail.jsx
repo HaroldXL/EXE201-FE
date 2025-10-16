@@ -517,6 +517,7 @@ function LocationDetail() {
                     {location.averageRating || 0}
                   </span>
                   <Rate
+                    disabled
                     allowHalf
                     value={location.averageRating || 0}
                     style={{ fontSize: 20, color: "#fadb14" }}
@@ -723,7 +724,6 @@ function LocationDetail() {
           <div className="wrapper-location-detail__rating-modal-item">
             <label>Đánh giá của bạn:</label>
             <Rate
-              disabled
               allowHalf
               value={ratingForm.point}
               onChange={(value) =>
