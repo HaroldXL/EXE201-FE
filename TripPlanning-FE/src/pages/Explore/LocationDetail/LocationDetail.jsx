@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, ExternalLink } from "lucide-react";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Pagination } from "@mui/material";
+import { Modal, Rate, message } from "antd";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import api from "../../../config/axios";
@@ -14,6 +15,19 @@ function LocationDetail() {
   const [relatedLocations, setRelatedLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [relatedLoading, setRelatedLoading] = useState(true);
+  const [ratings, setRatings] = useState([]);
+  const [ratingsLoading, setRatingsLoading] = useState(true);
+  const [ratingsPagination, setRatingsPagination] = useState({
+    page: 1,
+    pageSize: 5,
+    totalCount: 0,
+  });
+  const [isRatingModalVisible, setIsRatingModalVisible] = useState(false);
+  const [ratingForm, setRatingForm] = useState({
+    point: 0,
+    details: "",
+  });
+  const [submittingRating, setSubmittingRating] = useState(false);
 
   // Fetch location details
   const fetchLocationDetail = useCallback(async () => {
@@ -48,12 +62,94 @@ function LocationDetail() {
     }
   }, [id]);
 
+  // Fetch ratings
+  const fetchRatings = useCallback(
+    async (page = 1, pageSize = 5) => {
+      try {
+        setRatingsLoading(true);
+        const response = await api.get("/Rating", {
+          params: {
+            locationId: parseInt(id),
+            page,
+            pageSize,
+          },
+        });
+        setRatings(response.data.items || []);
+        setRatingsPagination({
+          page: response.data.page || 1,
+          pageSize: response.data.pageSize || 5,
+          totalCount: response.data.totalCount || 0,
+        });
+      } catch (error) {
+        console.error("Error fetching ratings:", error);
+      } finally {
+        setRatingsLoading(false);
+      }
+    },
+    [id]
+  );
+
+  // Handle rating pagination change
+  const handleRatingPageChange = (event, page) => {
+    fetchRatings(page, ratingsPagination.pageSize);
+  };
+
+  // Open rating modal
+  const showRatingModal = () => {
+    setIsRatingModalVisible(true);
+  };
+
+  // Close rating modal
+  const handleRatingCancel = () => {
+    setIsRatingModalVisible(false);
+    setRatingForm({ point: 0, details: "" });
+  };
+
+  // Submit rating
+  const handleRatingSubmit = async () => {
+    if (ratingForm.point === 0) {
+      message.error("Vui lòng chọn số sao đánh giá");
+      return;
+    }
+
+    if (!ratingForm.details.trim()) {
+      message.error("Vui lòng nhập nội dung đánh giá");
+      return;
+    }
+
+    try {
+      setSubmittingRating(true);
+      await api.post("/Rating", {
+        locationId: parseInt(id),
+        point: ratingForm.point,
+        details: ratingForm.details,
+      });
+
+      message.success("Đánh giá của bạn đã được gửi thành công!");
+      setIsRatingModalVisible(false);
+      setRatingForm({ point: 0, details: "" });
+
+      // Refresh ratings and location data
+      fetchRatings();
+      fetchLocationDetail();
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+      message.error(
+        error.response?.data?.message ||
+          "Không thể gửi đánh giá. Vui lòng thử lại sau."
+      );
+    } finally {
+      setSubmittingRating(false);
+    }
+  };
+
   useEffect(() => {
     if (id) {
       fetchLocationDetail();
       fetchRelatedLocations();
+      fetchRatings();
     }
-  }, [id]);
+  }, [id, fetchLocationDetail, fetchRelatedLocations, fetchRatings]);
 
   // Parse opening hours
   const parseOpeningHours = (hoursString) => {
@@ -407,6 +503,144 @@ function LocationDetail() {
               <p>{location.description}</p>
             </div>
 
+            {/* Ratings Section */}
+            <div className="wrapper-location-detail__ratings">
+              <div className="wrapper-location-detail__ratings-header">
+                <h3>
+                  Đánh giá{" "}
+                  <span className="wrapper-location-detail__ratings-count">
+                    ({ratingsPagination.totalCount})
+                  </span>
+                </h3>
+                <div className="wrapper-location-detail__ratings-summary">
+                  <span className="wrapper-location-detail__ratings-average">
+                    {location.averageRating || 0}
+                  </span>
+                  <Rate
+                    allowHalf
+                    value={location.averageRating || 0}
+                    style={{ fontSize: 20, color: "#fadb14" }}
+                  />
+                </div>
+              </div>
+              <button
+                className="wrapper-location-detail__add-rating-btn"
+                onClick={showRatingModal}
+              >
+                + Thêm đánh giá
+              </button>
+
+              {/* Ratings List */}
+              <div className="wrapper-location-detail__ratings-list">
+                {ratingsLoading ? (
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="wrapper-location-detail__rating-item"
+                    >
+                      <div className="wrapper-location-detail__rating-header">
+                        <Skeleton
+                          variant="circular"
+                          width={48}
+                          height={48}
+                          animation="wave"
+                        />
+                        <div style={{ flex: 1 }}>
+                          <Skeleton
+                            variant="text"
+                            width={120}
+                            height={20}
+                            animation="wave"
+                          />
+                          <Skeleton
+                            variant="text"
+                            width={150}
+                            height={16}
+                            animation="wave"
+                          />
+                        </div>
+                      </div>
+                      <Skeleton
+                        variant="text"
+                        width="100%"
+                        height={20}
+                        animation="wave"
+                      />
+                    </div>
+                  ))
+                ) : ratings.length > 0 ? (
+                  <>
+                    {ratings.map((rating) => (
+                      <div
+                        key={rating.id}
+                        className="wrapper-location-detail__rating-item"
+                      >
+                        <div className="wrapper-location-detail__rating-header">
+                          <div className="wrapper-location-detail__rating-avatar">
+                            <img
+                              src={
+                                rating.userAvatar ||
+                                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                  rating.userName || "User"
+                                )}&background=3b82f6&color=fff`
+                              }
+                              alt={rating.userName}
+                              onError={(e) => {
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                  rating.userName || "User"
+                                )}&background=3b82f6&color=fff`;
+                              }}
+                            />
+                          </div>
+                          <div className="wrapper-location-detail__rating-user-info">
+                            <h4>{rating.userName || "Người dùng"}</h4>
+                            <span className="wrapper-location-detail__rating-date">
+                              {new Date(rating.createdAt).toLocaleDateString(
+                                "vi-VN",
+                                {
+                                  day: "2-digit",
+                                  month: "long",
+                                  year: "numeric",
+                                }
+                              )}
+                            </span>
+                          </div>
+                          <div className="wrapper-location-detail__rating-point">
+                            <Star size={16} fill="#fadb14" color="#fadb14" />
+                            <span>{rating.point}</span>
+                          </div>
+                        </div>
+                        <div className="wrapper-location-detail__rating-content">
+                          <p>{rating.details}</p>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Pagination */}
+                    {ratingsPagination.totalCount >
+                      ratingsPagination.pageSize && (
+                      <div className="wrapper-location-detail__ratings-pagination">
+                        <Pagination
+                          count={Math.ceil(
+                            ratingsPagination.totalCount /
+                              ratingsPagination.pageSize
+                          )}
+                          page={ratingsPagination.page}
+                          onChange={handleRatingPageChange}
+                          color="primary"
+                          shape="rounded"
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="wrapper-location-detail__no-ratings">
+                    <p>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Related locations */}
             <div className="wrapper-location-detail__related">
               <div className="wrapper-location-detail__related-header">
@@ -472,6 +706,45 @@ function LocationDetail() {
           </div>
         </div>
       </div>
+
+      {/* Rating Modal */}
+      <Modal
+        title="Thêm đánh giá"
+        open={isRatingModalVisible}
+        onOk={handleRatingSubmit}
+        onCancel={handleRatingCancel}
+        okText="Gửi đánh giá"
+        cancelText="Hủy"
+        confirmLoading={submittingRating}
+        width={500}
+      >
+        <div className="wrapper-location-detail__rating-modal">
+          <div className="wrapper-location-detail__rating-modal-item">
+            <label>Đánh giá của bạn:</label>
+            <Rate
+              allowHalf
+              value={ratingForm.point}
+              onChange={(value) =>
+                setRatingForm({ ...ratingForm, point: value })
+              }
+              style={{ fontSize: 32 }}
+            />
+          </div>
+          <div className="wrapper-location-detail__rating-modal-item">
+            <label>Nội dung đánh giá:</label>
+            <textarea
+              rows={5}
+              placeholder="Chia sẻ trải nghiệm của bạn về địa điểm này..."
+              value={ratingForm.details}
+              onChange={(e) =>
+                setRatingForm({ ...ratingForm, details: e.target.value })
+              }
+              className="wrapper-location-detail__rating-textarea"
+            />
+          </div>
+        </div>
+      </Modal>
+
       <Footer />
     </div>
   );

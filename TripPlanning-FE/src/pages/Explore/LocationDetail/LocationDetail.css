@@ -565,3 +565,227 @@
     font-size: 13px;
   }
 }
+
+/* Ratings Section */
+.wrapper-location-detail__ratings {
+  margin-top: 48px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 48px;
+}
+
+.wrapper-location-detail__ratings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.wrapper-location-detail__ratings-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.wrapper-location-detail__ratings-count {
+  font-size: 16px;
+  font-weight: 400;
+  color: #64748b;
+}
+
+.wrapper-location-detail__ratings-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wrapper-location-detail__ratings-average {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.wrapper-location-detail__add-rating-btn {
+  padding: 10px 20px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  margin-bottom: 24px;
+}
+
+.wrapper-location-detail__add-rating-btn:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.wrapper-location-detail__ratings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wrapper-location-detail__rating-item {
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.wrapper-location-detail__rating-item:hover {
+  background: #f1f5f9;
+}
+
+.wrapper-location-detail__rating-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.wrapper-location-detail__rating-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.wrapper-location-detail__rating-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wrapper-location-detail__rating-user-info {
+  flex: 1;
+}
+
+.wrapper-location-detail__rating-user-info h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.wrapper-location-detail__rating-date {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.wrapper-location-detail__rating-point {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.wrapper-location-detail__rating-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
+}
+
+.wrapper-location-detail__no-ratings {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+}
+
+.wrapper-location-detail__no-ratings p {
+  font-size: 15px;
+  margin: 0;
+}
+
+.wrapper-location-detail__ratings-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+/* Rating Modal */
+.wrapper-location-detail__rating-modal {
+  padding: 16px 0;
+}
+
+.wrapper-location-detail__rating-modal-item {
+  margin-bottom: 24px;
+}
+
+.wrapper-location-detail__rating-modal-item:last-child {
+  margin-bottom: 0;
+}
+
+.wrapper-location-detail__rating-modal-item label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.wrapper-location-detail__rating-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.wrapper-location-detail__rating-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.wrapper-location-detail__rating-textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* Responsive for Ratings */
+@media (min-width: 768px) {
+  .wrapper-location-detail__ratings {
+    padding: 32px;
+  }
+
+  .wrapper-location-detail__ratings-header h3 {
+    font-size: 22px;
+  }
+
+  .wrapper-location-detail__rating-item {
+    padding: 24px;
+  }
+
+  .wrapper-location-detail__rating-user-info h4 {
+    font-size: 16px;
+  }
+
+  .wrapper-location-detail__rating-content p {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapper-location-detail__ratings-header h3 {
+    font-size: 24px;
+  }
+}
