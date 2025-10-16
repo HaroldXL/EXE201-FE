@@ -717,11 +717,13 @@ function LocationDetail() {
         cancelText="Hủy"
         confirmLoading={submittingRating}
         width={500}
+        centered
       >
         <div className="wrapper-location-detail__rating-modal">
           <div className="wrapper-location-detail__rating-modal-item">
             <label>Đánh giá của bạn:</label>
             <Rate
+              disabled
               allowHalf
               value={ratingForm.point}
               onChange={(value) =>
