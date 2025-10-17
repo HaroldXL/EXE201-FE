@@ -23,13 +23,18 @@ import SuggestReplace from "./pages/TripPlanning/SuggestReplace/SuggestReplace";
 import Wallet from "./pages/Profile/Wallet/Wallet";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import Help from "./pages/Profile/Help/Help";
+import Pricing from "./pages/Pricing/Pricing";
+import AdminDashboard from "./pages/AdminPages/AdminDasboard/AdminDashboard";
+import { notification } from "antd";
+import Subscription from "./pages/Profile/Subscription/Subscription";
+import UserManagement from "./pages/AdminPages/UserManagement/UserManagement";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
   if (user == null) {
     return children;
   } else if (user && user.user.roleName === "admin") {
-    return <Navigate to="/admin" />;
+    return <Navigate to="/admin-dashboard" />;
   } else {
     return <Navigate to="/" />;
   }
@@ -41,6 +46,22 @@ const ProtectUserProfile = ({ children }) => {
     return children;
   }
   return <Navigate to={"/"} />;
+};
+
+const ProtectAdminRoute = ({ children }) => {
+  const user = useSelector((store) => store.user);
+  if (user == null) {
+    return <Navigate to="/" />;
+  }
+  if (user.user.roleName !== "admin") {
+    notification.error({
+      message: "Truy cập bị từ chối",
+      description: "Cần có quyền Admin để truy cập.",
+      duration: 2,
+    });
+    return <Navigate to="/" />;
+  }
+  return children;
 };
 
 function App() {
@@ -115,8 +136,20 @@ function App() {
           ),
         },
         {
+          path: "profile/subscription",
+          element: (
+            <ProtectUserProfile>
+              <Subscription />
+            </ProtectUserProfile>
+          ),
+        },
+        {
           path: "chatbot",
           element: <Chatbot />,
+        },
+        {
+          path: "pricing",
+          element: <Pricing />,
         },
         {
           path: "about-us",
@@ -137,6 +170,14 @@ function App() {
         {
           path: "trip-planning/:itineraryId/suggest-replace/:orderIndex",
           element: <SuggestReplace />,
+        },
+        {
+          path: "admin-dashboard",
+          element: <AdminDashboard />,
+        },
+        {
+          path: "admin-dashboard/users",
+          element: <UserManagement />,
         },
       ],
     },

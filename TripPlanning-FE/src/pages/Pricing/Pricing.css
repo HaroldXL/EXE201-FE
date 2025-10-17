@@ -1,26 +1,26 @@
-/* Subscription Page Styles - Mobile First */
-.wrapper-subscription {
+/* Pricing Page Styles - Mobile First */
+.wrapper-pricing {
   min-height: calc(100vh - 160px);
   background: #f8fafc;
   padding: 30px 20px;
 }
 
 /* Header Section */
-.wrapper-subscription__header {
+.wrapper-pricing__header {
   text-align: center;
   margin-bottom: 32px;
   opacity: 0;
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
-.wrapper-subscription__title {
+.wrapper-pricing__title {
   font-size: 28px;
   font-weight: 700;
   color: #3b82f6;
   margin-bottom: 12px;
 }
 
-.wrapper-subscription__subtitle {
+.wrapper-pricing__subtitle {
   font-size: 14px;
   color: #64748b;
   max-width: 500px;
@@ -29,7 +29,7 @@
 }
 
 /* Plans Grid */
-.wrapper-subscription__plans {
+.wrapper-pricing__plans {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
@@ -41,7 +41,7 @@
 }
 
 /* Plan Card */
-.wrapper-subscription__plan-card {
+.wrapper-pricing__plan-card {
   background: white;
   border-radius: 12px;
   padding: 24px 20px;
@@ -50,22 +50,22 @@
   border: 2px solid #e5e7eb;
 }
 
-.wrapper-subscription__plan-card:hover {
+.wrapper-pricing__plan-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
-.wrapper-subscription__plan-card--popular {
+.wrapper-pricing__plan-card--popular {
   border-color: #3b82f6;
   box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
 }
 
-.wrapper-subscription__plan-card--popular:hover {
+.wrapper-pricing__plan-card--popular:hover {
   box-shadow: 0 20px 50px rgba(59, 130, 246, 0.25);
 }
 
 /* Popular Badge */
-.wrapper-subscription__popular-badge {
+.wrapper-pricing__popular-badge {
   position: absolute;
   top: -12px;
   left: 50%;
@@ -83,45 +83,45 @@
 }
 
 /* Plan Header */
-.wrapper-subscription__plan-header {
+.wrapper-pricing__plan-header {
   margin-bottom: 20px;
 }
 
-.wrapper-subscription__plan-name {
+.wrapper-pricing__plan-name {
   font-size: 22px;
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 6px;
 }
 
-.wrapper-subscription__plan-description {
+.wrapper-pricing__plan-description {
   font-size: 13px;
   color: #64748b;
   line-height: 1.4;
 }
 
 /* Plan Price */
-.wrapper-subscription__plan-price {
+.wrapper-pricing__plan-price {
   margin-bottom: 20px;
   display: flex;
   align-items: baseline;
   gap: 6px;
 }
 
-.wrapper-subscription__price-amount {
+.wrapper-pricing__price-amount {
   font-size: 36px;
   font-weight: 700;
   color: #1e293b;
 }
 
-.wrapper-subscription__price-currency {
+.wrapper-pricing__price-currency {
   font-size: 16px;
   font-weight: 600;
   color: #64748b;
 }
 
 /* Plan Button */
-.wrapper-subscription__plan-button {
+.wrapper-pricing__plan-button {
   width: 100%;
   padding: 12px 20px;
   border-radius: 8px;
@@ -133,35 +133,35 @@
   margin-bottom: 24px;
 }
 
-.wrapper-subscription__plan-button--primary {
+.wrapper-pricing__plan-button--primary {
   background: #3b82f6;
   color: white;
 }
 
-.wrapper-subscription__plan-button--primary:hover {
+.wrapper-pricing__plan-button--primary:hover {
   background: #2563eb;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
-.wrapper-subscription__plan-button--secondary {
+.wrapper-pricing__plan-button--secondary {
   background: white;
   color: #3b82f6;
   border: 2px solid #3b82f6;
 }
 
-.wrapper-subscription__plan-button--secondary:hover {
+.wrapper-pricing__plan-button--secondary:hover {
   background: #eff6ff;
   transform: translateY(-2px);
 }
 
 /* Plan Features */
-.wrapper-subscription__plan-features {
+.wrapper-pricing__plan-features {
   border-top: 1px solid #e5e7eb;
   padding-top: 20px;
 }
 
-.wrapper-subscription__features-title {
+.wrapper-pricing__features-title {
   font-size: 13px;
   font-weight: 600;
   color: #64748b;
@@ -170,7 +170,7 @@
   letter-spacing: 0.5px;
 }
 
-.wrapper-subscription__features-list {
+.wrapper-pricing__features-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -179,7 +179,7 @@
   gap: 10px;
 }
 
-.wrapper-subscription__feature-item {
+.wrapper-pricing__feature-item {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -188,7 +188,7 @@
   line-height: 1.5;
 }
 
-.wrapper-subscription__feature-icon {
+.wrapper-pricing__feature-icon {
   color: #3b82f6;
   flex-shrink: 0;
   margin-top: 2px;
@@ -208,55 +208,56 @@
 
 /* Tablet Styles */
 @media (min-width: 768px) {
-  .wrapper-subscription__title {
+  .wrapper-pricing__title {
     font-size: 36px;
   }
 
-  .wrapper-subscription__subtitle {
+  .wrapper-pricing__subtitle {
     font-size: 16px;
   }
 
-  .wrapper-subscription__plans {
+  .wrapper-pricing__plans {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
 
-  .wrapper-subscription__plan-card {
+  .wrapper-pricing__plan-card {
     padding: 28px 24px;
   }
 
-  .wrapper-subscription__plan-name {
+  .wrapper-pricing__plan-name {
     font-size: 24px;
   }
 
-  .wrapper-subscription__plan-description {
+  .wrapper-pricing__plan-description {
     font-size: 14px;
   }
 
-  .wrapper-subscription__price-amount {
+  .wrapper-pricing__price-amount {
     font-size: 40px;
   }
 
-  .wrapper-subscription__feature-item {
+  .wrapper-pricing__feature-item {
     font-size: 15px;
   }
 }
 
 /* Desktop Styles */
 @media (min-width: 1024px) {
-  .wrapper-subscription__title {
+
+  .wrapper-pricing__title {
     font-size: 42px;
   }
 
-  .wrapper-subscription__subtitle {
+  .wrapper-pricing__subtitle {
     font-size: 18px;
   }
 
-  .wrapper-subscription__header {
+  .wrapper-pricing__header {
     margin-bottom: 40px;
   }
 
-  .wrapper-subscription__plans {
+  .wrapper-pricing__plans {
     gap: 32px;
     margin-bottom: 50px;
   }

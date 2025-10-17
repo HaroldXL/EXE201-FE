@@ -47,7 +47,12 @@ function Login() {
       dispatch(login(response.data));
 
       // Navigate to home page
-      navigate("/");
+
+      if (response.data.user.roleName === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       notification.error({
         message: "Đăng nhập thất bại",

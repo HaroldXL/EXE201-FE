@@ -2,11 +2,11 @@ import React from "react";
 import { Check, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Header from "../../../components/header/header";
-import Footer from "../../../components/footer/footer";
-import "./Subscription.css";
+import Header from "../../components/header/header";
+import Footer from "../../components/footer/footer";
+import "./Pricing.css";
 
-function Subscription() {
+function Pricing() {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
 
@@ -29,7 +29,7 @@ function Subscription() {
   const plans = [
     {
       id: "free",
-      name: "Cơ bản",
+      name: "Cơ bản",
       price: 0,
       description: "Bắt đầu với những tính năng cơ bản",
       features: [
@@ -64,79 +64,70 @@ function Subscription() {
     <div>
       <Header />
       <div className="wrapper header-page-container">
-        <div className="wrapper-subscription">
+        <div className="wrapper-pricing">
           {/* Header Section */}
-          <div className="wrapper-subscription__header">
-            <h1 className="wrapper-subscription__title">
-              Chọn gói phù hợp với bạn
-            </h1>
-            <p className="wrapper-subscription__subtitle">
+          <div className="wrapper-pricing__header">
+            <h1 className="wrapper-pricing__title">Chọn gói phù hợp với bạn</h1>
+            <p className="wrapper-pricing__subtitle">
               Bắt đầu miễn phí và nâng cấp khi bạn cần thêm tính năng
             </p>
           </div>
 
           {/* Plans Grid */}
-          <div className="wrapper-subscription__plans">
+          <div className="wrapper-pricing__plans">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`wrapper-subscription__plan-card ${
-                  plan.popular ? "wrapper-subscription__plan-card--popular" : ""
+                className={`wrapper-pricing__plan-card ${
+                  plan.popular ? "wrapper-pricing__plan-card--popular" : ""
                 }`}
               >
                 {plan.popular && (
-                  <div className="wrapper-subscription__popular-badge">
+                  <div className="wrapper-pricing__popular-badge">
                     <Sparkles size={14} />
                     <span>Phổ biến nhất</span>
                   </div>
                 )}
 
-                <div className="wrapper-subscription__plan-header">
-                  <h3 className="wrapper-subscription__plan-name">
-                    {plan.name}
-                  </h3>
-                  <p className="wrapper-subscription__plan-description">
+                <div className="wrapper-pricing__plan-header">
+                  <h3 className="wrapper-pricing__plan-name">{plan.name}</h3>
+                  <p className="wrapper-pricing__plan-description">
                     {plan.description}
                   </p>
                 </div>
 
-                <div className="wrapper-subscription__plan-price">
-                  <span className="wrapper-subscription__price-amount">
+                <div className="wrapper-pricing__plan-price">
+                  <span className="wrapper-pricing__price-amount">
                     {plan.price === 0
                       ? "Miễn phí"
                       : new Intl.NumberFormat("vi-VN").format(plan.price)}
                   </span>
                   {plan.price > 0 && (
-                    <span className="wrapper-subscription__price-currency">
-                      VND
-                    </span>
+                    <span className="wrapper-pricing__price-currency">VND</span>
                   )}
                 </div>
 
                 <button
-                  className={`wrapper-subscription__plan-button ${
+                  className={`wrapper-pricing__plan-button ${
                     plan.popular
-                      ? "wrapper-subscription__plan-button--primary"
-                      : "wrapper-subscription__plan-button--secondary"
+                      ? "wrapper-pricing__plan-button--primary"
+                      : "wrapper-pricing__plan-button--secondary"
                   }`}
                   onClick={() => handleSelectPlan(plan.id)}
                 >
                   {plan.buttonText}
                 </button>
 
-                <div className="wrapper-subscription__plan-features">
-                  <p className="wrapper-subscription__features-title">
+                <div className="wrapper-pricing__plan-features">
+                  <p className="wrapper-pricing__features-title">
                     Tính năng bao gồm:
                   </p>
-                  <ul className="wrapper-subscription__features-list">
+                  <ul className="wrapper-pricing__features-list">
                     {plan.features.map((feature, index) => (
-                      <li
-                        key={index}
-                        className="wrapper-subscription__feature-item"
-                      >
+                      <li key={index} className="wrapper-pricing__feature-item">
                         <Check
                           size={18}
-                          className="wrapper-subscription__feature-icon"
+                          className="wrapper-pricing__feature-icon"
                         />
                         <span>{feature}</span>
                       </li>
@@ -153,4 +144,4 @@ function Subscription() {
   );
 }
 
-export default Subscription;
+export default Pricing;
