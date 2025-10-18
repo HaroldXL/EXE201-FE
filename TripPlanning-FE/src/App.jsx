@@ -28,6 +28,7 @@ import AdminDashboard from "./pages/AdminPages/AdminDasboard/AdminDashboard";
 import { notification } from "antd";
 import Subscription from "./pages/Profile/Subscription/Subscription";
 import UserManagement from "./pages/AdminPages/UserManagement/UserManagement";
+import LocationManagement from "./pages/AdminPages/LocationManagement/LocationManagement";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
@@ -172,12 +173,16 @@ function App() {
           element: <SuggestReplace />,
         },
         {
-          path: "admin-dashboard",
+          path: "admin",
           element: <AdminDashboard />,
         },
         {
-          path: "admin-dashboard/users",
+          path: "admin/users",
           element: <UserManagement />,
+        },
+        {
+          path: "admin/locations",
+          element: <LocationManagement />,
         },
       ],
     },

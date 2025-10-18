@@ -24,12 +24,38 @@ function AdminSidebar({
   const dispatch = useDispatch();
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "users", label: "Quản lý người dùng", icon: Users },
-    { id: "locations", label: "Quản lý địa điểm", icon: MapPin },
-    { id: "reports", label: "Báo cáo", icon: FileText },
-    { id: "settings", label: "Cài đặt", icon: Settings },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      path: "/admin",
+    },
+    {
+      id: "users",
+      label: "Quản lý người dùng",
+      icon: Users,
+      path: "/admin/users",
+    },
+    {
+      id: "locations",
+      label: "Quản lý địa điểm",
+      icon: MapPin,
+      path: "/admin/locations",
+    },
+    { id: "reports", label: "Báo cáo", icon: FileText, path: "/admin/reports" },
+    {
+      id: "settings",
+      label: "Cài đặt",
+      icon: Settings,
+      path: "/admin/settings",
+    },
   ];
+
+  const handleMenuClick = (item) => {
+    setActiveMenu(item.id);
+    setSidebarOpen(false);
+    navigate(item.path);
+  };
 
   const handleLogout = () => {
     Modal.confirm({
@@ -61,7 +87,7 @@ function AdminSidebar({
       >
         <div className="admin-sidebar__header">
           <div className="admin-sidebar__logo">
-            <h2>Admin Panel</h2>
+            <h2>Trang Admin</h2>
           </div>
           <button
             className="admin-sidebar__close-btn"
@@ -82,10 +108,7 @@ function AdminSidebar({
                     ? "admin-sidebar__menu-item--active"
                     : ""
                 }`}
-                onClick={() => {
-                  setActiveMenu(item.id);
-                  setSidebarOpen(false);
-                }}
+                onClick={() => handleMenuClick(item)}
               >
                 <Icon size={20} />
                 <span>{item.label}</span>
