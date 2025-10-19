@@ -3,10 +3,10 @@ import {
   LayoutDashboard,
   Users,
   MapPin,
-  FileText,
   Settings,
   LogOut,
   X,
+  Tag,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -42,12 +42,11 @@ function AdminSidebar({
       icon: MapPin,
       path: "/admin/locations",
     },
-    { id: "reports", label: "Báo cáo", icon: FileText, path: "/admin/reports" },
     {
-      id: "settings",
-      label: "Cài đặt",
-      icon: Settings,
-      path: "/admin/settings",
+      id: "topics",
+      label: "Quản lý chủ đề",
+      icon: Tag,
+      path: "/admin/topics",
     },
   ];
 

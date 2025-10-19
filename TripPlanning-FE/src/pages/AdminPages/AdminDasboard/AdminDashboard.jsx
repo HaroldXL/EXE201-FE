@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { TrendingUp, Calendar, DollarSign, Menu, FileText } from "lucide-react";
+import { Spin } from "antd";
+import {
+  TrendingUp,
+  Calendar,
+  DollarSign,
+  Menu,
+  FileText,
+  LayoutDashboard,
+} from "lucide-react";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import api from "../../../config/axios";
 import "./AdminDashboard.css";
@@ -93,8 +101,17 @@ function AdminDashboard() {
           <Menu size={24} />
         </button>
 
+        {/* Header */}
         <div className="admin-dashboard__header">
-          <h1>Dashboard - Báo cáo Doanh thu</h1>
+          <div className="admin-dashboard__header-content">
+            <div className="admin-dashboard__header-icon">
+              <LayoutDashboard size={32} />
+            </div>
+            <div>
+              <h1>Dashboard - Báo cáo Doanh thu</h1>
+              <p>Thống kê doanh thu theo tuần</p>
+            </div>
+          </div>
         </div>
 
         {/* Date Range Filter */}
@@ -174,7 +191,9 @@ function AdminDashboard() {
           <h2>Doanh thu theo tuần</h2>
 
           {loading ? (
-            <div className="admin-dashboard__loading">Đang tải dữ liệu...</div>
+            <div className="admin-dashboard__loading">
+              <Spin size="large" tip="Đang tải dữ liệu..." />
+            </div>
           ) : revenueData.length > 0 ? (
             <div className="admin-dashboard__chart">
               {revenueData.map((week, index) => (
@@ -222,8 +241,11 @@ function AdminDashboard() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: "center" }}>
-                    Đang tải...
+                  <td
+                    colSpan="3"
+                    style={{ textAlign: "center", padding: "32px" }}
+                  >
+                    <Spin />
                   </td>
                 </tr>
               ) : revenueData.length > 0 ? (

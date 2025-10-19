@@ -49,7 +49,7 @@ function Login() {
       // Navigate to home page
 
       if (response.data.user.roleName === "admin") {
-        navigate("/admin-dashboard");
+        navigate("/admin");
       } else {
         navigate("/");
       }

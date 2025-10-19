@@ -29,13 +29,14 @@ import { notification } from "antd";
 import Subscription from "./pages/Profile/Subscription/Subscription";
 import UserManagement from "./pages/AdminPages/UserManagement/UserManagement";
 import LocationManagement from "./pages/AdminPages/LocationManagement/LocationManagement";
+import TopicManagement from "./pages/AdminPages/TopicManagement/TopicManagement";
 
 const ProtectRouteAuth = ({ children }) => {
   const user = useSelector((store) => store.user);
   if (user == null) {
     return children;
   } else if (user && user.user.roleName === "admin") {
-    return <Navigate to="/admin-dashboard" />;
+    return <Navigate to="/admin" />;
   } else {
     return <Navigate to="/" />;
   }
@@ -174,15 +175,35 @@ function App() {
         },
         {
           path: "admin",
-          element: <AdminDashboard />,
+          element: (
+            <ProtectAdminRoute>
+              <AdminDashboard />
+            </ProtectAdminRoute>
+          ),
         },
         {
           path: "admin/users",
-          element: <UserManagement />,
+          element: (
+            <ProtectAdminRoute>
+              <UserManagement />
+            </ProtectAdminRoute>
+          ),
         },
         {
           path: "admin/locations",
-          element: <LocationManagement />,
+          element: (
+            <ProtectAdminRoute>
+              <LocationManagement />
+            </ProtectAdminRoute>
+          ),
+        },
+        {
+          path: "admin/topics",
+          element: (
+            <ProtectAdminRoute>
+              <TopicManagement />
+            </ProtectAdminRoute>
+          ),
         },
       ],
     },

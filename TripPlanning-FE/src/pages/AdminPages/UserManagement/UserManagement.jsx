@@ -12,7 +12,7 @@ import {
   Save,
   X as XIcon,
 } from "lucide-react";
-import { Modal, message, Select } from "antd";
+import { Modal, message, Select, Spin } from "antd";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import api from "../../../config/axios";
 import "./UserManagement.css";
@@ -312,7 +312,9 @@ function UserManagement() {
           </div>
 
           {loading ? (
-            <div className="admin-users__loading">Đang tải dữ liệu...</div>
+            <div className="admin-users__loading">
+              <Spin size="large" tip="Đang tải dữ liệu..." />
+            </div>
           ) : users.length > 0 ? (
             <>
               <div className="admin-users__table-wrapper">

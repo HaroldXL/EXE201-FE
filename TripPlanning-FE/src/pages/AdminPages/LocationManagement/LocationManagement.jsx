@@ -12,8 +12,9 @@ import {
   Calendar,
   Navigation,
   X,
+  Plus,
 } from "lucide-react";
-import { Select, Modal, message } from "antd";
+import { Select, Modal, message, Spin } from "antd";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import api from "../../../config/axios";
 import "./LocationManagement.css";
@@ -27,6 +28,8 @@ function LocationManagement() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [topicFilter, setTopicFilter] = useState("all");
+  const [topics, setTopics] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -38,17 +41,71 @@ function LocationManagement() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
+  // Edit Modal State
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    description: "",
+    imageUrl: "",
+    openingHours: "",
+    suggestedDuration: 0,
+    suggestedPrice: 0,
+    status: "",
+  });
+  const [submittingEdit, setSubmittingEdit] = useState(false);
+
+  // Add Location Modal State
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [addFormData, setAddFormData] = useState({
+    topicId: 0,
+    description: "",
+    googlePlaceId: "",
+    districtId: 0,
+    suggestedDuration: 0,
+    suggestedPrice: 0,
+  });
+  const [submittingAdd, setSubmittingAdd] = useState(false);
+
+  // Fetch topics list
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const response = await api.get("/Topic/list-active");
+        setTopics(response.data || []);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+        setTopics([]);
+      }
+    };
+
+    fetchTopics();
+  }, []);
+
   // Fetch locations data
   useEffect(() => {
     const fetchLocations = async () => {
       try {
         setLoading(true);
-        const response = await api.get("/Location/admin/list", {
-          params: {
-            page: pagination.page,
-            pageSize: pagination.pageSize,
-          },
-        });
+
+        let endpoint;
+        const params = {
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+        };
+
+        // Determine which API to use based on filters
+        if (topicFilter !== "all") {
+          // Use topic filter API
+          endpoint = `/Location/topic/${topicFilter}`;
+        } else if (searchTerm) {
+          // Use search API
+          endpoint = "/Location/search";
+          params.name = searchTerm;
+        } else {
+          // Use list all API
+          endpoint = "/Location/admin/list";
+        }
+
+        const response = await api.get(endpoint, { params });
         setLocations(response.data.items || []);
         setPagination((prev) => ({
           ...prev,
@@ -63,7 +120,7 @@ function LocationManagement() {
     };
 
     fetchLocations();
-  }, [pagination.page, pagination.pageSize]);
+  }, [pagination.page, pagination.pageSize, searchTerm, topicFilter]);
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
@@ -100,17 +157,150 @@ function LocationManagement() {
     setSelectedLocation(null);
   };
 
-  // Filter locations based on search and status
-  const filteredLocations = locations.filter((location) => {
-    const matchesSearch =
-      location.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      location.topicName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      location.districtName?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Handle edit location
+  const handleEditLocation = async (locationId) => {
+    try {
+      setLoadingDetail(true);
+      const response = await api.get(`/Location/admin/${locationId}`);
+      const locationData = response.data;
 
+      setEditFormData({
+        description: locationData.description || "",
+        imageUrl: locationData.imageUrl || "",
+        openingHours: locationData.openingHours || "",
+        suggestedDuration: locationData.suggestedDuration || 0,
+        suggestedPrice: locationData.suggestedPrice || 0,
+        status: locationData.status || "",
+      });
+      setSelectedLocation(locationData);
+      setEditModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching location for edit:", error);
+      message.error("Không thể tải thông tin địa điểm. Vui lòng thử lại sau.");
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalVisible(false);
+    setSelectedLocation(null);
+    setEditFormData({
+      description: "",
+      imageUrl: "",
+      openingHours: "",
+      suggestedDuration: 0,
+      suggestedPrice: 0,
+      status: "",
+    });
+  };
+
+  const handleEditFormChange = (field, value) => {
+    setEditFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmitEdit = async () => {
+    if (!selectedLocation) return;
+
+    try {
+      setSubmittingEdit(true);
+      await api.patch(`/Location/admin/${selectedLocation.id}`, editFormData);
+
+      message.success("Cập nhật địa điểm thành công!");
+      handleCloseEditModal();
+
+      // Refresh locations list
+      const response = await api.get("/Location/admin/list", {
+        params: {
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+        },
+      });
+      setLocations(response.data.items || []);
+      setPagination((prev) => ({
+        ...prev,
+        totalCount: response.data.totalCount || 0,
+      }));
+    } catch (error) {
+      console.error("Error updating location:", error);
+      message.error("Cập nhật địa điểm thất bại. Vui lòng thử lại sau.");
+    } finally {
+      setSubmittingEdit(false);
+    }
+  };
+
+  // Handle add location
+  const handleOpenAddModal = () => {
+    setAddModalVisible(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setAddModalVisible(false);
+    setAddFormData({
+      topicId: 0,
+      description: "",
+      googlePlaceId: "",
+      districtId: 0,
+      suggestedDuration: 0,
+      suggestedPrice: 0,
+    });
+  };
+
+  const handleAddFormChange = (field, value) => {
+    setAddFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmitAdd = async () => {
+    // Validate required fields
+    if (
+      !addFormData.topicId ||
+      !addFormData.googlePlaceId ||
+      !addFormData.districtId
+    ) {
+      message.error("Vui lòng điền đầy đủ các trường bắt buộc!");
+      return;
+    }
+
+    try {
+      setSubmittingAdd(true);
+      await api.post("/Location/add", addFormData);
+
+      message.success("Thêm địa điểm thành công!");
+      handleCloseAddModal();
+
+      // Refresh locations list
+      const response = await api.get("/Location/admin/list", {
+        params: {
+          page: 1,
+          pageSize: pagination.pageSize,
+        },
+      });
+      setLocations(response.data.items || []);
+      setPagination((prev) => ({
+        ...prev,
+        page: 1,
+        totalCount: response.data.totalCount || 0,
+      }));
+    } catch (error) {
+      console.error("Error adding location:", error);
+      message.error("Thêm địa điểm thất bại. Vui lòng thử lại sau.");
+    } finally {
+      setSubmittingAdd(false);
+    }
+  };
+
+  // Filter locations based on status only (search is now handled by API)
+  const filteredLocations = locations.filter((location) => {
     const matchesStatus =
       statusFilter === "all" || location.status?.toLowerCase() === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    return matchesStatus;
   });
 
   const getStatusBadge = (status) => {
@@ -199,11 +389,29 @@ function LocationManagement() {
             <Search size={20} />
             <input
               type="text"
-              placeholder="Tìm kiếm theo tên, chủ đề hoặc quận..."
+              placeholder="Tìm kiếm theo tên địa điểm..."
               value={searchTerm}
               onChange={handleSearchChange}
             />
           </div>
+
+          <Select
+            className="admin-locations__topic-filter"
+            value={topicFilter}
+            onChange={(value) => {
+              setTopicFilter(value);
+              setPagination((prev) => ({ ...prev, page: 1 }));
+            }}
+            style={{ width: 200 }}
+            placeholder="Lọc theo chủ đề"
+          >
+            <Option value="all">Tất cả chủ đề</Option>
+            {topics.map((topic) => (
+              <Option key={topic.id} value={topic.id}>
+                {topic.name}
+              </Option>
+            ))}
+          </Select>
 
           <Select
             className="admin-locations__status-filter"
@@ -224,10 +432,19 @@ function LocationManagement() {
         <div className="admin-locations__table-container">
           <div className="admin-locations__table-header">
             <h2>Danh sách địa điểm</h2>
+            <button
+              className="admin-locations__add-btn"
+              onClick={handleOpenAddModal}
+            >
+              <Plus size={20} />
+              <span>Thêm địa điểm</span>
+            </button>
           </div>
 
           {loading ? (
-            <div className="admin-locations__loading">Đang tải dữ liệu...</div>
+            <div className="admin-locations__loading">
+              <Spin size="large" tip="Đang tải dữ liệu..." />
+            </div>
           ) : locations.length > 0 ? (
             <>
               <div className="admin-locations__table-wrapper">
@@ -311,6 +528,7 @@ function LocationManagement() {
                             <button
                               className="admin-locations__action-btn admin-locations__action-btn--edit"
                               title="Chỉnh sửa"
+                              onClick={() => handleEditLocation(location.id)}
                             >
                               <Edit size={16} />
                             </button>
@@ -323,10 +541,15 @@ function LocationManagement() {
               </div>
 
               {/* Results Info */}
-              {searchTerm || statusFilter !== "all" ? (
+              {searchTerm || statusFilter !== "all" || topicFilter !== "all" ? (
                 <div className="admin-locations__filter-results">
                   Tìm thấy {filteredLocations.length} kết quả
                   {searchTerm && ` cho "${searchTerm}"`}
+                  {topicFilter !== "all" &&
+                    ` - Chủ đề: ${
+                      topics.find((t) => t.id === parseInt(topicFilter))
+                        ?.name || ""
+                    }`}
                   {statusFilter !== "all" &&
                     ` - ${
                       statusFilter === "active"
@@ -413,7 +636,7 @@ function LocationManagement() {
         >
           {loadingDetail ? (
             <div className="admin-locations__modal-loading">
-              Đang tải thông tin...
+              <Spin size="large" tip="Đang tải thông tin..." />
             </div>
           ) : selectedLocation ? (
             <div className="admin-locations__detail-modal">
@@ -550,6 +773,247 @@ function LocationManagement() {
               </div>
             </div>
           ) : null}
+        </Modal>
+
+        {/* Edit Location Modal */}
+        <Modal
+          title="Chỉnh sửa địa điểm"
+          open={editModalVisible}
+          onCancel={handleCloseEditModal}
+          onOk={handleSubmitEdit}
+          okText="Lưu thay đổi"
+          cancelText="Hủy"
+          width={700}
+          centered
+          confirmLoading={submittingEdit}
+        >
+          {loadingDetail ? (
+            <div className="admin-locations__modal-loading">
+              <Spin size="large" tip="Đang tải thông tin..." />
+            </div>
+          ) : selectedLocation ? (
+            <div className="admin-locations__edit-modal">
+              {/* Location Info Header */}
+              <div className="admin-locations__edit-header">
+                <h3>{selectedLocation.name}</h3>
+                <span className="admin-locations__topic">
+                  {selectedLocation.topicName}
+                </span>
+              </div>
+
+              {/* Edit Form */}
+              <div className="admin-locations__edit-form">
+                <div className="admin-locations__form-group">
+                  <label>Mô tả</label>
+                  <textarea
+                    value={editFormData.description}
+                    onChange={(e) =>
+                      handleEditFormChange("description", e.target.value)
+                    }
+                    rows={6}
+                    placeholder="Nhập mô tả địa điểm..."
+                  />
+                </div>
+
+                <div className="admin-locations__form-group">
+                  <label>URL hình ảnh</label>
+                  <input
+                    type="text"
+                    value={editFormData.imageUrl}
+                    onChange={(e) =>
+                      handleEditFormChange("imageUrl", e.target.value)
+                    }
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+
+                <div className="admin-locations__form-group">
+                  <label>Giờ mở cửa</label>
+                  <input
+                    type="text"
+                    value={editFormData.openingHours}
+                    onChange={(e) =>
+                      handleEditFormChange("openingHours", e.target.value)
+                    }
+                    placeholder="Ví dụ: 08:00 - 22:00"
+                  />
+                </div>
+
+                <div className="admin-locations__form-row">
+                  <div className="admin-locations__form-group">
+                    <label>Thời gian gợi ý (phút)</label>
+                    <input
+                      type="number"
+                      value={editFormData.suggestedDuration}
+                      onChange={(e) =>
+                        handleEditFormChange(
+                          "suggestedDuration",
+                          parseInt(e.target.value) || 0
+                        )
+                      }
+                      min="0"
+                      placeholder="120"
+                    />
+                  </div>
+
+                  <div className="admin-locations__form-group">
+                    <label>Chi phí gợi ý (VND)</label>
+                    <input
+                      type="text"
+                      value={new Intl.NumberFormat("vi-VN").format(
+                        editFormData.suggestedPrice
+                      )}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        handleEditFormChange(
+                          "suggestedPrice",
+                          parseInt(value) || 0
+                        );
+                      }}
+                      placeholder="180.000"
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-locations__form-group">
+                  <label>Trạng thái</label>
+                  <Select
+                    className="admin-locations__edit-select"
+                    value={editFormData.status}
+                    onChange={(value) => handleEditFormChange("status", value)}
+                    style={{ width: "100%" }}
+                  >
+                    <Option value="active">Hoạt động</Option>
+                    <Option value="inactive">Ngừng hoạt động</Option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </Modal>
+
+        {/* Add Location Modal */}
+        <Modal
+          title="Thêm địa điểm mới"
+          open={addModalVisible}
+          onCancel={handleCloseAddModal}
+          onOk={handleSubmitAdd}
+          okText="Thêm địa điểm"
+          cancelText="Hủy"
+          width={700}
+          centered
+          confirmLoading={submittingAdd}
+        >
+          <div className="admin-locations__add-modal">
+            <div className="admin-locations__add-form">
+              <div className="admin-locations__form-group">
+                <label>
+                  Topic ID <span className="admin-locations__required">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={addFormData.topicId}
+                  onChange={(e) =>
+                    handleAddFormChange(
+                      "topicId",
+                      parseInt(e.target.value) || 0
+                    )
+                  }
+                  min="0"
+                  placeholder="Nhập Topic ID"
+                />
+              </div>
+
+              <div className="admin-locations__form-group">
+                <label>
+                  Google Place ID{" "}
+                  <span className="admin-locations__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={addFormData.googlePlaceId}
+                  onChange={(e) =>
+                    handleAddFormChange("googlePlaceId", e.target.value)
+                  }
+                  placeholder="ChIJV09QuFAvdTERT6v9xMqRsKk"
+                />
+              </div>
+
+              <div className="admin-locations__form-group">
+                <label>
+                  District ID{" "}
+                  <span className="admin-locations__required">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={addFormData.districtId}
+                  onChange={(e) =>
+                    handleAddFormChange(
+                      "districtId",
+                      parseInt(e.target.value) || 0
+                    )
+                  }
+                  min="0"
+                  placeholder="Nhập District ID"
+                />
+              </div>
+
+              <div className="admin-locations__form-group">
+                <label>Mô tả</label>
+                <textarea
+                  value={addFormData.description}
+                  onChange={(e) =>
+                    handleAddFormChange("description", e.target.value)
+                  }
+                  rows={6}
+                  placeholder="Nhập mô tả địa điểm..."
+                />
+              </div>
+
+              <div className="admin-locations__form-row">
+                <div className="admin-locations__form-group">
+                  <label>Thời gian gợi ý (phút)</label>
+                  <input
+                    type="number"
+                    value={addFormData.suggestedDuration}
+                    onChange={(e) =>
+                      handleAddFormChange(
+                        "suggestedDuration",
+                        parseInt(e.target.value) || 0
+                      )
+                    }
+                    min="0"
+                    placeholder="120"
+                  />
+                </div>
+
+                <div className="admin-locations__form-group">
+                  <label>Chi phí gợi ý (VND)</label>
+                  <input
+                    type="text"
+                    value={new Intl.NumberFormat("vi-VN").format(
+                      addFormData.suggestedPrice
+                    )}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      handleAddFormChange(
+                        "suggestedPrice",
+                        parseInt(value) || 0
+                      );
+                    }}
+                    placeholder="180.000"
+                  />
+                </div>
+              </div>
+
+              <div className="admin-locations__form-note">
+                <p>
+                  <span className="admin-locations__required">*</span> Trường
+                  bắt buộc
+                </p>
+              </div>
+            </div>
+          </div>
         </Modal>
       </main>
     </div>
