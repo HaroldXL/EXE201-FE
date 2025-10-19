@@ -5,6 +5,7 @@ import {
   HelpCircle,
   LogOut,
   ChevronRight,
+  Crown,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
@@ -47,10 +48,14 @@ function ProfilePav() {
       navigate("/profile/wallet");
     }
     if (item.id === 4) {
+      // Gói Thành Viên
+      navigate("/profile/subscription");
+    }
+    if (item.id === 5) {
       // Trợ Giúp
       navigate("/profile/help");
     }
-    if (item.id === 5) {
+    if (item.id === 6) {
       // Đăng Xuất
       handleLogout();
     }
@@ -81,13 +86,20 @@ function ProfilePav() {
     },
     {
       id: 4,
+      icon: Crown,
+      title: "Gói Thành Viên",
+      description: "Nâng cấp tài khoản và xem gói thành viên",
+      hasArrow: true,
+    },
+    {
+      id: 5,
       icon: HelpCircle,
       title: "Trợ Giúp",
       description: "Hỗ trợ và câu hỏi thường gặp",
       hasArrow: true,
     },
     {
-      id: 5,
+      id: 6,
       icon: LogOut,
       title: "Đăng Xuất",
       description: "Thoát khỏi tài khoản",
