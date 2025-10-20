@@ -46,8 +46,10 @@ function AdminDashboard() {
           endDate: dateRange.endDate,
         },
       });
-      // Ensure response.data is an array
-      const data = Array.isArray(response.data) ? response.data : [];
+      // Extract reports array from response
+      const data = Array.isArray(response.data?.reports)
+        ? response.data.reports
+        : [];
       setRevenueData(data);
     } catch (error) {
       console.error("Error fetching revenue data:", error);
@@ -196,29 +198,39 @@ function AdminDashboard() {
             </div>
           ) : revenueData.length > 0 ? (
             <div className="admin-dashboard__chart">
-              {revenueData.map((week, index) => (
-                <div key={index} className="admin-dashboard__chart-bar">
-                  <div
-                    className="admin-dashboard__chart-bar-fill"
-                    style={{
-                      height: `${(week.totalAmount / maxRevenue) * 100}%`,
-                    }}
-                    title={`${new Intl.NumberFormat("vi-VN").format(
-                      week.totalAmount
-                    )} VND`}
-                  >
-                    <span className="admin-dashboard__chart-value">
-                      {new Intl.NumberFormat("vi-VN", {
-                        notation: "compact",
-                        compactDisplay: "short",
-                      }).format(week.totalAmount)}
-                    </span>
+              {revenueData.map((week, index) => {
+                const weekStart = new Date(week.weekStart);
+                const weekEnd = new Date(week.weekEnd);
+                const weekLabel = `${weekStart.getDate()}/${
+                  weekStart.getMonth() + 1
+                } - ${weekEnd.getDate()}/${weekEnd.getMonth() + 1}`;
+
+                return (
+                  <div key={index} className="admin-dashboard__chart-bar">
+                    <div
+                      className="admin-dashboard__chart-bar-fill"
+                      style={{
+                        height: `${(week.totalAmount / maxRevenue) * 100}%`,
+                      }}
+                      title={`${new Intl.NumberFormat("vi-VN").format(
+                        week.totalAmount
+                      )} VND\nGiao dịch: ${
+                        week.transactionCount
+                      }\nNgười dùng: ${week.userCount}`}
+                    >
+                      <span className="admin-dashboard__chart-value">
+                        {new Intl.NumberFormat("vi-VN", {
+                          notation: "compact",
+                          compactDisplay: "short",
+                        }).format(week.totalAmount)}
+                      </span>
+                    </div>
+                    <div className="admin-dashboard__chart-label">
+                      {weekLabel}
+                    </div>
                   </div>
-                  <div className="admin-dashboard__chart-label">
-                    Tuần {week.weekNumber}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="admin-dashboard__empty">
@@ -234,7 +246,8 @@ function AdminDashboard() {
             <thead>
               <tr>
                 <th>Tuần</th>
-                <th>Năm</th>
+                <th>Giao dịch</th>
+                <th>Người dùng</th>
                 <th>Doanh thu</th>
               </tr>
             </thead>
@@ -242,26 +255,39 @@ function AdminDashboard() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan="3"
+                    colSpan="4"
                     style={{ textAlign: "center", padding: "32px" }}
                   >
                     <Spin />
                   </td>
                 </tr>
               ) : revenueData.length > 0 ? (
-                revenueData.map((week, index) => (
-                  <tr key={index}>
-                    <td>Tuần {week.weekNumber}</td>
-                    <td>{week.year}</td>
-                    <td>
-                      {new Intl.NumberFormat("vi-VN").format(week.totalAmount)}{" "}
-                      VND
-                    </td>
-                  </tr>
-                ))
+                revenueData.map((week, index) => {
+                  const weekStart = new Date(week.weekStart);
+                  const weekEnd = new Date(week.weekEnd);
+                  const weekLabel = `${weekStart.getDate()}/${
+                    weekStart.getMonth() + 1
+                  }/${weekStart.getFullYear()} - ${weekEnd.getDate()}/${
+                    weekEnd.getMonth() + 1
+                  }/${weekEnd.getFullYear()}`;
+
+                  return (
+                    <tr key={index}>
+                      <td>{weekLabel}</td>
+                      <td>{week.transactionCount}</td>
+                      <td>{week.userCount}</td>
+                      <td>
+                        {new Intl.NumberFormat("vi-VN").format(
+                          week.totalAmount
+                        )}{" "}
+                        VND
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: "center" }}>
+                  <td colSpan="4" style={{ textAlign: "center" }}>
                     Không có dữ liệu
                   </td>
                 </tr>
