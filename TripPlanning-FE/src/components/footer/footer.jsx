@@ -25,15 +25,15 @@ function Footer() {
           <div className="footer-contact">
             <div className="contact-item">
               <MapPin size={16} />
-              <span>123 Đường ABC, Quận 1, TP.HCM</span>
+              <span>7Đ. D1, Long Thạnh Mỹ, Thủ Đức, TP.HCM</span>
             </div>
             <div className="contact-item">
               <Phone size={16} />
-              <span>+84 123 456 789</span>
+              <span>+84 378 271 846</span>
             </div>
             <div className="contact-item">
               <Mail size={16} />
-              <span>contact@tripplanning.com</span>
+              <span>goldendome101exe@gmail.com</span>
             </div>
           </div>
         </div>
