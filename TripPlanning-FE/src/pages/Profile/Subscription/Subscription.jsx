@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import api from "../../../config/axios";
+import { login } from "../../../store/redux/features/userSlice";
 import "./Subscription.css";
 
 function Subscription() {
@@ -37,13 +38,18 @@ function Subscription() {
   // Check if user has active Pro subscription
   const isProActive = () => {
     console.log("User object:", user);
-    console.log("subscriptionExpiredAt:", user?.user?.subscriptionExpiredAt);
 
-    if (!user?.user?.subscriptionExpiredAt) {
+    const subscriptionExpiredAt =
+      user?.user?.subscriptionExpiredAt || user?.subscriptionExpiredAt;
+
+    console.log("subscriptionExpiredAt:", subscriptionExpiredAt);
+
+    if (!subscriptionExpiredAt) {
       console.log("No subscription expiry date found");
       return false;
     }
-    const expiryDate = new Date(user.user.subscriptionExpiredAt);
+
+    const expiryDate = new Date(subscriptionExpiredAt);
     const now = new Date();
 
     console.log("Expiry Date:", expiryDate);
@@ -90,10 +96,20 @@ function Subscription() {
         description: "Nâng cấp gói Pro",
       });
 
+      // Fetch updated user profile
+      const response = await api.get("/User/profile");
+
+      // Wrap profile response to match login structure
+      const updatedUserData = {
+        token: user.token, // Keep existing token
+        user: response.data, // New user data from profile
+        expiresAt: user.expiresAt, // Keep existing expiresAt
+      };
+
+      dispatch(login(updatedUserData));
+
       message.success("Nâng cấp gói Pro thành công!");
       setIsUpgradeModalVisible(false);
-
-      dispatch(user);
     } catch (error) {
       console.error("Error upgrading to Pro:", error);
       message.error(
