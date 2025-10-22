@@ -724,7 +724,6 @@ function LocationDetail() {
           <div className="wrapper-location-detail__rating-modal-item">
             <label>Đánh giá của bạn:</label>
             <Rate
-              allowHalf
               value={ratingForm.point}
               onChange={(value) =>
                 setRatingForm({ ...ratingForm, point: value })

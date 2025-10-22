@@ -18,6 +18,11 @@ function Wallet() {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+    totalCount: 0,
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isQRModalVisible, setIsQRModalVisible] = useState(false);
   const [qrData, setQrData] = useState(null);
@@ -26,7 +31,7 @@ function Wallet() {
   const [processing, setProcessing] = useState(false);
 
   // Predefined amounts
-  const quickAmounts = [50000, 100000, 200000, 500000, 1000000, 2000000];
+  const quickAmounts = [10000, 20000, 50000, 100000, 200000, 500000];
 
   // Fetch wallet balance from user profile
   const fetchBalance = async () => {
@@ -40,12 +45,24 @@ function Wallet() {
   };
 
   // Fetch transaction history
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (page = 1, pageSize = 10) => {
     try {
-      const response = await api.get("/Wallet/transactions");
-      setTransactions(response.data || []);
+      setLoading(true);
+      const response = await api.get("/Transaction/history", {
+        params: {
+          page,
+          pageSize,
+        },
+      });
+      setTransactions(response.data.items || []);
+      setPagination({
+        page: response.data.page || 1,
+        pageSize: response.data.pageSize || 10,
+        totalCount: response.data.totalCount || 0,
+      });
     } catch (error) {
       console.error("Error fetching transactions:", error);
+      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -178,44 +195,49 @@ function Wallet() {
               </div>
             ) : (
               <div className="wallet-transaction-list">
-                {transactions.map((transaction) => (
-                  <div
-                    key={transaction.id}
-                    className={`wallet-transaction-item ${
-                      transaction.type === "recharge"
-                        ? "wallet-transaction-in"
-                        : "wallet-transaction-out"
-                    }`}
-                  >
-                    <div className="wallet-transaction-icon">
-                      {transaction.type === "recharge" ? (
-                        <ArrowDownRight size={24} />
-                      ) : (
-                        <ArrowUpRight size={24} />
-                      )}
+                {transactions.map((transaction) => {
+                  // Determine transaction type based on transactionType
+                  const isDeposit = transaction.transactionType
+                    ?.toLowerCase()
+                    .includes("deposit");
+
+                  return (
+                    <div
+                      key={transaction.id}
+                      className={`wallet-transaction-item ${
+                        isDeposit
+                          ? "wallet-transaction-in"
+                          : "wallet-transaction-out"
+                      }`}
+                    >
+                      <div className="wallet-transaction-icon">
+                        {isDeposit ? (
+                          <ArrowDownRight size={24} />
+                        ) : (
+                          <ArrowUpRight size={24} />
+                        )}
+                      </div>
+                      <div className="wallet-transaction-details">
+                        <p className="wallet-transaction-title">
+                          {transaction.transactionType || "Giao dịch"}
+                        </p>
+                        <p className="wallet-transaction-date">
+                          {formatDate(transaction.createdAt)}
+                        </p>
+                      </div>
+                      <div className="wallet-transaction-amount">
+                        <p
+                          className={
+                            isDeposit ? "wallet-amount-in" : "wallet-amount-out"
+                          }
+                        >
+                          {isDeposit ? "+" : "-"}
+                          {formatCurrency(transaction.amount)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="wallet-transaction-details">
-                      <p className="wallet-transaction-title">
-                        {transaction.description || "Giao dịch"}
-                      </p>
-                      <p className="wallet-transaction-date">
-                        {formatDate(transaction.createdAt)}
-                      </p>
-                    </div>
-                    <div className="wallet-transaction-amount">
-                      <p
-                        className={
-                          transaction.type === "recharge"
-                            ? "wallet-amount-in"
-                            : "wallet-amount-out"
-                        }
-                      >
-                        {transaction.type === "recharge" ? "+" : "-"}
-                        {formatCurrency(transaction.amount)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
