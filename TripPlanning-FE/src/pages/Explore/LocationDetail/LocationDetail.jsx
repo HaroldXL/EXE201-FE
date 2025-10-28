@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ArrowLeft, Star, MapPin, Clock, ExternalLink } from "lucide-react";
 import { Skeleton, Pagination } from "@mui/material";
 import { Modal, Rate, message } from "antd";
@@ -11,6 +12,7 @@ import "./LocationDetail.css";
 function LocationDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
   const [location, setLocation] = useState(null);
   const [relatedLocations, setRelatedLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,8 +96,13 @@ function LocationDetail() {
     fetchRatings(page, ratingsPagination.pageSize);
   };
 
-  // Open rating modal
+  // Open rating modal or redirect to login
   const showRatingModal = () => {
+    if (!user) {
+      message.warning("Vui lòng đăng nhập để thêm Đánh giá");
+      navigate("/login");
+      return;
+    }
     setIsRatingModalVisible(true);
   };
 
@@ -528,7 +535,7 @@ function LocationDetail() {
                 className="wrapper-location-detail__add-rating-btn"
                 onClick={showRatingModal}
               >
-                + Thêm đánh giá
+                {user ? "+ Thêm đánh giá" : "Đăng nhập để thêm đánh giá"}
               </button>
 
               {/* Ratings List */}

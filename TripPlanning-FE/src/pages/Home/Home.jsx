@@ -525,7 +525,7 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="https://images.unsplash.com/photo-1494790108755-2616b612b632?w=50&h=50&fit=crop&crop=face"
+                  src="../public/images/avatar.jpg"
                   alt="Nguyễn Lan Anh"
                   className="testimonial-avatar"
                 />
@@ -546,7 +546,7 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face"
+                  src="../public/images/avatar1.jpg"
                   alt="Trần Minh Hoàng"
                   className="testimonial-avatar"
                 />
@@ -567,8 +567,8 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face"
-                  alt="Phạm Thu Hà"
+                  src="../public/images/avatar2.jpg"
+                  alt="Minh Phạm"
                   className="testimonial-avatar"
                 />
                 <div>
