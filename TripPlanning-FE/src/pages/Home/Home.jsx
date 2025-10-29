@@ -525,7 +525,7 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="../public/images/avatar.jpg"
+                  src="../images/avatar.jpg"
                   alt="Nguyễn Lan Anh"
                   className="testimonial-avatar"
                 />
@@ -546,7 +546,7 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="../public/images/avatar1.jpg"
+                  src="../images/avatar1.jpg"
                   alt="Trần Minh Hoàng"
                   className="testimonial-avatar"
                 />
@@ -567,7 +567,7 @@ function Home() {
               </p>
               <div className="testimonial-author">
                 <img
-                  src="../public/images/avatar2.jpg"
+                  src="../images/avatar2.jpg"
                   alt="Minh Phạm"
                   className="testimonial-avatar"
                 />

@@ -137,7 +137,7 @@ function Subscription() {
       price: 0,
       description: "Bắt đầu với những tính năng cơ bản",
       features: [
-        "Tạo tối đa 3 kế hoạch du lịch",
+        "Tạo tối đa 5 kế hoạch du lịch",
         "Khám phá địa điểm du lịch",
         "Tìm kiếm địa điểm",
         "Xem chi tiết địa điểm",

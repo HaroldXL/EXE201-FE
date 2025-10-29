@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar,
   TimePicker,
@@ -11,38 +11,36 @@ import dayjs from "dayjs";
 import locale from "antd/locale/vi_VN";
 import "dayjs/locale/vi";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ArrowLeft,
-  Clock,
   Users,
   User,
-  Heart,
   MapPin,
-  Mountain,
-  Utensils,
-  Camera,
   Banknote,
   Star,
   Globe,
-  TreePine,
-  Building,
-  ShoppingBag,
-  Gamepad2,
-  Zap,
-  Dumbbell,
-  Palette,
 } from "lucide-react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import api from "../../../config/axios";
+import { login } from "../../../store/redux/features/userSlice";
 import "./TripPlanning.css";
-import { useSelector } from "react-redux";
 
 // Set dayjs locale to Vietnamese
 dayjs.locale("vi");
 
 // Welcome Screen Component
-const WelcomeScreen = ({ onStart, isTransitioning }) => {
+const WelcomeScreen = ({
+  onStart,
+  isTransitioning,
+  tripCount,
+  maxFreeTrips,
+  isProActive,
+}) => {
+  const remainingFreeTrips = Math.max(0, maxFreeTrips - tripCount);
+  const showFreeTripsInfo = !isProActive && remainingFreeTrips >= 0;
+
   return (
     <div className="trip-planning-welcome">
       <div className="welcome-content">
@@ -81,6 +79,49 @@ const WelcomeScreen = ({ onStart, isTransitioning }) => {
             Chuyến Đi Của Bạn
           </h1>
         </div>
+
+        {showFreeTripsInfo && (
+          <div
+            style={{
+              background:
+                remainingFreeTrips > 0
+                  ? "linear-gradient(135deg, #ecfdf5, #d1fae5)"
+                  : "linear-gradient(135deg, #fef2f2, #fee2e2)",
+              border:
+                remainingFreeTrips > 0
+                  ? "1px solid #86efac"
+                  : "1px solid #fecaca",
+              padding: "12px 20px",
+              borderRadius: "12px",
+              marginBottom: "20px",
+              maxWidth: "400px",
+              margin: "0 auto 20px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "14px",
+                color: remainingFreeTrips > 0 ? "#065f46" : "#991b1b",
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+            >
+              {remainingFreeTrips > 0 ? (
+                <>
+                  Bạn còn{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {remainingFreeTrips}/{maxFreeTrips}
+                  </span>{" "}
+                  lượt tạo miễn phí
+                </>
+              ) : (
+                <>
+                  Đã hết lượt miễn phí ({tripCount}/{maxFreeTrips})
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         <button
           className="welcome-start-btn"
@@ -589,10 +630,21 @@ function TripPlanning() {
   const [isCreating, setIsCreating] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+  const [isStartModalVisible, setIsStartModalVisible] = useState(false);
+  const [isConfirmPaymentModalVisible, setIsConfirmPaymentModalVisible] =
+    useState(false);
+  const [balance, setBalance] = useState(0);
+  const [processing, setProcessing] = useState(false);
+  const [pendingTripData, setPendingTripData] = useState(null);
+  const [tripCount, setTripCount] = useState(0);
   const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const totalSteps = 6;
+  const TRIP_CREATION_PRICE = 10000;
+  const MAX_FREE_TRIPS = 5;
 
   // Page load animation
   useEffect(() => {
@@ -601,6 +653,58 @@ function TripPlanning() {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Fetch user balance
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const response = await api.get("/User/profile");
+        setBalance(response.data.balance || 0);
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+      }
+    };
+
+    if (user) {
+      fetchBalance();
+    }
+  }, [user]);
+
+  // Fetch user trip count
+  useEffect(() => {
+    const fetchTripCount = async () => {
+      try {
+        const response = await api.get("/Itinerary", {
+          params: {
+            page: 1,
+            pageSize: 1, // Only need totalCount
+          },
+        });
+        setTripCount(response.data.totalCount || 0);
+      } catch (error) {
+        console.error("Error fetching trip count:", error);
+      }
+    };
+
+    if (user) {
+      fetchTripCount();
+    }
+  }, [user]);
+
+  // Check if user has active Pro subscription
+  const isProActive = () => {
+    const subscriptionExpiredAt =
+      user?.user?.subscriptionExpiredAt || user?.subscriptionExpiredAt;
+
+    if (!subscriptionExpiredAt) {
+      return false;
+    }
+
+    const expiryDate = new Date(subscriptionExpiredAt);
+    const now = new Date();
+
+    return expiryDate > now;
+  };
 
   // Helper function to convert companion selection to numPeople
   const getNumPeople = (companion) => {
@@ -660,6 +764,73 @@ function TripPlanning() {
         return;
       }
 
+      // Check if user is Pro or needs to pay
+      if (!isProActive()) {
+        // Check if user has exceeded free trip limit
+        if (tripCount >= MAX_FREE_TRIPS) {
+          // User must pay for additional trips
+          if (balance < TRIP_CREATION_PRICE) {
+            setIsPaymentModalVisible(true);
+            setIsCreating(false);
+            return;
+          }
+
+          // Store trip data and show confirmation modal
+          setPendingTripData(finalData);
+          setIsConfirmPaymentModalVisible(true);
+          setIsCreating(false);
+          return;
+        }
+        // User still has free trips remaining - create directly
+      }
+
+      // Pro user or Free user with remaining free trips - create trip directly
+      await executeCreateTrip(finalData);
+    } catch (error) {
+      console.error("Error creating trip:", error);
+      message.error("Không thể tạo kế hoạch chuyến đi. Vui lòng thử lại.");
+      setIsCreating(false);
+    }
+  };
+
+  // Execute trip creation after payment confirmation
+  const executeCreateTrip = async (finalData) => {
+    try {
+      setIsCreating(true);
+
+      // Pay for trip creation if not Pro and exceeded free limit
+      if (!isProActive() && tripCount >= MAX_FREE_TRIPS) {
+        try {
+          await api.post("/Transaction/pay", {
+            amount: TRIP_CREATION_PRICE,
+            paymentMethod: "Wallet",
+            description: "Thanh toán tạo kế hoạch chuyến đi",
+          });
+
+          // Update balance and user data
+          const response = await api.get("/User/profile");
+          setBalance(response.data.balance || 0);
+
+          // Update Redux state
+          const updatedUserData = {
+            token: user.token,
+            user: response.data,
+            expiresAt: user.expiresAt,
+          };
+          dispatch(login(updatedUserData));
+
+          message.success("Thanh toán thành công!");
+        } catch (error) {
+          console.error("Error processing payment:", error);
+          message.error(
+            error.response?.data?.message ||
+              "Thanh toán thất bại. Vui lòng thử lại."
+          );
+          setIsCreating(false);
+          return;
+        }
+      }
+
       const requestData = {
         Title: finalData.title.trim(),
         NumPeople: getNumPeople(finalData.companion),
@@ -673,18 +844,13 @@ function TripPlanning() {
       const response = await api.post("/Itinerary/create", requestData);
 
       if (response.data && response.data.success) {
-        message.success(
-          response.data.message || "Tạo kế hoạch chuyến đi thành công!"
-        );
+        message.success("Tạo kế hoạch chuyến đi thành công!");
         // Navigate to trip detail page using itineraryId
         navigate(`/trip-planning/${response.data.itineraryId}`);
       }
     } catch (error) {
       console.error("Error creating trip:", error);
-      message.error(
-        error.response?.data?.message ||
-          "Không thể tạo kế hoạch chuyến đi. Vui lòng thử lại."
-      );
+      message.error("Không thể tạo kế hoạch chuyến đi. Vui lòng thử lại.");
     } finally {
       setIsCreating(false);
     }
@@ -701,6 +867,32 @@ function TripPlanning() {
       return;
     }
 
+    // Show initial modal if not Pro
+    if (!isProActive()) {
+      // Check if user has exceeded free trips
+      if (tripCount >= MAX_FREE_TRIPS) {
+        // Show modal with payment warning
+        setIsStartModalVisible(true);
+      } else {
+        // User still has free trips - start directly
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentStep(0);
+          setIsTransitioning(false);
+        }, 200);
+      }
+    } else {
+      // Pro user - start directly
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(0);
+        setIsTransitioning(false);
+      }, 200);
+    }
+  };
+
+  const handleConfirmStart = () => {
+    setIsStartModalVisible(false);
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentStep(0);
@@ -756,6 +948,14 @@ function TripPlanning() {
     setTripData((prev) => ({ ...prev, ...data }));
   };
 
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case -1:
@@ -763,6 +963,9 @@ function TripPlanning() {
           <WelcomeScreen
             onStart={handleStart}
             isTransitioning={isTransitioning}
+            tripCount={tripCount}
+            maxFreeTrips={MAX_FREE_TRIPS}
+            isProActive={isProActive()}
           />
         );
       case 0:
@@ -865,6 +1068,419 @@ function TripPlanning() {
             {renderStep()}
           </div>
         </div>
+
+        {/* Payment Modal */}
+        <Modal
+          title={
+            <div style={{ fontSize: "18px", fontWeight: "600" }}>
+              Thanh toán tạo kế hoạch
+            </div>
+          }
+          open={isPaymentModalVisible}
+          onCancel={() => setIsPaymentModalVisible(false)}
+          footer={null}
+          centered
+          width={500}
+        >
+          <div style={{ padding: "20px 0" }}>
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              <div style={{ marginBottom: "12px" }}>
+                <span style={{ color: "#64748b", fontSize: "14px" }}>
+                  Số dư hiện tại:
+                </span>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "700",
+                    color: "#1f2937",
+                    marginTop: "4px",
+                  }}
+                >
+                  {formatCurrency(balance)}
+                </div>
+              </div>
+              <div>
+                <span style={{ color: "#64748b", fontSize: "14px" }}>
+                  Giá tạo kế hoạch:
+                </span>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "600",
+                    color: "#3b82f6",
+                    marginTop: "4px",
+                  }}
+                >
+                  {formatCurrency(TRIP_CREATION_PRICE)}
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#fef2f2",
+                border: "1px solid #fecaca",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                color: "#dc2626",
+                fontSize: "14px",
+              }}
+            >
+              Số dư không đủ. Vui lòng nạp thêm{" "}
+              {formatCurrency(TRIP_CREATION_PRICE - balance)} để tạo kế hoạch.
+            </div>
+
+            <div
+              style={{
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                color: "#1e40af",
+                fontSize: "14px",
+              }}
+            >
+              💡 <strong>Mẹo:</strong> Nâng cấp lên gói Pro để tạo không giới
+              hạn kế hoạch chuyến đi!
+            </div>
+
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "linear-gradient(135deg, #10b981, #059669)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setIsPaymentModalVisible(false);
+                  navigate("/profile/wallet");
+                }}
+              >
+                Nạp tiền vào ví
+              </button>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "linear-gradient(135deg, #fbbf24, #f59e0b)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setIsPaymentModalVisible(false);
+                  navigate("/profile/subscription");
+                }}
+              >
+                Nâng cấp Pro
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Start Modal - Warning about 10k fee */}
+        <Modal
+          title={
+            <div style={{ fontSize: "18px", fontWeight: "600" }}>Thông báo</div>
+          }
+          open={isStartModalVisible}
+          onCancel={() => setIsStartModalVisible(false)}
+          footer={null}
+          centered
+          width={500}
+        >
+          <div style={{ padding: "20px 0" }}>
+            <div
+              style={{
+                background: "#fef2f2",
+                border: "1px solid #fecaca",
+                padding: "16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "16px",
+                  color: "#991b1b",
+                  marginBottom: "12px",
+                  fontWeight: "600",
+                }}
+              >
+                ⚠️ Đã hết lượt tạo miễn phí
+              </div>
+              <div style={{ fontSize: "14px", color: "#7f1d1d" }}>
+                Bạn đã tạo{" "}
+                <strong>
+                  {tripCount}/{MAX_FREE_TRIPS}
+                </strong>{" "}
+                kế hoạch miễn phí. Để tạo thêm kế hoạch, bạn cần thanh toán{" "}
+                <strong>{formatCurrency(TRIP_CREATION_PRICE)}</strong> cho mỗi
+                kế hoạch.
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#fffbeb",
+                border: "1px solid #fcd34d",
+                padding: "16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "16px",
+                  color: "#78350f",
+                  marginBottom: "12px",
+                  fontWeight: "600",
+                }}
+              >
+                💰 Chi phí tạo kế hoạch
+              </div>
+              <div style={{ fontSize: "14px", color: "#92400e" }}>
+                Mỗi kế hoạch chuyến đi sẽ tốn{" "}
+                <strong>{formatCurrency(TRIP_CREATION_PRICE)}</strong> từ số dư
+                trong ví của bạn.
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                color: "#1e40af",
+                fontSize: "14px",
+              }}
+            >
+              <strong>Mẹo:</strong> Nâng cấp lên gói Pro (
+              {formatCurrency(50000)} / tháng) để tạo không giới hạn kế hoạch
+              chuyến đi và nhiều tính năng khác!
+            </div>
+
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              <div style={{ color: "#64748b", fontSize: "14px" }}>
+                Số dư hiện tại:
+              </div>
+              <div
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "700",
+                  color: "#1f2937",
+                  marginTop: "4px",
+                }}
+              >
+                {formatCurrency(balance)}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "#e5e7eb",
+                  color: "#374151",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+                onClick={() => setIsStartModalVisible(false)}
+              >
+                Hủy
+              </button>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+                onClick={handleConfirmStart}
+              >
+                Tiếp tục
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Confirm Payment Modal - Before creating trip */}
+        <Modal
+          title={
+            <div style={{ fontSize: "18px", fontWeight: "600" }}>
+              Xác nhận thanh toán
+            </div>
+          }
+          open={isConfirmPaymentModalVisible}
+          onCancel={() => {
+            setIsConfirmPaymentModalVisible(false);
+            setPendingTripData(null);
+          }}
+          footer={null}
+          centered
+          width={500}
+        >
+          <div style={{ padding: "20px 0" }}>
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              <div style={{ marginBottom: "12px" }}>
+                <span style={{ color: "#64748b", fontSize: "14px" }}>
+                  Số dư hiện tại:
+                </span>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "700",
+                    color: "#1f2937",
+                    marginTop: "4px",
+                  }}
+                >
+                  {formatCurrency(balance)}
+                </div>
+              </div>
+              <div>
+                <span style={{ color: "#64748b", fontSize: "14px" }}>
+                  Chi phí tạo kế hoạch:
+                </span>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "600",
+                    color: "#ef4444",
+                    marginTop: "4px",
+                  }}
+                >
+                  - {formatCurrency(TRIP_CREATION_PRICE)}
+                </div>
+              </div>
+              <div
+                style={{
+                  borderTop: "1px solid #e5e7eb",
+                  marginTop: "12px",
+                  paddingTop: "12px",
+                }}
+              >
+                <span style={{ color: "#64748b", fontSize: "14px" }}>
+                  Số dư sau thanh toán:
+                </span>
+                <div
+                  style={{
+                    fontSize: "22px",
+                    fontWeight: "700",
+                    color: "#10b981",
+                    marginTop: "4px",
+                  }}
+                >
+                  {formatCurrency(balance - TRIP_CREATION_PRICE)}
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#fef3c7",
+                border: "1px solid #fcd34d",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                color: "#92400e",
+                fontSize: "14px",
+              }}
+            >
+              Bạn có chắc chắn muốn thanh toán{" "}
+              <strong>{formatCurrency(TRIP_CREATION_PRICE)}</strong> để tạo kế
+              hoạch chuyến đi này không?
+            </div>
+
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "#e5e7eb",
+                  color: "#374151",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setIsConfirmPaymentModalVisible(false);
+                  setPendingTripData(null);
+                }}
+              >
+                Hủy
+              </button>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: processing ? "not-allowed" : "pointer",
+                  opacity: processing ? 0.7 : 1,
+                }}
+                onClick={async () => {
+                  setIsConfirmPaymentModalVisible(false);
+                  if (pendingTripData) {
+                    await executeCreateTrip(pendingTripData);
+                    setPendingTripData(null);
+                  }
+                }}
+                disabled={processing}
+              >
+                {processing ? "Đang xử lý..." : "Xác nhận thanh toán"}
+              </button>
+            </div>
+          </div>
+        </Modal>
 
         <Footer />
       </div>
