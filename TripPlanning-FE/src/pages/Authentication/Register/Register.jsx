@@ -33,7 +33,7 @@ function Register() {
         email: formData.email,
         password: formData.password,
       });
-      message.success("Đăng ký thành công!");
+      message.success("Hãy kiểm tra email của bạn để xác nhận tài khoản!");
       console.log("Registration successful:", response.data);
       navigate("/login");
     } catch (err) {

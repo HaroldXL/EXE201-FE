@@ -37,9 +37,11 @@ const WelcomeScreen = ({
   tripCount,
   maxFreeTrips,
   isProActive,
+  isUserLoggedIn,
 }) => {
   const remainingFreeTrips = Math.max(0, maxFreeTrips - tripCount);
-  const showFreeTripsInfo = !isProActive && remainingFreeTrips >= 0;
+  const showFreeTripsInfo =
+    isUserLoggedIn && !isProActive && remainingFreeTrips >= 0;
 
   return (
     <div className="trip-planning-welcome">
@@ -966,6 +968,7 @@ function TripPlanning() {
             tripCount={tripCount}
             maxFreeTrips={MAX_FREE_TRIPS}
             isProActive={isProActive()}
+            isUserLoggedIn={!!user}
           />
         );
       case 0:
