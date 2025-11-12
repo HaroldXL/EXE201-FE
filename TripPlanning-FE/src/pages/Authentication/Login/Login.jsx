@@ -14,7 +14,6 @@ function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,25 +130,6 @@ function Login() {
               <span className="normal-content">Đăng Nhập</span>
             )}
           </button>
-
-          <div className="form-footer">
-            <div className="remember-me">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                name="rememberMe"
-                checked={formData.rememberMe}
-                onChange={handleInputChange}
-                className="checkbox"
-              />
-              <label htmlFor="rememberMe" className="checkbox-label">
-                Nhớ tôi
-              </label>
-            </div>
-            <a href="#" className="forgot-password">
-              Quên Mật Khẩu?
-            </a>
-          </div>
         </form>
 
         <div className="signup-link">

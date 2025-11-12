@@ -11,7 +11,9 @@ import Layout from "./components/layout/Layout";
 import ProfilePav from "./pages/Profile/ProfilePav/ProfilePav";
 import Info from "./pages/Profile/Info/Info";
 import Test from "./pages/test/test";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { logout } from "./store/redux/features/userSlice";
 import Chatbot from "./pages/Chatbot/Chatbot";
 import Explore from "./pages/Explore/LocationList/Explore";
 import LocationDetail from "./pages/Explore/LocationDetail/LocationDetail";
@@ -67,6 +69,21 @@ const ProtectAdminRoute = ({ children }) => {
 };
 
 function App() {
+  const dispatch = useDispatch();
+
+  // Listen for logout event from axios interceptor
+  useEffect(() => {
+    const handleLogoutEvent = () => {
+      dispatch(logout());
+    };
+
+    window.addEventListener("logout", handleLogoutEvent);
+
+    return () => {
+      window.removeEventListener("logout", handleLogoutEvent);
+    };
+  }, [dispatch]);
+
   const router = createBrowserRouter([
     {
       path: "/",

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@coreui/icons": "^3.0.1",
+    "@coreui/icons-react": "^2.3.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@maptiler/sdk": "^3.8.0",
@@ -22,6 +24,7 @@
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
+    "jwt-decode": "^4.0.0",
     "lucide": "^0.542.0",
     "lucide-react": "^0.542.0",
     "next-themes": "^0.4.6",

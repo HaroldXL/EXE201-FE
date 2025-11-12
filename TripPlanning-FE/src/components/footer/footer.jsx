@@ -9,7 +9,10 @@ import {
   Youtube,
   Heart,
 } from "lucide-react";
+import CIcon from "@coreui/icons-react";
+import { cibTiktok } from "@coreui/icons";
 import "./footer.css";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -43,29 +46,29 @@ function Footer() {
           <h4 className="footer-title">Liên Kết Nhanh</h4>
           <ul className="footer-links">
             <li>
-              <a href="/" className="footer-link">
+              <Link to="/" className="footer-link">
                 Trang Chủ
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/explore" className="footer-link">
+              <Link to="/explore" className="footer-link">
                 Khám Phá
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/create-plan" className="footer-link">
+              <Link to="/create-plan" className="footer-link">
                 Tạo Kế Hoạch
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/chatbot" className="footer-link">
+              <Link to="/chatbot" className="footer-link">
                 Hỏi Đáp AI
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="footer-link">
+              <Link to="#" className="footer-link">
                 Về Chúng Tôi
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -110,24 +113,11 @@ function Footer() {
           </p>
           <div className="footer-social">
             <a
-              href="https://www.facebook.com/minhthien.phung.5"
+              href="https://www.facebook.com/profile.php?id=61580529372450"
               target="_blank"
               className="social-link"
             >
               <Facebook size={20} />
-            </a>
-            <a href="#" className="social-link">
-              <Twitter size={20} />
-            </a>
-            <a
-              href="https://www.instagram.com/harold2996s"
-              target="_blank"
-              className="social-link"
-            >
-              <Instagram size={20} />
-            </a>
-            <a href="#" className="social-link">
-              <Youtube size={20} />
             </a>
           </div>
         </div>

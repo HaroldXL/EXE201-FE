@@ -187,15 +187,15 @@ function Home() {
             ) : (
               // Hiển thị login và register khi chưa login
               <>
-                <a href="/login" className="mobile-auth-btn mobile-login-btn">
+                <Link to="/login" className="mobile-auth-btn mobile-login-btn">
                   Đăng nhập
-                </a>
-                <a
-                  href="/register"
+                </Link>
+                <Link
+                  to="/register"
                   className="mobile-auth-btn mobile-register-btn"
                 >
                   Đăng ký
-                </a>
+                </Link>
               </>
             )}
           </div>
@@ -203,21 +203,21 @@ function Home() {
           {/* Desktop Navigation */}
           <div className="desktop-nav">
             <div className="nav-links">
-              <a href="/" className="nav-link">
+              <Link to="/" className="nav-link">
                 Trang Chủ
-              </a>
-              <a href="/explore" className="nav-link">
+              </Link>
+              <Link to="/explore" className="nav-link">
                 Khám Phá
-              </a>
-              <a href="/trip-planning" className="nav-link">
+              </Link>
+              <Link to="/trip-planning" className="nav-link">
                 Tạo Kế Hoạch
-              </a>
-              <a href="/chatbot" className="nav-link">
+              </Link>
+              <Link to="/chatbot" className="nav-link">
                 Hỏi Đáp AI
-              </a>
-              <a href="/about-us" className="nav-link">
+              </Link>
+              <Link to="/about-us" className="nav-link">
                 Về Chúng Tôi
-              </a>
+              </Link>
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               {user && user.token ? (
