@@ -646,7 +646,7 @@ function TripPlanning() {
 
   const totalSteps = 6;
   const TRIP_CREATION_PRICE = 10000;
-  const MAX_FREE_TRIPS = 5;
+  const MAX_FREE_TRIPS = 3;
 
   // Page load animation
   useEffect(() => {
